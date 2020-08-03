@@ -1,3 +1,5 @@
+import * as UsersAPI from '../graphql-api/users';
+
 type HelloArgs = {
   name: string
 };
@@ -8,9 +10,24 @@ const hello = (_: void, args: HelloArgs): string => {
   return `Hello anonymous`;
 };
 
+type FindArgs = {
+  email: string
+}
+
+const find = async (_: void, args: FindArgs): Promise<string> => {
+  const users = await UsersAPI.find({ email: args.email });
+
+  if (users.length > 0) {
+    return users[0].first_name;
+  }
+  
+  return 'Not Found';
+}
+
 const resolverMap = {
   Query: {
-    hello
+    hello,
+    find
   },
   Mutation: {
     hello

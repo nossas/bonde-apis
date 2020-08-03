@@ -1,5 +1,6 @@
 type Query {
   hello(name: String): String
+  find(email: String): String
 }
 
 type Mutation {

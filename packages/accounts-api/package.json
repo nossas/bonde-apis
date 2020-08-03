@@ -9,5 +9,8 @@
     "lint": "eslint . --ext ts,tsx --fix",
     "test": "jest",
     "coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "apollo-fetch": "^0.7.0"
   }
 }
