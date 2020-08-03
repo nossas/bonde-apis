@@ -1,1 +1,3 @@
-console.log('Bonde Notifications API');
+import logger from './logger';
+
+logger.info('Bonde Notifications API');

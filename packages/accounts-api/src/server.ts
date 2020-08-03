@@ -1,1 +1,3 @@
-console.log('Bonde Accounts API');
+import logger from './logger';
+
+logger.info('Bonde Accounts API');
