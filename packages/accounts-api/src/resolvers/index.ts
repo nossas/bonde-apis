@@ -1,4 +1,5 @@
 import * as UsersAPI from '../graphql-api/users';
+import authenticate from './authenticate';
 
 type HelloArgs = {
   name: string
@@ -30,7 +31,8 @@ const resolverMap = {
     find
   },
   Mutation: {
-    hello
+    hello,
+    authenticate
   }
 };
 
