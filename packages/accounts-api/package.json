@@ -1,7 +1,7 @@
 {
   "name": "accounts-api",
   "scripts": {
-    "build": "tsc -p .",
+    "build": "tsc -p . && ncp src/schema dist/schema",
     "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql",
     "clean": "rm -rf node_modules dist",
     "dev": "LOG_LEVEL=debug NODE_ENV=development yarn run build:dev | pino-pretty",
