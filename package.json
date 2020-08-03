@@ -1,0 +1,32 @@
+{
+  "name": "bonde-graphql-apis",
+  "description": "Monorepo with GraphQL APIs used on the Bonde platform.",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nossas/bonde-graphql-apis.git"
+  },
+  "author": "Nossas",
+  "bugs": {
+    "url": "https://github.com/nossas/bonde-graphql-apis/issues"
+  },
+  "homepage": "https://github.com/nossas/bonde-graphql-apis#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix --ext js,ts,tsx",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "accounts-api",
+  "scripts": {
+    "dev": "LOG_LEVEL=debug NODE_ENV=development yarn run build:dev",
+    "clean": "rm -rf node_modules dist",
+    "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql"
+  }
+}
