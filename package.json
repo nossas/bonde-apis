@@ -1,5 +1,5 @@
 {
-  "name": "bonde-graphql-apis",
+  "name": "bonde-graphql",
   "description": "Monorepo with GraphQL APIs used on the Bonde platform.",
   "license": "GPL-3.0",
   "repository": {
