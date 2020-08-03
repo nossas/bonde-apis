@@ -1,5 +1,5 @@
 {
-  "name": "accounts-api",
+  "name": "notifications-api",
   "scripts": {
     "build": "tsc -p .",
     "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql",
