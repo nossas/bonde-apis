@@ -1,7 +1,61 @@
 type Query {
-  hello(name: String): String
+  activists_by_community: String!
+}
+
+scalar JSON
+
+scalar JSONObject
+
+input DonationInput {
+  payment_method: String!
+  amount: Int!
+  card_hash: String
+  customer: JSON
+  period: Int
+  checkout_data: JSON
+}
+
+input FormEntryField {
+  uid: String!
+  kind: String!
+  label: String!
+  placeholder: String
+  required: Boolean!
+  value: String
+}
+
+input FormEntryInput {
+  fields: [FormEntryField]
+}
+
+input EmailPressureInput {
+  target: String
+}
+
+input Action {
+  donation: DonationInput
+  email_pressure: EmailPressureInput
+}
+
+input ActivistInput {
+  email: String!
+  name: String!
+  first_name: String
+  last_name: String
+  phone: String
+  city: String
+}
+
+type Response {
+  data: JSON
+}
+
+type Status {
+  status: String
 }
 
 type Mutation {
-  hello(name: String): String
+  create_email_pressure(widget_id: Int!, activist: ActivistInput!, input: EmailPressureInput): Response
+  create_form_entry(widget_id: Int!, activist: ActivistInput!, input: FormEntryInput!): Response
+  update_mailchimp_settings(api_key: String!, list_id: String!): Status
 }

@@ -8,6 +8,7 @@ type Config = {
   logLevel: string
   graphqlHttpUrl: string
   jwtSecret: string
+  jwtToken?: string
   hasuraSecret?: string
 }
 
@@ -24,6 +25,7 @@ const config: Config = {
   logLevel: process.env.LOG_LEVEL || 'info',
   graphqlHttpUrl: process.env.GRAPHQL_HTTP_URL,
   jwtSecret: process.env.JWT_SECRET,
+  jwtToken: process.env.JWT_TOKEN,
   hasuraSecret: process.env.HASURA_SECRET
 };
 

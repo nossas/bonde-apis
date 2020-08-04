@@ -9,5 +9,10 @@
     "lint": "eslint . --ext ts,tsx --fix",
     "test": "jest",
     "coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "apollo-fetch": "^0.7.0",
+    "graphql-type-json": "^0.3.2",
+    "mailchimp-api-v3": "^1.14.0"
   }
 }
