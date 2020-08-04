@@ -1,20 +1,18 @@
-type HelloArgs = {
-  name: string
-};
+import { GraphQLJSONObject } from 'graphql-type-json';
+import notify from './notify';
 
-const hello = (_: void, args: HelloArgs): string => {
-  if (!!args.name) return `Hello, ${args.name}!`;
-  
-  return `Hello anonymous`;
-};
+const hello = async (): Promise<string> => {
+  return 'Hello';
+}
 
 const resolverMap = {
   Query: {
     hello
   },
   Mutation: {
-    hello
-  }
+    notify
+  },
+  JSON: GraphQLJSONObject
 };
 
 export default resolverMap;
