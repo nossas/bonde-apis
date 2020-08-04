@@ -1,39 +1,37 @@
-import * as UsersAPI from '../graphql-api/users';
+import { GraphQLScalarType } from 'graphql'
 import authenticate from './authenticate';
+import reset_password_change from './reset_password_change';
+import reset_password_request from './reset_password_request';
+import reset_password_verify from './reset_password_verify';
 
-type HelloArgs = {
-  name: string
-};
+const Void = new GraphQLScalarType({
+  name: 'Void',
 
-const hello = (_: void, args: HelloArgs): string => {
-  if (!!args.name) return `Hello, ${args.name}!`;
-  
-  return `Hello anonymous`;
-};
+  description: 'Represents NULL values',
 
-type FindArgs = {
-  email: string
-}
+  serialize() {
+    return null
+  },
 
-const find = async (_: void, args: FindArgs): Promise<string> => {
-  const users = await UsersAPI.find({ email: args.email });
+  parseValue() {
+    return null
+  },
 
-  if (users.length > 0) {
-    return users[0].first_name;
+  parseLiteral() {
+    return null
   }
-  
-  return 'Not Found';
-}
+});
 
 const resolverMap = {
   Query: {
-    hello,
-    find
+    reset_password_verify
   },
   Mutation: {
-    hello,
-    authenticate
-  }
+    authenticate,
+    reset_password_change,
+    reset_password_request
+  },
+  Void
 };
 
 export default resolverMap;

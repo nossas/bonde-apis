@@ -1,11 +1,5 @@
-import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-
-dotenv.config();
-
-if (!process.env.JWT_SECRET)
-  throw new Error('Please specify the `JWT_SECRET` environment variable.');
-
+import config from './config';
 
 type User = {
   id: number
@@ -22,5 +16,5 @@ export const generateJWT = (user: User): string => {
   };
   const options = { audience: 'postgraphile' };
 
-  return jwt.sign(payload, process.env.JWT_SECRET || 'not_found_secret', options);
+  return jwt.sign(payload, config.jwtSecret, options);
 };

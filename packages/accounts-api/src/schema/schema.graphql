@@ -4,12 +4,36 @@ type JWT {
   first_name: String
 }
 
+type DecodedJWT {
+  id: Int
+  expired_at: Int
+  iat: Int
+}
+
+type Register {
+  email: String!
+  code: String!
+  is_new_user: Boolean!
+}
+
+input RegisterInput {
+  email: String!
+  first_name: String!
+  last_name: String
+  password: String!
+  code: String!
+}
+
+scalar Void
+
 type Query {
-  hello(name: String): String
-  find(email: String): String
+  register_verify(email: String, code: String): Register
+  reset_password_verify(token: String): DecodedJWT
 }
 
 type Mutation {
-  hello(name: String): String
   authenticate(email: String, password: String): JWT
+  register(input: RegisterInput): JWT
+  reset_password_change(token: String, password: String): JWT
+  reset_password_request(email: String, locale: String, callback_url: String): Void
 }
