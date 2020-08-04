@@ -1,8 +1,6 @@
 import pino from 'pino';
-import dotenv from 'dotenv';
+import config from './config';
 
-dotenv.config();
-
-const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
+const logger = pino({ level: config.logLevel || 'info' });
 
 export default logger;

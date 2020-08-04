@@ -5,7 +5,7 @@ dotenv.config();
 type Config = {
   port: number | string
   host: string
-  debug: string
+  logLevel: string
   graphqlHttpUrl: string
   jwtSecret: string
   hasuraSecret?: string
@@ -21,7 +21,7 @@ if (!process.env.GRAPHQL_HTTP_URL)
 const config: Config = {
   port: process.env.PORT || 3000,
   host: process.env.HOST || 'localhost',
-  debug: process.env.DEBUG || 'info',
+  logLevel: process.env.LOG_LEVEL || 'info',
   graphqlHttpUrl: process.env.GRAPHQL_HTTP_URL,
   jwtSecret: process.env.JWT_SECRET,
   hasuraSecret: process.env.HASURA_SECRET

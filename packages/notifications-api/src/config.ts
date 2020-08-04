@@ -5,7 +5,7 @@ dotenv.config();
 type Config = {
   port: number | string
   host: string
-  debug?: string
+  logLevel?: string
   sendgridApiKey?: string
   smtpHost?: string
   smtpPass?: string
@@ -16,7 +16,7 @@ type Config = {
 const config: Config = {
   port: process.env.PORT || 3001,
   host: process.env.HOST || 'localhost',
-  debug: process.env.DEBUG,
+  logLevel: process.env.LOG_LEVEL,
   sendgridApiKey: process.env.SENDGRID_API_KEY,
   smtpHost: process.env.SMTP_HOST,
   smtpPass: process.env.SMTP_PASS,

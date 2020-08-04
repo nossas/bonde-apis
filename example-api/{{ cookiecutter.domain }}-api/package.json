@@ -1,5 +1,5 @@
 {
-  "name": "package-api",
+  "name": "{{ cookiecutter.domain }}-api",
   "scripts": {
     "build": "tsc -p . && ncp src/schema dist/schema",
     "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql",

@@ -5,11 +5,9 @@ import { createServer } from 'http';
 import compression from 'compression';
 import cors from 'cors';
 import expressPino from 'express-pino-logger';
-import dotenv from 'dotenv';
+import config from './config';
 import schema from './schema';
 import logger from './logger';
-
-dotenv.config();
 
 const app = express();
 const server = new ApolloServer({
@@ -26,13 +24,8 @@ server.applyMiddleware({ app, path: '/graphql' });
 
 const httpServer = createServer(app);
 
-const config = {
-  host: process.env.HOST || 'localhost',
-  port: process.env.PORT || 3000
-}
-
 httpServer.listen(
-  config,
+  { host: config.host, port: config.port },
   () => logger.info(`GraphQL is now running on http://${config.host}:${config.port}/graphql`)
 );
 

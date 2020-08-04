@@ -3,68 +3,63 @@
 TODO:
 
 - [ ] Definição resumida
-- [ ] Definição tecnica de uma API GraphQL (bibliotecas)
+- [X] Definição tecnica de uma API GraphQL (bibliotecas)
 - [ ] Definição de arquitetura e fluxo de acesso
 
-- How to build? typescript
-- How to lint? eslint
-- How to tests? jest
-- How to run dev? nodemon and ts-node
+### Understand the SETUP
 
-### Setup API
+**Install**
 
-**package.json**
-
-```json
-{
-  "name": "{{ service_name }}-api",
-  "scripts": {
-    "build": "tsc -p .",
-    "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql",
-    "clean": "rm -rf node_modules dist",
-    "dev": "LOG_LEVEL=debug NODE_ENV=development yarn run build:dev",
-    "start": "node 'dist/server.js'",
-    "lint": "eslint . --ext ts,tsx --fix"
-  }
-}
+```sh
+# Install the package manager
+yarn global add pnpm
+# Install packages dependencies
+pnpm i
 ```
 
-**tsconfig.json**
+**Libraries**
 
-```json
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist"
-  }
-}
+- Build (Node, Typescript)
+- Server (Express, GraphQL)
+- Log (Pino)
+- Tests (Jest)
+
+**Commands**
+
+- Tests:
+
+```sh
+pnpm m run tests # pnpm m run coverage
 ```
 
-**jest.config.js**
+- Development server:
 
-```js
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  modulePathIgnorePatterns: ["<rootDir>/dist/"],
-  globals: {
-    'ts-jest': {
-      packageJson: 'package.json',
-    },
-  },
-};
+```sh
+pnpm m run dev
 ```
 
-**logger.ts**
+- Production build and start:
 
-```ts
-import pino from 'pino';
-import dotenv from 'dotenv';
+```sh
+pnpm m run build
+pnpm m run start
+```
 
-dotenv.config();
+### How to create a new package?
 
-const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
+Install [cookiecutter](https://cookiecutter.readthedocs.io/en/1.7.2/installation.html#install-cookiecutter), following setup on Debian/Ubuntu OS:
 
-export default logger;
+```
+sudo apt-get install cookiecutter
+```
+
+Copy a base project to GraphQL API:
+
+```
+cookiecutter example-api/ -o packages/
+```
+
+Run tests on your new GraphQL API, change `example` by the `domain` configuration made in the previous step:
+```
+pnpm m run tests --filter example-api
 ```
