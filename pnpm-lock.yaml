@@ -98,6 +98,11 @@ importers:
       graphql-type-json: ^0.3.2
       nodemailer: ^6.4.11
       nunjucks: ^3.2.2
+  packages/payments-api:
+    dependencies:
+      pagarme: 4.12.0
+    specifiers:
+      pagarme: ^4.12.0
 lockfileVersion: 5.1
 packages:
   /@apollo/protobufjs/1.0.4:
@@ -5123,6 +5128,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-k3bdm2n25tkyxcjSKzB5x8kfVxlMdgsbPr0GkZcwHsLpba6cBjqCt1KlcChKEvxHIcTB1FVMuwoijZ26xex5MQ==
+  /pagarme/4.12.0:
+    dev: false
+    resolution:
+      integrity: sha512-YJkEZJHyZAPEMpAolE3T/f7jjGrJ5coFH4oqRe0q6ZG40ucYJRCX13J9z01p0cjgbGV+Ddo0LOq+HDfjItbu0A==
   /parent-module/1.0.1:
     dependencies:
       callsites: 3.1.0

@@ -1,0 +1,16 @@
+{
+  "name": "payments-api",
+  "scripts": {
+    "build": "tsc -p . && ncp src/schema dist/schema",
+    "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql",
+    "clean": "rm -rf node_modules dist",
+    "dev": "LOG_LEVEL=debug NODE_ENV=development yarn run build:dev | pino-pretty",
+    "start": "node 'dist/server.js'",
+    "lint": "eslint . --ext ts,tsx --fix",
+    "test": "jest",
+    "coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "pagarme": "^4.12.0"
+  }
+}
