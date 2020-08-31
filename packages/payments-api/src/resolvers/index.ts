@@ -1,19 +1,9 @@
-type HelloArgs = {
-  name: string
-};
-
-const hello = (_: void, args: HelloArgs): string => {
-  if (!!args.name) return `Hello, ${args.name}!`;
-  
-  return `Hello anonymous`;
-};
+import create_or_update_recipient from './create_or_update_recipient';
 
 const resolverMap = {
-  Query: {
-    hello
-  },
+  Query: {},
   Mutation: {
-    hello
+    create_or_update_recipient
   }
 };
 

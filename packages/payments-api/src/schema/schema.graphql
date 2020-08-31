@@ -1,7 +1,62 @@
 type Query {
-  hello(name: String): String
+  version: String
 }
 
 type Mutation {
-  hello(name: String): String
+  create_or_update_recipient(input: RecipientEntity): Recipient
+}
+
+type BankAccount {
+  object: String!
+  id: Int!
+  bank_code: String!
+  agencia: String!
+  agencia_dv: String
+  conta: String!
+  conta_dv: String!
+  type: String!
+  document_type: String!
+  document_number: String!
+  legal_name: String!
+
+}
+
+type Recipient {
+  object: String!
+  id: String!
+  transfer_enabled: Boolean
+  transfer_interval: String
+  transfer_day: Int
+  bank_account: BankAccount
+  community_id: Int
+}
+
+input BankAccountInput {
+  object: String
+  id: Int
+  bank_code: String!
+  agencia: String!
+  agencia_dv: String
+  conta: String!
+  conta_dv: String!
+  type: String!
+  document_type: String!
+  document_number: String!
+  legal_name: String!
+
+}
+
+input RecipientInput {
+  object: String
+  id: String
+  transfer_enabled: Boolean!
+  transfer_interval: String!
+  transfer_day: Int!
+  bank_account: BankAccountInput
+}
+
+input RecipientEntity {
+  id: Int
+  recipient: RecipientInput
+  community_id: Int!
 }
