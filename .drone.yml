@@ -1,0 +1,41 @@
+workspace:
+  base: /code
+
+pipeline:
+  publish-staging-build:
+    image: plugins/docker
+    repo: nossas/bonde-apis
+    dockerfile: Dockerfile
+    secrets: [ docker_username, docker_password ]
+    group: builder
+    tags:
+      - builder
+    when:
+      status: success
+      event: [push]
+  
+  # publish-accounts:
+  #   image: plugins/docker
+  #   repo: nossas/bonde-apis
+  #   secrets: [ docker_username, docker_password ]
+  #   dockerfile: packages/accounts-api/Dockerfile
+  #   context: packages/accounts-api/
+  #   group: apis
+  #   tags:
+  #     - accounts
+  #   when:
+  #     status: success
+  #     event: [push]
+  
+  # accounts-staging-deploy:
+  #   image: peloton/drone-rancher
+  #   url: http://cluster.bonde.org
+  #   service: accounts/api
+  #   group: deploying
+  #   docker_image: nossas/bonde-apis:accounts
+  #   timeout: 360
+  #   confirm: true
+  #   secrets: [ rancher_access_key, rancher_secret_key ]
+  #   when:
+  #     status: success
+  #     event: [push]
