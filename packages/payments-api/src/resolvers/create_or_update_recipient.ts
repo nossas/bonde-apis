@@ -39,8 +39,34 @@ type Args = {
   input: RecipientEntity
 }
 
-export default async (_: void, args: Args): Promise<RecipientEntity | undefined> => {
+type Session = {
+  sub: string
+  role: string
+  user_id: number
+  iat: number
+  aud: string
+}
+
+type Context = {
+  session: Session
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const checkUser = (next: any) => async (_: void, args: any, context: any) => {
+  const { session }: Context = context;
+
+  logger.child({ session }).info('checkUser');
+  if (session && session.role === 'admin') {
+    return next(_, args, context);
+  }
+
+  throw new Error('invalid_permission');
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const create_or_update = async (_: void, args: Args, context: any): Promise<RecipientEntity | undefined> => {
   const { input: { id, recipient, community_id } } = args;
+  logger.child({ context }).info('create_or_update');
   const client: any = await pagarme.client.connect({ api_key: config.pagarmeApiKey });
 
   try {
@@ -75,3 +101,5 @@ export default async (_: void, args: Args): Promise<RecipientEntity | undefined>
     else logger.error(err);
   }
 }
+
+export default checkUser(create_or_update);

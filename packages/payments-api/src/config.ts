@@ -7,6 +7,7 @@ type Config = {
   host: string
   logLevel: string
   graphqlHttpUrl?: string
+  jwtSecret?: string
   jwtToken?: string
   hasuraSecret?: string
   pagarmeApiKey?: string
@@ -17,6 +18,7 @@ const config: Config = {
   host: process.env.HOST || 'localhost',
   logLevel: process.env.LOG_LEVEL || 'info',
   jwtToken: process.env.JWT_TOKEN,
+  jwtSecret: process.env.JWT_SECRET,
   hasuraSecret: process.env.HASURA_SECRET,
   graphqlHttpUrl: process.env.GRAPHQL_HTTP_URL,
   pagarmeApiKey: process.env.PAGARME_API_KEY
