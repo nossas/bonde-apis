@@ -1,6 +1,6 @@
-import logger from '../logger';
 import pagarme from 'pagarme';
 import * as recipients from '../graphql-api/recipients';
+import * as permissions from '../graphql-api/permissions';
 import config from '../config';
 
 if (!config.pagarmeApiKey) throw new Error('PAGARME_API_KEY not found');
@@ -51,55 +51,59 @@ type Context = {
   session: Session
 }
 
+enum Roles {
+  USER=2,
+  ADMIN=1
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const checkUser = (next: any) => async (_: void, args: any, context: any) => {
+const check_user = (next: any, role: Roles) => async (_: void, args: any, context: Context) => {
   const { session }: Context = context;
 
-  logger.child({ session }).info('checkUser');
-  if (session && session.role === 'admin') {
-    return next(_, args, context);
+  if (session) {
+    const { input: { community_id } } = args;
+    // Get permission on API-GraphQL (Hasura)
+    const permission = await permissions.get_permission({ user_id: session.user_id, community_id });
+    // Execute only when role is permitted from relationship between community users
+    if (permission.role === role) return next(_, args, context);
   }
-
+  // Permission denied
   throw new Error('invalid_permission');
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const create_or_update = async (_: void, args: Args, context: any): Promise<RecipientEntity | undefined> => {
+const create_or_update = async (_: void, args: Args): Promise<RecipientEntity | undefined> => {
   const { input: { id, recipient, community_id } } = args;
-  logger.child({ context }).info('create_or_update');
   const client: any = await pagarme.client.connect({ api_key: config.pagarmeApiKey });
 
-  try {
-    // const recipients: Recipient[] = await client.recipients.all();
-    if (!!id && !!recipient.id) {
-      // update
-      const pagarmeUpdated: Recipient = await client.recipients.update(recipient);
+  
+  if (!!id) {
+    // The next line ensures only 1 recipient by Community on Pagarme
+    if (!recipient.id) throw new Error('recipient.id is required');
 
-      await recipients.update({
-        recipient: pagarmeUpdated,
-        pagarme_recipient_id: pagarmeUpdated.id,
-        transfer_day: pagarmeUpdated.transfer_day,
-        transfer_enabled: pagarmeUpdated.transfer_enabled
-      }, id);
+    const pagarmeUpdated: Recipient = await client.recipients.update(recipient);
 
-      return { id, recipient: pagarmeUpdated, community_id };
-    } else {
-      // insert
-      const pagarmeCreated: Recipient = await client.recipients.create(recipient);
-      const bondeCreated = await recipients.insert({
-        recipient: pagarmeCreated,
-        pagarme_recipient_id: pagarmeCreated.id,
-        transfer_day: pagarmeCreated.transfer_day,
-        transfer_enabled: pagarmeCreated.transfer_enabled,
-        community_id
-      });
+    await recipients.update({
+      recipient: pagarmeUpdated,
+      pagarme_recipient_id: pagarmeUpdated.id,
+      transfer_day: pagarmeUpdated.transfer_day,
+      transfer_enabled: pagarmeUpdated.transfer_enabled
+    }, id);
 
-      return { id: bondeCreated.id, recipient: pagarmeCreated, community_id };
-    }
-  } catch (err) {
-    if (err.response) logger.error(err.response)
-    else logger.error(err);
+    return { id, recipient: pagarmeUpdated, community_id };
   }
+
+  // Insert Recipient on Pagarme
+  const pagarmeCreated: Recipient = await client.recipients.create(recipient);
+  // Insert Recipient on Bonde database (API GraphQL)
+  const bondeCreated = await recipients.insert({
+    recipient: pagarmeCreated,
+    pagarme_recipient_id: pagarmeCreated.id,
+    transfer_day: pagarmeCreated.transfer_day,
+    transfer_enabled: pagarmeCreated.transfer_enabled,
+    community_id
+  });
+  
+  return { id: bondeCreated.id, recipient: pagarmeCreated, community_id };
 }
 
-export default checkUser(create_or_update);
+export default check_user(create_or_update, Roles.ADMIN);
