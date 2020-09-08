@@ -3,7 +3,7 @@ type Query {
 }
 
 type Mutation {
-  create_or_update_recipient(input: RecipientEntity): Recipient
+  create_or_update_recipient(input: RecipientEntityInput): RecipientEntity
 }
 
 type BankAccount {
@@ -55,7 +55,13 @@ input RecipientInput {
   bank_account: BankAccountInput
 }
 
-input RecipientEntity {
+type RecipientEntity {
+  id: Int
+  recipient: Recipient
+  community_id: Int!
+}
+
+input RecipientEntityInput {
   id: Int
   recipient: RecipientInput
   community_id: Int!

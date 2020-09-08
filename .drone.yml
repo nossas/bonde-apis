@@ -14,19 +14,6 @@ pipeline:
       status: success
       event: [push]
   
-  # publish-accounts:
-  #   image: plugins/docker
-  #   repo: nossas/bonde-apis
-  #   secrets: [ docker_username, docker_password ]
-  #   dockerfile: packages/accounts-api/Dockerfile
-  #   context: packages/accounts-api/
-  #   group: apis
-  #   tags:
-  #     - accounts
-  #   when:
-  #     status: success
-  #     event: [push]
-  
   accounts-staging-deploy:
     image: peloton/drone-rancher
     url: http://cluster.bonde.org
@@ -44,6 +31,32 @@ pipeline:
     image: peloton/drone-rancher
     url: http://cluster.bonde.org
     service: apis/payments
+    group: deploying
+    docker_image: nossas/bonde-apis:builder
+    timeout: 360
+    confirm: true
+    secrets: [ rancher_access_key, rancher_secret_key ]
+    when:
+      status: success
+      event: [push]
+
+  notifications-staging-deploy:
+    image: peloton/drone-rancher
+    url: http://cluster.bonde.org
+    service: apis/notifications
+    group: deploying
+    docker_image: nossas/bonde-apis:builder
+    timeout: 360
+    confirm: true
+    secrets: [ rancher_access_key, rancher_secret_key ]
+    when:
+      status: success
+      event: [push]
+
+  activists-staging-deploy:
+    image: peloton/drone-rancher
+    url: http://cluster.bonde.org
+    service: apis/activists
     group: deploying
     docker_image: nossas/bonde-apis:builder
     timeout: 360
