@@ -22,9 +22,9 @@ export const tags = (widget: Widget): Tag[] => {
   const status = 'active';
   return [
     // TAG COMMUNITY
-    { name: `C${community.id}-${community.name.toUpperCase()}`, status },
+    { name: `C${community.id} - ${community.name}`, status },
     // TAG MOBILIZATION
-    { name: `M${mobilization.id}-${mobilization.name.toUpperCase()}`, status },
+    { name: `M${mobilization.id} - ${mobilization.name}`, status },
     // TAG WIDGET KIND
     { name: kind.toUpperCase().substring(0, 1) + '' + id, status }
   ];
