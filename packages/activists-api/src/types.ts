@@ -15,6 +15,7 @@ export type ActivistPressure = {
 
 export type Community = {
   id: number
+  name: string
   mailchimp_api_key?: string
   mailchimp_list_id?: string
   email_template_from?: string
@@ -22,6 +23,7 @@ export type Community = {
 
 export type Mobilization = {
   id: number
+  name: string
   community: Community
 };
 
@@ -62,27 +64,27 @@ export interface IBaseAction<T> {
   action?: T
   activist: Activist
   widget: Widget
-};
+}
 
 export interface IBaseActionArgs {
   input?: any
   activist: ActivistInput
   widget_id: number
-};
+}
 
 export interface IPreviousData {
   activist: Activist
   widget: Widget
-};
+}
 
 export interface IActionData {
   data: any
   syncronize: DoneAction
-};
+}
 
 export interface IResolverData {
   data: any
-};
+}
 
 export type DoneAction = () => Promise<any>;
 export type Resolver = (_: void, args: IBaseActionArgs) => Promise<IResolverData>;

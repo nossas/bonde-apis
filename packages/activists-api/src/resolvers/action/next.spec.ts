@@ -29,8 +29,10 @@ describe('next proccess on BaseAction mailchimp tests', () => {
       block: {
         mobilization: {
           id: 234,
+          name: 'name mobilization',
           community: {
             id: 103,
+            name: 'name community',
             mailchimp_api_key: 'xxxxx-us10',
             mailchimp_list_id: 'xxxxx',
             email_template_from: 'Test <test@community.org>'
@@ -79,6 +81,7 @@ describe('next proccess on BaseAction mailchimp tests', () => {
             ...opts.widget.block.mobilization,
             community: {
               id: opts.widget.block.mobilization.community.id,
+              name: opts.widget.block.mobilization.community.name,
               email_template_from: opts.widget.block.mobilization.community.email_template_from
             }
           }

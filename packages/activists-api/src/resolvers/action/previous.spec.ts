@@ -44,8 +44,10 @@ describe('previous proccess on BaseAction get widget and activist', () => {
       block: {
         mobilization: {
           id: 234,
+          name: 'name mobilization',
           community: {
             id: 103,
+            name: 'name community',
             mailchimp_api_key: 'xxxxx-us10',
             mailchimp_list_id: 'xxxxx',
           }

@@ -29,8 +29,10 @@ describe('mailchimp function tests', () => {
     block: {
       mobilization: {
         id: 6,
+        name: 'name mobilization',
         community: {
           id: 1,
+          name: 'name community',
           mailchimp_api_key: 'xxx-us10',
           mailchimp_list_id: 'xxx'
         }
@@ -53,10 +55,10 @@ describe('mailchimp function tests', () => {
   });
 
   it('tags function should be return a COMMUNITY, MOBILIZATION and ACTION tags', () => {
-    const { id, kind, block: { mobilization } } = widget;
+    const { id, kind, block: { mobilization: { community, ...mobilization } } } = widget;
     const expected = [
-      { name: 'C' + mobilization.community.id, status: 'active' },
-      { name: 'M' + mobilization.id, status: 'active' },
+      { name: `C${community.id}-${community.name.toUpperCase()}` , status: 'active' },
+      { name: `M${mobilization.id}-${mobilization.name.toUpperCase()}`, status: 'active' },
       { name: kind.toUpperCase().substring(0, 1) + '' + id, status: 'active' }
     ];
 

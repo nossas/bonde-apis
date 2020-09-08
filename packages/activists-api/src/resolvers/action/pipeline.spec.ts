@@ -23,8 +23,10 @@ describe('tests to pipeline functions execute', () => {
       block: {
         mobilization: {
           id: 234,
+          name: 'name mobilization',
           community: {
             id: 103,
+            name: 'name community',
             mailchimp_api_key: 'xxxxx-us10',
             mailchimp_list_id: 'xxxxx',
           }

@@ -27,7 +27,7 @@ export default async <T>({ activist, widget }: IBaseAction<T>, done: DoneAction)
 
   if (!!sender_name && !!sender_email) {
     notifyOpts.email_from = `${sender_name} <${sender_email}>`;
-  };
+  }
 
   await NotificationsAPI.send(notifyOpts);
 

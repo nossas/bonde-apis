@@ -32,8 +32,10 @@ describe('actions functions tests', () => {
     block: {
       mobilization: {
         id: 1,
+        name: 'name mobilization',
         community: {
           id: 1,
+          name: 'name community',
           mailchimp_api_key: 'xxx-us10',
           mailchimp_list_id: 'xxx'
         }
