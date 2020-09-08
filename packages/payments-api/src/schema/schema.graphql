@@ -32,6 +32,7 @@ type Recipient {
 }
 
 input BankAccountInput {
+  date_created: String
   object: String
   id: Int
   bank_code: String!
@@ -51,7 +52,7 @@ input RecipientInput {
   id: String
   transfer_enabled: Boolean!
   transfer_interval: String!
-  transfer_day: Int!
+  transfer_day: String!
   bank_account: BankAccountInput
 }
 

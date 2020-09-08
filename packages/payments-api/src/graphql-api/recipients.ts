@@ -8,6 +8,7 @@ export const queries = {
       update_recipients(_set: $update_fields, where: { id: { _eq: $id } }) {
         returning {
           id
+          pagarme_recipient_id,
           transfer_day: recipient(path: "transfer_day")
           transfer_interval: recipient(path: "transfer_interval")
           transfer_enabled: recipient(path: "transfer_enabled")
@@ -21,6 +22,7 @@ export const queries = {
       insert_recipients(objects: $input) {
         returning {
           id
+          pagarme_recipient_id,
           transfer_day: recipient(path: "transfer_day")
           transfer_interval: recipient(path: "transfer_interval")
           transfer_enabled: recipient(path: "transfer_enabled")
