@@ -10,8 +10,10 @@ export const queries = {
         block {
           mobilization {
             id
+            name
             community {
               id
+              name
               mailchimp_api_key
               mailchimp_list_id
               email_template_from

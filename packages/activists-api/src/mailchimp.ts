@@ -18,13 +18,13 @@ type Tag = {
 }
 
 export const tags = (widget: Widget): Tag[] => {
-  const { id, kind, block: { mobilization } } = widget;
+  const { id, kind, block: { mobilization: { community, ...mobilization } } } = widget;
   const status = 'active';
   return [
     // TAG COMMUNITY
-    { name: 'C' + mobilization.community.id, status },
+    { name: `C${community.id}-${community.name}`, status },
     // TAG MOBILIZATION
-    { name: 'M' + mobilization.id, status },
+    { name: `M${mobilization.id}-${mobilization.name}`, status },
     // TAG WIDGET KIND
     { name: kind.toUpperCase().substring(0, 1) + '' + id, status }
   ];
