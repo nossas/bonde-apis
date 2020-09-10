@@ -1,5 +1,32 @@
+type Widget {
+  id: Int!
+  kind: String!
+}
+
+type Model {
+  id: Int!
+  name: String!
+}
+
+type ActivistAction {
+  id: Int!
+  email: String!
+  name: String!
+  first_name: String
+  last_name: String
+  phone: String
+  city: String
+}
+
+type Action {
+  widget: Widget
+  mobilization: Model
+  community: Model
+  activist: ActivistAction
+}
+
 type Query {
-  activists_by_community: String!
+  unsyncronized_actions(community_id: Int!): [Action]
 }
 
 scalar JSON
@@ -30,11 +57,6 @@ input FormEntryInput {
 
 input EmailPressureInput {
   target: String
-}
-
-input Action {
-  donation: DonationInput
-  email_pressure: EmailPressureInput
 }
 
 input ActivistInput {

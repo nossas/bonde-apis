@@ -23,7 +23,7 @@ export const queries = {
       update_activist_pressures(
         where: { id: { _eq: $id } },
         _set: {
-          synchronized: true,
+          syncronized: true,
           mailchimp_syncronization_at: $sync_at
         }
       ) {
@@ -48,7 +48,7 @@ export const queries = {
       update_form_entries(
         where: { id: { _eq: $id } },
         _set: {
-          synchronized: true,
+          syncronized: true,
           mailchimp_syncronization_at: $sync_at
         }
       ) {
