@@ -61,6 +61,7 @@ describe('actions functions tests', () => {
         const expectedPressure = {
           activist_id: activist.id,
           widget_id: widget.id,
+          mobilization_id: widget.block.mobilization.id,
           cached_community_id: widget.block.mobilization.community.id
         };
         expect(mockedActions.pressure).toBeCalledWith(expectedPressure);

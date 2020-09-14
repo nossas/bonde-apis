@@ -25,6 +25,7 @@ export const create_email_pressure = async ({ widget, activist }: IBaseAction<an
   const { id, created_at } = await ActionsAPI.pressure({
     activist_id: activist.id,
     widget_id: widget.id,
+    mobilization_id: widget.block.mobilization.id,
     cached_community_id: widget.block.mobilization.community.id
   });
 

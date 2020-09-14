@@ -1,10 +1,16 @@
 import { ActivistPressure } from '../types';
 import fetch from './client';
 
-interface Pressure {
+interface WidgetAction {
   activist_id: number
   cached_community_id: number
+  mobilization_id: number
   widget_id: number
+}
+
+
+interface Pressure extends WidgetAction {
+  targets?: string
 }
 
 export const queries = {
@@ -83,10 +89,7 @@ export const pressure_sync_done = async ({ id, sync_at }: DoneOpts): Promise<any
   return data.update_activist_pressures.returning[0];
 };
 
-type FormEntry = {
-  activist_id: number
-  widget_id: number
-  cached_community_id: number
+interface FormEntry extends WidgetAction {
   // JSON
   fields: string
 }

@@ -82,6 +82,7 @@ describe('tests on api graphql', () => {
     const input = {
       activist_id: 2,
       cached_community_id: 1,
+      mobilization_id: 3,
       widget_id: 2
     }
     const graphqQLResponse = { data: { insert_activist_pressures: { returning: [{ id: 2 }] } } };

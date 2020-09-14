@@ -7,6 +7,7 @@ export const create_form_entry = async ({ action, activist, widget }: IBaseActio
   const { id, created_at } = await ActionsAPI.send_form({
     activist_id: activist.id,
     widget_id: widget.id,
+    mobilization_id: widget.block.mobilization.id,
     cached_community_id: widget.block.mobilization.community.id,
     fields: JSON.stringify(action?.fields || []),
   });
