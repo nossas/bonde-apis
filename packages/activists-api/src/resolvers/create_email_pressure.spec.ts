@@ -62,7 +62,8 @@ describe('actions functions tests', () => {
           activist_id: activist.id,
           widget_id: widget.id,
           mobilization_id: widget.block.mobilization.id,
-          cached_community_id: widget.block.mobilization.community.id
+          cached_community_id: widget.block.mobilization.community.id,
+          targets: widget.settings.targets
         };
         expect(mockedActions.pressure).toBeCalledWith(expectedPressure);
       });
