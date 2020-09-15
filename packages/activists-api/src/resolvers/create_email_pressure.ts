@@ -5,6 +5,8 @@ import makeActionResolver from './action';
 
 type PressureAction = {
   targets_id?: string
+  email_subject?: string
+  email_body?: string
 }
 
 /**
@@ -15,7 +17,7 @@ type PressureAction = {
  */
 export const create_email_pressure = async ({ widget, activist, action }: IBaseAction<PressureAction>): Promise<IActionData> => {
   const { targets: settingsTargets, pressure_subject, pressure_body, } = widget.settings;
-  const { targets_id } = action as PressureAction;
+  const { targets_id, email_subject, email_body } = action || {};
 
   let targets = '';
   try {
@@ -29,8 +31,8 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
 
   const mailInput = targets.split(';').map((target: string) => ({
     context: { activist, widget },
-    body: pressure_body,
-    subject: pressure_subject,
+    body: email_body || pressure_body,
+    subject: email_subject || pressure_subject,
     email_from: `${activist.name} <${activist.email}>`,
     email_to: target
   }));
