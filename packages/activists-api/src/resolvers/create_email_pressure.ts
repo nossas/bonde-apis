@@ -3,14 +3,29 @@ import * as NotificationsAPI from '../graphql-api/notifications';
 import * as ActionsAPI from '../graphql-api/actions';
 import makeActionResolver from './action';
 
+type PressureAction = {
+  targets_id?: string
+}
+
 /**
  * Make a pressure to email using Notifications and Actions API
  * 
  * @param widget
  * @param activist 
  */
-export const create_email_pressure = async ({ widget, activist }: IBaseAction<any>): Promise<IActionData> => {
-  const { targets, pressure_subject, pressure_body, } = widget.settings;
+export const create_email_pressure = async ({ widget, activist, action }: IBaseAction<PressureAction>): Promise<IActionData> => {
+  const { targets: settingsTargets, pressure_subject, pressure_body, } = widget.settings;
+  const { targets_id } = action as PressureAction;
+
+  let targets = '';
+  try {
+    const group = JSON.parse(settingsTargets).filter((g: any) => g.value === targets_id)[0];
+    if (!!group) {
+      targets = group.targets
+    }
+  } catch (e) {
+    targets = settingsTargets
+  }
 
   const mailInput = targets.split(';').map((target: string) => ({
     context: { activist, widget },
@@ -27,7 +42,7 @@ export const create_email_pressure = async ({ widget, activist }: IBaseAction<an
     widget_id: widget.id,
     mobilization_id: widget.block.mobilization.id,
     cached_community_id: widget.block.mobilization.community.id,
-    targets: widget.settings.targets
+    targets: targets
   });
 
   return {

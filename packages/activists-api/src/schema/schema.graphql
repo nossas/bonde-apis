@@ -56,7 +56,7 @@ input FormEntryInput {
 }
 
 input EmailPressureInput {
-  target: String
+  targets_id: String
 }
 
 input ActivistInput {

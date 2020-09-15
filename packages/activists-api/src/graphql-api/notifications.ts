@@ -18,6 +18,6 @@ export const queries = {
   `
 };
 
-export const send = async (input: NotifyInput): Promise<any> => {
+export const send = async (input: NotifyInput[] | NotifyInput): Promise<any> => {
   return await fetch({ query: queries.send, variables: { input } });
 };
