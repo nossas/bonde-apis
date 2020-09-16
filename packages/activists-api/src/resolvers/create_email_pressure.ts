@@ -1,4 +1,4 @@
-import { IActionData, IBaseAction } from '../types';
+import { IActionData, IBaseAction, GroupTarget } from '../types';
 import * as NotificationsAPI from '../graphql-api/notifications';
 import * as ActionsAPI from '../graphql-api/actions';
 import makeActionResolver from './action';
@@ -16,20 +16,20 @@ type PressureAction = {
  * @param activist 
  */
 export const create_email_pressure = async ({ widget, activist, action }: IBaseAction<PressureAction>): Promise<IActionData> => {
-  const { targets: settingsTargets, pressure_subject, pressure_body, } = widget.settings;
+  const { settings: { targets: settingsTargets, pressure_subject, pressure_body }, pressure_targets } = widget;
   const { targets_id, email_subject, email_body } = action || {};
 
-  let targets = '';
-  try {
-    const group = JSON.parse(settingsTargets).filter((g: any) => g.value === targets_id)[0];
+  let targets: string[] = [];
+  if (pressure_targets && pressure_targets.length > 0) {
+    const group = pressure_targets.filter((g: GroupTarget) => g.identify === targets_id)[0];
     if (!!group) {
-      targets = group.targets
+      targets = group.targets;
     }
-  } catch (e) {
-    targets = settingsTargets
+  } else {
+    targets = settingsTargets.split(';');
   }
 
-  const mailInput = targets.split(';').map((target: string) => ({
+  const mailInput = targets.map((target: string) => ({
     context: { activist, widget },
     body: email_body || pressure_body,
     subject: email_subject || pressure_subject,
@@ -44,7 +44,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     widget_id: widget.id,
     mobilization_id: widget.block.mobilization.id,
     cached_community_id: widget.block.mobilization.community.id,
-    targets: targets
+    targets: targets.join(';')
   });
 
   return {

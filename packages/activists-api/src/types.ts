@@ -31,11 +31,18 @@ export type Block = {
   mobilization: Mobilization
 };
 
+export type GroupTarget = {
+  identify: string
+  label: string
+  targets: string[]
+}
+
 export type Widget = {
   id: number
   settings: any
   kind: string
   block: Block
+  pressure_targets?: GroupTarget[]
 };
 
 export type ActivistInput = {
