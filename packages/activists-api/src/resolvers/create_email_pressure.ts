@@ -33,18 +33,14 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
   }
 
   const mailInput = targets.map((target: string) => ({
-    context: { activist, widget },
+    context: { activist },
     body: email_body || pressure_body,
     subject: email_subject || pressure_subject,
     email_from: `${activist.name} <${activist.email}>`,
     email_to: target
   }));
 
-  try {
-    await NotificationsAPI.send(mailInput);
-  } catch (e) {
-    logger.error(e);
-  }
+  await NotificationsAPI.send(mailInput);
 
   logger.child({ mailInput }).info('NotificationsAPI');
 
