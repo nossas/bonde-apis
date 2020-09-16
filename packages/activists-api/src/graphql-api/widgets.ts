@@ -7,7 +7,11 @@ export const queries = {
         id
         settings
         kind
-        pressure_targets
+        pressure_targets {
+          identify
+          label
+          targets
+        }
         block {
           mobilization {
             id

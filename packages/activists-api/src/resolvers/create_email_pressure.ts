@@ -1,3 +1,4 @@
+import logger from '../logger';
 import { IActionData, IBaseAction, GroupTarget } from '../types';
 import * as NotificationsAPI from '../graphql-api/notifications';
 import * as ActionsAPI from '../graphql-api/actions';
@@ -16,6 +17,7 @@ type PressureAction = {
  * @param activist 
  */
 export const create_email_pressure = async ({ widget, activist, action }: IBaseAction<PressureAction>): Promise<IActionData> => {
+  logger.info('create_email_pressure')
   const { settings: { targets: settingsTargets, pressure_subject, pressure_body }, pressure_targets } = widget;
   const { targets_id, email_subject, email_body } = action || {};
 
@@ -25,6 +27,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     if (!!group) {
       targets = group.targets;
     }
+    logger.child({ targets }).info('pressure_targets is true');
   } else {
     targets = settingsTargets.split(';');
   }
@@ -37,7 +40,13 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     email_to: target
   }));
 
-  await NotificationsAPI.send(mailInput);
+  try {
+    await NotificationsAPI.send(mailInput);
+  } catch (e) {
+    logger.error(e);
+  }
+
+  logger.child({ mailInput }).info('NotificationsAPI');
 
   const { id, created_at } = await ActionsAPI.pressure({
     activist_id: activist.id,
