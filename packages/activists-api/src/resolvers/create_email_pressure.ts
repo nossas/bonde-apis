@@ -17,7 +17,6 @@ type PressureAction = {
  * @param activist
  */
 export const create_email_pressure = async ({ widget, activist, action }: IBaseAction<PressureAction>): Promise<IActionData> => {
-  logger.info('create_email_pressure')
   const { settings: { targets: settingsTargets, pressure_subject, pressure_body }, pressure_targets } = widget;
   const { targets_id, email_subject, email_body } = action || {};
 
@@ -28,21 +27,23 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     if (!!group) {
       targets = group.targets;
     }
-    logger.child({ targets }).info('pressure_targets is true');
   } else {
     targets = settingsTargets.split(';');
   }
 
+  // Subject and Body orders
+  // 1 Changed by activists
+  // 2 Configured in group of targets
+  // 3 Configured in settings of widget
   const mailInput = targets.map((target: string) => ({
     context: { activist },
-    body: email_body || pressure_body,
-    subject: email_subject || pressure_subject,
+    body: email_body || group?.email_body || pressure_body,
+    subject: email_subject || group?.email_subject || pressure_subject,
     email_from: `${activist.name} <${activist.email}>`,
     email_to: target
   }));
 
   await NotificationsAPI.send(mailInput);
-
   logger.child({ mailInput }).info('NotificationsAPI');
 
   const { id, created_at } = await ActionsAPI.pressure({
@@ -55,6 +56,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
       targets: targets
     }
   });
+  logger.child({ id, created_at }).info('ActionsAPI');
 
   return {
     data: { activist_pressure_id: id },

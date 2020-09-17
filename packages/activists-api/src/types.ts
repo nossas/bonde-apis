@@ -35,6 +35,8 @@ export type GroupTarget = {
   identify: string
   label: string
   targets: string[]
+  email_subject?: string
+  email_body?: string
 }
 
 export type Widget = {

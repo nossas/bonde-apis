@@ -11,6 +11,8 @@ export const queries = {
           identify
           label
           targets
+          email_subject
+          email_body
         }
         block {
           mobilization {
