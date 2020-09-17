@@ -50,7 +50,7 @@ describe('actions functions tests', () => {
     return pressure({ widget, activist })
       .then(() => {
         const expectedMail = widget.settings.targets.split(';').map((target: string) => ({
-          context: { activist, widget },
+          context: { activist },
           body: widget.settings.pressure_body,
           subject: widget.settings.pressure_subject,
           email_from: `${activist.name} <${activist.email}>`,
@@ -63,7 +63,7 @@ describe('actions functions tests', () => {
           widget_id: widget.id,
           mobilization_id: widget.block.mobilization.id,
           cached_community_id: widget.block.mobilization.community.id,
-          targets: widget.settings.targets
+          targets: { targets: widget.settings.targets.split(';') }
         };
         expect(mockedActions.pressure).toBeCalledWith(expectedPressure);
       });

@@ -10,7 +10,7 @@ interface WidgetAction {
 
 
 interface Pressure extends WidgetAction {
-  targets?: string
+  targets?: any
 }
 
 export const queries = {

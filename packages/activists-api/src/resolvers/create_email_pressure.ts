@@ -14,7 +14,7 @@ type PressureAction = {
  * Make a pressure to email using Notifications and Actions API
  * 
  * @param widget
- * @param activist 
+ * @param activist
  */
 export const create_email_pressure = async ({ widget, activist, action }: IBaseAction<PressureAction>): Promise<IActionData> => {
   logger.info('create_email_pressure')
@@ -22,8 +22,9 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
   const { targets_id, email_subject, email_body } = action || {};
 
   let targets: string[] = [];
+  let group: GroupTarget | null = null;
   if (pressure_targets && pressure_targets.length > 0) {
-    const group = pressure_targets.filter((g: GroupTarget) => g.identify === targets_id)[0];
+    group = pressure_targets.filter((g: GroupTarget) => g.identify === targets_id)[0];
     if (!!group) {
       targets = group.targets;
     }
@@ -49,7 +50,10 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     widget_id: widget.id,
     mobilization_id: widget.block.mobilization.id,
     cached_community_id: widget.block.mobilization.community.id,
-    targets: targets.join(';')
+    targets: {
+      group: group?.identify,
+      targets: targets
+    }
   });
 
   return {
