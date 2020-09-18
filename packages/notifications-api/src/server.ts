@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import { ApolloServer } from 'apollo-server-express';
 import depthLimit from 'graphql-depth-limit';
 import { createServer } from 'http';
@@ -12,11 +13,12 @@ import logger from './logger';
 const app = express();
 const server = new ApolloServer({
   schema: schema,
-  validationRules: [depthLimit(7)]
+  validationRules: [depthLimit(9)]
 } as any);
 const expressLogger = expressPino({ logger });
 
 app.use('*', cors());
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(compression());
 app.use(expressLogger);
 

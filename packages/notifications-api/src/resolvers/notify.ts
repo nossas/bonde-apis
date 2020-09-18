@@ -20,7 +20,6 @@ export default async (_: void, args: NotifyArgs): Promise<{ status: string }> =>
 
   args.input.forEach(async (settings: MailSettings) => {
     const mail = new Mail(settings).json();
-    // logger.child({ email_to: mail.email_to, email_from: mail.email_from }).info('loop send mail');
     await send(mail);
   });
 
