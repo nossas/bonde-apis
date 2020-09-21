@@ -1,5 +1,6 @@
 import { ActivistPressure } from '../types';
 import fetch from './client';
+import logger from '../logger';
 
 interface WidgetAction {
   activist_id: number
@@ -67,11 +68,12 @@ export const queries = {
 };
 
 export const pressure = async (input: Pressure): Promise<ActivistPressure> => {
-  const { data } = await fetch({
+  const { data, errors } = await fetch({
     query: queries.pressure,
     variables: { input }
   });
 
+  logger.child({ data, errors }).info('pressure');
   return data.insert_activist_pressures.returning[0];
 };
 
