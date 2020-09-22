@@ -1,4 +1,5 @@
 import fetch from './client';
+import logger from '../logger';
 
 export interface Template {
   subject_template: string
@@ -46,6 +47,7 @@ export interface NotifyResponse {
 }
 
 export const send = async (input: Notify, template?: FilterTemplate): Promise<NotifyResponse> => {
+  logger.child({ template }).info('start notification...');
   if (!!template) {
     const { subject_template, body_template } = await findTemplate(template);
     input.subject = subject_template;
@@ -60,7 +62,8 @@ export const send = async (input: Notify, template?: FilterTemplate): Promise<No
     }
   `;
 
-  const resp = await fetch({ query: insertMailMutation, variables: { input } });
+  const { data, errors } = await fetch({ query: insertMailMutation, variables: { input } });
 
-  return resp.data;
+  logger.child({ data, errors }).info('done notification!');
+  return data;
 };

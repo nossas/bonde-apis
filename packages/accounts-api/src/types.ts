@@ -14,4 +14,5 @@ export interface Register {
   email: string
   code: string
   is_new_user: boolean
+  isNewUser: boolean
 }

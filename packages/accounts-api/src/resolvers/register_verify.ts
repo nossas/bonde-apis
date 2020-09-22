@@ -9,6 +9,7 @@ type RegisterVerify = {
 }
 
 export default async (root: void, args: RegisterVerify): Promise<Register> => {
+  logger.child({ args }).info('start register_verify...');
   const { email, code } = args
 
   // Validate fields
@@ -24,9 +25,9 @@ export default async (root: void, args: RegisterVerify): Promise<Register> => {
     // Done invite to not reuse
     await InvitationsAPI.done(invite.id);
     // Response to client that users has relationship
-    return { code, email, is_new_user: false };
+    return { code, email, is_new_user: false, isNewUser: false };
   }
 
   // Response to client should continuous register user
-  return { code, email, is_new_user: true };
+  return { code, email, is_new_user: false, isNewUser: true };
 };

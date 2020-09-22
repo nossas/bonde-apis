@@ -14,6 +14,7 @@ type Register {
   email: String!
   code: String!
   is_new_user: Boolean!
+  isNewUser: Boolean!
 }
 
 input RegisterInput {
@@ -34,6 +35,7 @@ type Query {
 type Mutation {
   authenticate(email: String, password: String): JWT
   register(input: RegisterInput): JWT
+  register_verify(email: String, code: String): Register
   reset_password_change(token: String, password: String): JWT
   reset_password_request(email: String, locale: String, callback_url: String): Void
 }

@@ -3,6 +3,8 @@ import authenticate from './authenticate';
 import reset_password_change from './reset_password_change';
 import reset_password_request from './reset_password_request';
 import reset_password_verify from './reset_password_verify';
+import register_verify from './register_verify';
+import register from './register';
 
 const Void = new GraphQLScalarType({
   name: 'Void',
@@ -24,10 +26,13 @@ const Void = new GraphQLScalarType({
 
 const resolverMap = {
   Query: {
-    reset_password_verify
+    reset_password_verify,
+    register_verify
   },
   Mutation: {
     authenticate,
+    register,
+    register_verify,
     reset_password_change,
     reset_password_request
   },
