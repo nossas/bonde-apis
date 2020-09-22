@@ -1,4 +1,5 @@
 import fetch from './client';
+import logger from '../logger';
 
 export interface User {
   id: number
@@ -88,8 +89,9 @@ export const find = async (params: any | UserFilter): Promise<User[]> => {
     where = Object.assign(where, { [field]: { _eq: params[field] } })
   });
   
-  const { data } = await fetch({ query: UserFilterQuery, variables: { where } });
+  const { data, errors } = await fetch({ query: UserFilterQuery, variables: { where } });
   
+  logger.child({ data, errors }).info('find user');
   return data.users;
 };
 

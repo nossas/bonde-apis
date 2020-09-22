@@ -1,6 +1,7 @@
 import { Register } from '../types';
 import * as InvitationsAPI from '../graphql-api/invitations';
 import * as UsersAPI from '../graphql-api/users';
+import logger from '../logger';
 
 type RegisterVerify = {
   email: string
@@ -14,6 +15,8 @@ export default async (root: void, args: RegisterVerify): Promise<Register> => {
   // find throw error when not found
   const invite = await InvitationsAPI.find({ code, email });
   const user = (await UsersAPI.find({ email }))[0];
+
+  logger.child({ invite, user }).info('register_verify');
 
   if (user) {
     // Relationship community and users
