@@ -4,6 +4,7 @@ import logger from '../logger';
 export interface Template {
   subject_template: string
   body_template: string
+  locale: string
 }
 
 export interface FilterTemplate {
@@ -16,16 +17,21 @@ export const findTemplate = async (filter: FilterTemplate): Promise<Template> =>
 		query findTemplate ($where: notification_templates_bool_exp) {
 		  notification_templates(where: $where) {
 		    subject_template
-		    body_template
+        body_template
+        locale
 		  }
 		}
 	`;
 
-  const where = { label: { _eq: filter.label }, locale: { _ilike: filter.locale } };
+  const where = { label: { _eq: filter.label } };
   const resp = await fetch({ query: FilterNotificationTemplateQuery, variables: { where } });
 
   if (resp.data && resp.data.notification_templates.length > 0) {
-    return resp.data.notification_templates[0];
+    const template = resp.data.notification_templates.filter(
+      (t: any) => t.locale.toLowerCase() === filter.locale.toLocaleLowerCase()
+    )[0];
+    if (!!template) return template
+    else return resp.data.notification_templates[0];
   }
 
   throw new Error('template_not_found');
