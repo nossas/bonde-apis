@@ -5,6 +5,7 @@ import reset_password_request from './reset_password_request';
 import reset_password_verify from './reset_password_verify';
 import register_verify from './register_verify';
 import register from './register';
+import send_invitation from './send_invitation';
 
 const Void = new GraphQLScalarType({
   name: 'Void',
@@ -34,7 +35,8 @@ const resolverMap = {
     register,
     register_verify,
     reset_password_change,
-    reset_password_request
+    reset_password_request,
+    send_invitation
   },
   Void
 };

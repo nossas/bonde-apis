@@ -8,11 +8,15 @@ import expressPino from 'express-pino-logger';
 import schema from './schema';
 import logger from './logger';
 import config from './config';
+import { handle_context } from 'permissions-utils';
+
+if (!config.jwtSecret) throw new Error('No JWT_SECRET provided.');
 
 const app = express();
 const server = new ApolloServer({
   schema: schema,
-  validationRules: [depthLimit(7)]
+  validationRules: [depthLimit(7)],
+  context: handle_context({ jwtSecret: config.jwtSecret, logger })
 } as any);
 const expressLogger = expressPino({ logger });
 

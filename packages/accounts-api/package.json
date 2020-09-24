@@ -12,7 +12,8 @@
   "dependencies": {
     "apollo-fetch": "^0.7.0",
     "bcrypt": "^5.0.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "permissions-utils": "workspace:*"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

@@ -11,6 +11,7 @@ COPY tsconfig*.json ./
 COPY pnpm-workspace.yaml ./
 
 COPY packages packages
+
 COPY utils utils
 
 RUN pnpm m i
