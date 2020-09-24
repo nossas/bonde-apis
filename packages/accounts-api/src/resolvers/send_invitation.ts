@@ -1,3 +1,7 @@
+import md5 from 'md5';
+import urljoin from 'url-join';
+import * as NotificationsAPI from '../graphql-api/notifications';
+import * as CommunitiesAPI from '../graphql-api/communities';
 import { check_user, Roles } from '../permissions';
 
 type InvitationInput = {
@@ -25,6 +29,23 @@ type Invite = {
 
 const send_invitation = async (_: void, args: Args): Promise<Invite> => {
   const { input: { community_id, email, role, user_id } } = args;
+  
+  const community = CommunitiesAPI.get(community_id);
+
+  if (!community) throw new Error('community_id not found');
+  
+  const code: string = md5(`${community_id}-${user_id}-${email}-${role}-${new Date().toISOString()}`);
+
+  const registerUrl: string = process.env.ACCOUNTS_REGISTER_URL || 'http://accounts.bonde.devel:5000/register';
+  const url: string = urljoin(registerUrl, `?code=${code}&email=${email}`);
+
+  const notifyInput = {
+    email_to: email,
+    email_from: process.env.ACCOUNTS_EMAIL_FROM || 'suporte@bonde.org',
+    context: { invite_url: url, community }
+  }
+  // Send email
+  await NotificationsAPI.send(notifyInput, { label: 'invite', locale: 'pt-BR' });
 
   return {
     created_at: new Date().toISOString(),
@@ -34,8 +55,8 @@ const send_invitation = async (_: void, args: Args): Promise<Invite> => {
     role,
     email,
     community_id,
-    code: 'asdasdasdasdasdasd'
+    code
   }
 }
 
-export default check_user(send_invitation, Roles.ADMIN)
+export default check_user(send_invitation, Roles.ADMIN);

@@ -66,6 +66,9 @@ importers:
       apollo-fetch: 0.7.0
       bcrypt: 5.0.0
       jsonwebtoken: 8.5.1
+      md5: 2.3.0
+      permissions-utils: 'link:../../utils/permissions-utils'
+      url-join: 4.0.1
     devDependencies:
       '@types/bcrypt': 3.0.0
       '@types/jsonwebtoken': 8.5.0
@@ -75,6 +78,9 @@ importers:
       apollo-fetch: ^0.7.0
       bcrypt: ^5.0.0
       jsonwebtoken: ^8.5.1
+      md5: ^2.3.0
+      permissions-utils: 'workspace:*'
+      url-join: ^4.0.1
   packages/activists-api:
     dependencies:
       apollo-fetch: 0.7.0
@@ -1945,6 +1951,10 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==
+  /charenc/0.0.2:
+    dev: false
+    resolution:
+      integrity: sha1-wKHS86cJLgN3S/qD8UwPxXkKhmc=
   /chokidar/3.4.1:
     dependencies:
       anymatch: 3.1.1
@@ -2187,6 +2197,10 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==
+  /crypt/0.0.2:
+    dev: false
+    resolution:
+      integrity: sha1-iNf/fsDfuG9xPch7u0LQRNPmxBs=
   /crypto-random-string/2.0.0:
     dev: true
     engines:
@@ -3498,7 +3512,6 @@ packages:
     resolution:
       integrity: sha512-ZMERYes6pDydyuGidse7OsHxtbI7WVeUEozgR/g7rd0xUimYNlvZRE/K2MgZTjWy725IfelLeVcEM97mmtRGXw==
   /is-buffer/1.1.6:
-    dev: true
     resolution:
       integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
   /is-callable/1.2.0:
@@ -4560,6 +4573,14 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
+  /md5/2.3.0:
+    dependencies:
+      charenc: 0.0.2
+      crypt: 0.0.2
+      is-buffer: 1.1.6
+    dev: false
+    resolution:
+      integrity: sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g==
   /media-typer/0.3.0:
     dev: false
     engines:
@@ -6522,6 +6543,10 @@ packages:
     dev: true
     resolution:
       integrity: sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
+  /url-join/4.0.1:
+    dev: false
+    resolution:
+      integrity: sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==
   /url-parse-lax/3.0.0:
     dependencies:
       prepend-http: 2.0.0
