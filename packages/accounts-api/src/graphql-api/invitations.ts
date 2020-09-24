@@ -1,7 +1,7 @@
 import fetch from './client';
 import logger from '../logger';
 
-export interface Community {
+export interface CommunityInfo {
   id: number
   name: string
   image?: string
@@ -18,7 +18,7 @@ export interface Invite {
   email: string
   community_id: number
   code: string
-  community: Community
+  community: CommunityInfo
 }
 
 export interface FilterInvitation {

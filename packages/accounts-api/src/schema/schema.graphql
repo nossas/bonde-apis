@@ -32,7 +32,7 @@ input InvitationInput {
   user_id: Int!
 }
 
-type Community {
+type CommunityInfo {
   id: Int!
   name: String!
   image: String
@@ -47,7 +47,7 @@ type Invite {
   role: Int!
   email: String!
   community_id: Int!
-  communtiy: Community
+  community: CommunityInfo
   code: String!
 }
 
