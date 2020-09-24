@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "name": "permissions-utils",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "postinstall": "yarn build",
+    "clean": "rm -rf node_modules dist",
+    "lint": "eslint . --ext ts,tsx --fix",
+    "test": "jest",
+    "coverage": "jest --coverage"
+  }
+}

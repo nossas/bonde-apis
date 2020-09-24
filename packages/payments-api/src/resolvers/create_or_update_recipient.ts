@@ -1,6 +1,6 @@
 import pagarme from 'pagarme';
 import * as recipients from '../graphql-api/recipients';
-import * as permissions from '../graphql-api/permissions';
+import { check_user, Roles } from '../permissions';
 import config from '../config';
 
 if (!config.pagarmeApiKey) throw new Error('PAGARME_API_KEY not found');
@@ -37,38 +37,6 @@ type RecipientEntity = {
 
 type Args = {
   input: RecipientEntity
-}
-
-type Session = {
-  sub: string
-  role: string
-  user_id: number
-  iat: number
-  aud: string
-}
-
-type Context = {
-  session: Session
-}
-
-enum Roles {
-  USER=2,
-  ADMIN=1
-}
-
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const check_user = (next: any, role: Roles) => async (_: void, args: any, context: Context) => {
-  const { session }: Context = context;
-
-  if (session) {
-    const { input: { community_id } } = args;
-    // Get permission on API-GraphQL (Hasura)
-    const permission = await permissions.get_permission({ user_id: session.user_id, community_id });
-    // Execute only when role is permitted from relationship between community users
-    if (permission?.role === role) return next(_, args, context);
-  }
-  // Permission denied
-  throw new Error('invalid_permission');
 }
 
 const create_or_update = async (_: void, args: Args): Promise<RecipientEntity | undefined> => {

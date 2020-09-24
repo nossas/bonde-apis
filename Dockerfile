@@ -11,7 +11,8 @@ COPY tsconfig*.json ./
 COPY pnpm-workspace.yaml ./
 
 COPY packages packages
+COPY utils utils
 
-RUN pnpm i
+RUN pnpm m i
 
 RUN pnpm m run build

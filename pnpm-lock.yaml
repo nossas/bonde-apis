@@ -106,9 +106,13 @@ importers:
     dependencies:
       apollo-fetch: 0.7.0
       pagarme: 4.12.0
+      permissions-utils: 'link:../../utils/permissions-utils'
     specifiers:
       apollo-fetch: ^0.7.0
       pagarme: ^4.12.0
+      permissions-utils: 'workspace:*'
+  utils/permissions-utils:
+    specifiers: {}
 lockfileVersion: 5.1
 packages:
   /@apollo/protobufjs/1.0.4:
