@@ -1,4 +1,5 @@
 import fetch from './client';
+import logger from '../logger';
 
 export interface Community {
   id: number
@@ -7,10 +8,16 @@ export interface Community {
 }
 
 export interface Invite {
+  created_at: string
+  expired?: any
+  expires?: string
   id: number
-  expired?: boolean
-  expires: Date
+  updated_at: string
+  user_id: number
   role: number
+  email: string
+  community_id: number
+  code: string
   community: Community
 }
 
@@ -37,6 +44,12 @@ export const find = async (variables: FilterInvitation): Promise<Invite> => {
         expired
         expires
         role
+        user_id
+        email
+        created_at
+        updated_at
+        community_id
+        code
         community {
           id
           name
@@ -56,6 +69,40 @@ export const find = async (variables: FilterInvitation): Promise<Invite> => {
 
   throw new Error('invalid_invitation_code');
 };
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const create = async (input: any): Promise<Invite> => {
+  const CreateInvite = `
+    mutation ($input: [invitations_insert_input!]!) {
+      insert_invitations (
+        objects: $input
+      ) {
+        returning {
+          id
+          expired
+          expires
+          role
+          user_id
+          email
+          created_at
+          updated_at
+          community_id
+          code
+          community {
+            id
+            name
+            image
+          }
+        }
+      }
+    }
+  `;
+  const { data, errors } = await fetch({ query: CreateInvite, variables: { input } });
+  if (data && data.insert_invitations) return data.insert_invitations.returning[0];
+  
+  logger.child({ errors }).info('failed to create invite')
+  throw new Error('failed_insert_invitations');
+}
 
 export const done = async (id: number): Promise<Invite> => {
   const UpdateInvitationQuery = `
