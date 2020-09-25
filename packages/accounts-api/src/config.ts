@@ -10,6 +10,7 @@ type Config = {
   jwtSecret: string
   jwtToken?: string
   hasuraSecret?: string
+  accountsRegisterUrl: string
 }
 
 // Accounts API required a JWT_SECRET to create valid tokens
@@ -26,7 +27,8 @@ const config: Config = {
   graphqlHttpUrl: process.env.GRAPHQL_HTTP_URL,
   jwtSecret: process.env.JWT_SECRET,
   jwtToken: process.env.JWT_TOKEN,
-  hasuraSecret: process.env.HASURA_SECRET
+  hasuraSecret: process.env.HASURA_SECRET,
+  accountsRegisterUrl: process.env.ACCOUNTS_REGISTER_URL || 'http://accounts.bonde.devel:5000/register'
 };
 
 export default config;

@@ -1,6 +1,7 @@
 import md5 from 'md5';
 import urljoin from 'url-join';
 import logger from '../logger';
+import config from '../config';
 import * as NotificationsAPI from '../graphql-api/notifications';
 import * as InvitationsAPI from '../graphql-api/invitations';
 import { check_user, Roles } from '../permissions';
@@ -20,9 +21,7 @@ const send_invitation = async (_: void, args: Args): Promise<InvitationsAPI.Invi
   const { input: { community_id, email, role, user_id } } = args;
   
   const code: string = md5(`${community_id}-${user_id}-${email}-${role}-${new Date().toISOString()}`);
-
-  const registerUrl: string = process.env.ACCOUNTS_REGISTER_URL || 'http://accounts.bonde.devel:5000/register';
-  const url: string = urljoin(registerUrl, `?code=${code}&email=${email}`);
+  const url: string = urljoin(config.accountsRegisterUrl, `?code=${code}&email=${email}`);
   const expires: string = new Date(new Date().setDate(new Date().getDate() + 5)).toISOString();
 
   const invite = await InvitationsAPI.create({
