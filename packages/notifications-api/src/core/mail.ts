@@ -17,11 +17,17 @@ class Mail {
     this.engine.configure({ autoescape: true });
   }
 
+  get_body (): string {
+    if (new RegExp(/\<!DOCTYPE/).test(this.settings.body)) {
+      return this.settings.body;
+    }
+    return this.settings.body.replace(/\n/g, '<br/>');
+  }
+
   json (): any {
     const {
       email_to,
       email_from,
-      body,
       context,
       subject
     } = this.settings;
@@ -30,7 +36,7 @@ class Mail {
       to: email_to,
       from: email_from,
       subject: this.engine.renderString(subject, context),
-      html: this.engine.renderString(body.replace(/\n/g, '<br/>'), context)
+      html: this.engine.renderString(this.get_body(), context)
     };
   }
 }
