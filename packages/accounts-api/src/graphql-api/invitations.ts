@@ -35,7 +35,7 @@ export const find = async (variables: FilterInvitation): Promise<Invite> => {
           _and: {
             code: { _eq: $code },
             email: { _eq: $email },
-            expired: { _is_null: true },
+            expired: { _neq: true },
             expires: { _gte: $expires }
           }
         }

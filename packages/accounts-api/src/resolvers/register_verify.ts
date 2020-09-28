@@ -29,5 +29,5 @@ export default async (root: void, args: RegisterVerify): Promise<Register> => {
   }
 
   // Response to client should continuous register user
-  return { code, email, is_new_user: false, isNewUser: true };
+  return { code, email, is_new_user: true, isNewUser: true };
 };
