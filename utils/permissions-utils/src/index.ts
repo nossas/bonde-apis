@@ -25,9 +25,9 @@ export const handle_check_user = ({ fetch, logger }: Options) => (next: any, rol
   if (session) {
     const { input: { community_id } } = args;
     // Get permission on API-GraphQL (Hasura)
-    const permission = await get_permission({ user_id: session.user_id, community_id });
+    const { permission, user } = await get_permission({ user_id: session.user_id, community_id });
     // Execute only when role is permitted from relationship between community users
-    if (permission?.role === role) return next(_, args, context);
+    if (permission?.role === role || user.is_admin) return next(_, args, context);
   }
   // Permission denied
   throw new Error('invalid_permission');
