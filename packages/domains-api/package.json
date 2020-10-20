@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "apollo-fetch": "^0.7.0",
-    "aws-sdk": "^2.773.0",
+    "aws-sdk": "^2.774.0",
     "permissions-utils": "workspace:*"
   }
 }

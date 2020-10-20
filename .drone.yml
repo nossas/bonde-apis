@@ -66,6 +66,19 @@ pipeline:
       status: success
       event: [push]
 
+  domains-staging-deploy:
+    image: peloton/drone-rancher
+    url: http://cluster.bonde.org
+    service: apis/domains
+    group: deploying
+    docker_image: nossas/bonde-apis:builder
+    timeout: 360
+    confirm: true
+    secrets: [ rancher_access_key, rancher_secret_key ]
+    when:
+      status: success
+      event: [push]
+
   accounts-production-deploy:
     image: peloton/drone-rancher
     url: http://cluster.bonde.org

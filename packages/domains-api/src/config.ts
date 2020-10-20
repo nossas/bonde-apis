@@ -12,6 +12,7 @@ type Config = {
   hasuraSecret?: string
   awsAccessKey?: string
   awsSecretKey?: string
+  awsRoute53Region: string
 }
 
 const config: Config = {
@@ -23,7 +24,8 @@ const config: Config = {
   hasuraSecret: process.env.HASURA_SECRET,
   graphqlHttpUrl: process.env.GRAPHQL_HTTP_URL,
   awsAccessKey: process.env.AWS_ACCESS_KEY,
-  awsSecretKey: process.env.AWS_SECRET_KEY
+  awsSecretKey: process.env.AWS_SECRET_KEY,
+  awsRoute53Region: process.env.AWS_ROUTE53_REGION || 'sa-east-1'
 };
 
 export default config;

@@ -1,9 +1,9 @@
-import create_or_update_recipient from './create_or_update_recipient';
+import create_domain from './create_domain';
 
 const resolverMap = {
   Query: {},
   Mutation: {
-    create_or_update_recipient
+    create_domain
   }
 };
 
