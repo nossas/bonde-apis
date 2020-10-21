@@ -19,7 +19,13 @@ export const queries = {
   // `,
   create_dns_hosted_zone: `  
     mutation CreateRecipient($input: dns_hosted_zones_insert_input!) {
-      insert_dns_hosted_zones_one(object: $input) {
+      insert_dns_hosted_zones_one(
+        object: $input,
+        on_conflict: {
+          constraint: dns_hosted_zones_domain_name_key,
+          update_columns: [response]
+        }
+      ) {
         id
         domain_name
         ns_ok
@@ -68,10 +74,11 @@ export type DNSHostedZoneResult = {
   ns_ok: boolean
   created_at: string
   updated_at: string
+  community_id: number
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const insert = async (input: DNSHostedZoneInput): Promise<DNSHostedZoneResult> => {
+export const upsert = async (input: DNSHostedZoneInput): Promise<DNSHostedZoneResult> => {
   const { data, errors }: any = await fetch({
     query: queries.create_dns_hosted_zone,
     variables: { input }
