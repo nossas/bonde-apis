@@ -2,24 +2,37 @@ workspace:
   base: /code
 
 pipeline:
-  publish-build:
+  publish-staging-build:
     image: plugins/docker
     repo: nossas/bonde-apis
     dockerfile: Dockerfile
     secrets: [ docker_username, docker_password ]
     group: builder
     tags:
-      - builder
+      - ${DRONE_BRANCH/\//-}
     when:
       status: success
-      event: [push, tag]
+      event: [push]
+
+  publish-production-build:
+    image: plugins/docker
+    repo: nossas/bonde-apis
+    dockerfile: Dockerfile
+    secrets: [ docker_username, docker_password ]
+    group: builder
+    tags:
+      - ${DRONE_TAG##v}
+      - latest
+    when:
+      status: success
+      event: [tag]
   
   accounts-staging-deploy:
     image: peloton/drone-rancher
     url: http://cluster.bonde.org
     service: apis/accounts
     group: deploying
-    docker_image: nossas/bonde-apis:builder
+    docker_image: nossas/bonde-apis:${DRONE_BRANCH/\//-}
     timeout: 360
     confirm: true
     secrets: [ rancher_access_key, rancher_secret_key ]
@@ -32,7 +45,7 @@ pipeline:
     url: http://cluster.bonde.org
     service: apis/payments
     group: deploying
-    docker_image: nossas/bonde-apis:builder
+    docker_image: nossas/bonde-apis:${DRONE_BRANCH/\//-}
     timeout: 360
     confirm: true
     secrets: [ rancher_access_key, rancher_secret_key ]
@@ -45,7 +58,7 @@ pipeline:
     url: http://cluster.bonde.org
     service: apis/notifications
     group: deploying
-    docker_image: nossas/bonde-apis:builder
+    docker_image: nossas/bonde-apis:${DRONE_BRANCH/\//-}
     timeout: 360
     confirm: true
     secrets: [ rancher_access_key, rancher_secret_key ]
@@ -58,7 +71,7 @@ pipeline:
     url: http://cluster.bonde.org
     service: apis/activists
     group: deploying
-    docker_image: nossas/bonde-apis:builder
+    docker_image: nossas/bonde-apis:${DRONE_BRANCH/\//-}
     timeout: 360
     confirm: true
     secrets: [ rancher_access_key, rancher_secret_key ]
@@ -71,7 +84,7 @@ pipeline:
     url: http://cluster.bonde.org
     service: apis/accounts
     group: deploying
-    docker_image: nossas/bonde-apis:builder
+    docker_image: "nossas/bonde-apis:${DRONE_TAG##v}"
     timeout: 360
     confirm: true
     secrets: [ rancher_access_key, rancher_secret_key ]
@@ -84,7 +97,7 @@ pipeline:
     url: http://cluster.bonde.org
     service: apis/payments
     group: deploying
-    docker_image: nossas/bonde-apis:builder
+    docker_image: "nossas/bonde-apis:${DRONE_TAG##v}"
     timeout: 360
     confirm: true
     secrets: [ rancher_access_key, rancher_secret_key ]
@@ -97,7 +110,7 @@ pipeline:
     url: http://cluster.bonde.org
     service: apis/notifications
     group: deploying
-    docker_image: nossas/bonde-apis:builder
+    docker_image: "nossas/bonde-apis:${DRONE_TAG##v}"
     timeout: 360
     confirm: true
     secrets: [ rancher_access_key, rancher_secret_key ]
@@ -110,7 +123,7 @@ pipeline:
     url: http://cluster.bonde.org
     service: apis/activists
     group: deploying
-    docker_image: nossas/bonde-apis:builder
+    docker_image: "nossas/bonde-apis:${DRONE_TAG##v}"
     timeout: 360
     confirm: true
     secrets: [ rancher_access_key, rancher_secret_key ]
