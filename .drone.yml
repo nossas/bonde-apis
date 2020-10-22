@@ -84,7 +84,7 @@ pipeline:
     url: http://cluster.bonde.org
     service: apis/domains
     group: deploying
-    docker_image: nossas/bonde-apis:builder
+    docker_image: nossas/bonde-apis:${DRONE_BRANCH/\//-}
     timeout: 360
     confirm: true
     secrets: [ rancher_access_key, rancher_secret_key ]
@@ -135,6 +135,19 @@ pipeline:
     image: peloton/drone-rancher
     url: http://cluster.bonde.org
     service: apis/activists
+    group: deploying
+    docker_image: "nossas/bonde-apis:${DRONE_TAG##v}"
+    timeout: 360
+    confirm: true
+    secrets: [ rancher_access_key, rancher_secret_key ]
+    when:
+      status: success
+      event: [tag]
+
+  domains-production-deploy:
+    image: peloton/drone-rancher
+    url: http://cluster.bonde.org
+    service: apis/domains
     group: deploying
     docker_image: "nossas/bonde-apis:${DRONE_TAG##v}"
     timeout: 360
