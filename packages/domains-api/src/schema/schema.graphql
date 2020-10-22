@@ -1,0 +1,24 @@
+type Query {
+  domains_api_version: String
+}
+
+type Mutation {
+  create_domain(input: DomainInput): DomainResult
+}
+
+type DomainResult {
+  id: Int!
+  domain_name: String!
+  comment: String
+  name_servers: [String]!
+  ns_ok: Boolean
+  created_at: String
+  updated_at: String
+  community_id: Int!
+}
+
+input DomainInput {
+  domain: String!
+  comment: String
+  community_id: Int!
+}
