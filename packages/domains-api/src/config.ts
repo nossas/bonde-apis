@@ -13,7 +13,7 @@ type Config = {
   awsAccessKey?: string
   awsSecretKey?: string
   awsRoute53Region: string
-  awsRouteIp?: string
+  awsRouteIp: string
 }
 
 const config: Config = {
@@ -27,7 +27,7 @@ const config: Config = {
   awsAccessKey: process.env.AWS_ACCESS_KEY,
   awsSecretKey: process.env.AWS_SECRET_KEY,
   awsRoute53Region: process.env.AWS_ROUTE53_REGION || 'sa-east-1',
-  awsRouteIp: process.env.AWS_ROUTE_IP
+  awsRouteIp: process.env.AWS_ROUTE_IP || 'localhost'
 };
 
 export default config;

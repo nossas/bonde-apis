@@ -1,8 +1,8 @@
 // import * as recipients from '../graphql-api/recipients';
 import logger from '../logger';
-import config from '../config';
 import { check_user, Roles } from '../permissions';
 import route53 from '../route53';
+import { DNSRecord } from '../route53/types';
 import * as DNSHostedZonesAPI from '../graphql-api/dns_hosted_zones';
 
 type DomainInput = {
@@ -35,6 +35,15 @@ const create_domain = async (_: void, args: Args): Promise<DNSHostedZonesAPI.DNS
   if (data.HostedZone.ResourceRecordSetCount === 2) {
     await route53.create_default_records({ domain, hostedZoneId: data.HostedZone.Id });
   }
+
+  const records = await route53.fetch_records({ hostedZoneId: data.HostedZone.Id });
+  await DNSHostedZonesAPI.records_upsert(
+    records.map((r: DNSRecord) => ({
+      ...r,
+      name: r.name.replace('\\052', '*'),
+      dns_hosted_zone_id: dnsHostedZone.id
+    }))
+  );
 
   return dnsHostedZone;
 }

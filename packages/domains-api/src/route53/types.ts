@@ -16,3 +16,11 @@ export type DelegationSet = {
   CallerReference?: string
   NameServers: string[]
 }
+
+export type DNSRecord = {
+  name: string
+  record_type: string
+  value: string
+  ttl: number
+  comment?: string
+}

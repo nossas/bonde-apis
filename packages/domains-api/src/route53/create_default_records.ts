@@ -2,7 +2,7 @@ import config from '../config';
 import logger from '../logger';
 
 type ResourceRecord = {
-  Value?: string
+  Value: string
 }
 
 type ResourceRecordSet = {
@@ -71,5 +71,6 @@ export default (route53: any) => async ({ domain, hostedZoneId }: Args) => {
     logger.child({ result }).info('changeResourceRecordSets');
   } catch (err) {
     logger.child({ err }).info('error');
+    return [];
   }
 }

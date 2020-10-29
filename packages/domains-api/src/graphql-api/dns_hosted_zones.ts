@@ -22,6 +22,28 @@ export const queries = {
         community_id
       }
     }
+  `,
+  insert_dns_records: `
+    mutation ($objects: [dns_records_insert_input!]!) {
+      insert_dns_records(
+        objects: $objects,
+        on_conflict: {
+          constraint: dns_records_name_record_type_key,
+          update_columns: [value, ttl, comment]
+        }
+      ) {
+        returning {
+          id
+          name
+          value
+          record_type
+          comment
+          ttl
+          created_at
+          updated_at
+        }
+      }
+    }
   `
 };
 
@@ -54,3 +76,35 @@ export const upsert = async (input: DNSHostedZoneInput): Promise<DNSHostedZoneRe
 
   return data.insert_dns_hosted_zones_one;
 };
+
+type DNSRecordInput = {
+  dns_hosted_zone_id: number
+  value: string
+  name: string
+  record_type: string
+  ttl: number
+  comment?: string
+}
+
+export type DNSRecordResult = {
+  id: number
+  dns_hosted_zone_id: number
+  value: string
+  name: string
+  record_type: string
+  ttl: number
+  comment?: string
+  created_at: string
+  updated_at: string
+}
+
+export const records_upsert = async (objects: DNSRecordInput[]): Promise<DNSRecordResult[]> => {
+  const { data, errors }: any = await fetch({
+    query: queries.insert_dns_records,
+    variables: { objects }
+  });
+
+  logger.child({ errors, data }).info('dns_hosted_zones.insert');
+
+  return data.insert_dns_records.returning;
+}
