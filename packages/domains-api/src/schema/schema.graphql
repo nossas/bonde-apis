@@ -4,7 +4,10 @@ type Query {
 
 type Mutation {
   create_domain(input: DomainInput): DomainResult
+  delete_domain(input: DeleteDomainInput): Void
 }
+
+scalar Void
 
 type DomainResult {
   id: Int!
@@ -20,5 +23,10 @@ type DomainResult {
 input DomainInput {
   domain: String!
   comment: String
+  community_id: Int!
+}
+
+input DeleteDomainInput {
+  dns_hosted_zone_id: Int!
   community_id: Int!
 }

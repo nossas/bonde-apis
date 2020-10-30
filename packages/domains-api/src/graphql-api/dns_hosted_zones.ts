@@ -18,6 +18,8 @@ export const queries = {
         comment
         created_at
         updated_at
+
+        hosted_zone: response(path: "HostedZone")
         name_servers: response(path: "DelegationSet.NameServers")
         community_id
       }
@@ -44,6 +46,48 @@ export const queries = {
         }
       }
     }
+  `,
+  delete_dns_hosted_zone: `
+    mutation ($id: Int!) {
+      delete_dns_records(where: {
+        dns_hosted_zone_id: { _eq: $id }
+      }) {
+        returning {
+          id
+          name
+          record_type
+        }
+      }
+
+      delete_dns_hosted_zones_by_pk(id: $id) {
+        id
+        domain_name
+      }
+    }
+  `,
+  get_dns_hosted_zone: `
+    query ($id: Int!) {
+      dns_hosted_zones_by_pk(id: $id) {
+        id
+        comment
+        domain_name
+        ns_ok
+
+        hosted_zone_rest: response(path: "hosted_zone")
+        hosted_zone: response(path: "HostedZone")
+        name_servers_rest: response(path: "delegation_set.name_servers")
+        name_servers: response(path: "DelegationSet.NameServers")
+
+        dns_records {
+          id
+          name
+          value
+          record_type
+          comment
+          ttl
+        }   
+      }
+    }
   `
 };
 
@@ -63,6 +107,8 @@ export type DNSHostedZoneResult = {
   created_at: string
   updated_at: string
   community_id: number
+  dns_records?: DNSRecordResult[]
+  hosted_zone: any
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -72,7 +118,7 @@ export const upsert = async (input: DNSHostedZoneInput): Promise<DNSHostedZoneRe
     variables: { input }
   });
 
-  logger.child({ errors, data }).info('dns_hosted_zones.insert');
+  logger.child({ errors, data }).info('dns_hosted_zones.upsert');
 
   return data.insert_dns_hosted_zones_one;
 };
@@ -88,14 +134,14 @@ type DNSRecordInput = {
 
 export type DNSRecordResult = {
   id: number
-  dns_hosted_zone_id: number
+  dns_hosted_zone_id?: number
   value: string
   name: string
   record_type: string
   ttl: number
   comment?: string
-  created_at: string
-  updated_at: string
+  created_at?: string
+  updated_at?: string
 }
 
 export const records_upsert = async (objects: DNSRecordInput[]): Promise<DNSRecordResult[]> => {
@@ -104,7 +150,32 @@ export const records_upsert = async (objects: DNSRecordInput[]): Promise<DNSReco
     variables: { objects }
   });
 
-  logger.child({ errors, data }).info('dns_hosted_zones.insert');
+  logger.child({ errors, data }).info('dns_hosted_zones.records_upsert');
 
   return data.insert_dns_records.returning;
+}
+
+export const remove = async (id: number): Promise<void> => {
+  const { data, errors }: any = await fetch({
+    query: queries.delete_dns_hosted_zone,
+    variables: { id }
+  });
+
+  logger.child({ errors, data }).info('dns_hosted_zones.delete');
+}
+
+export const get = async (id: number): Promise<DNSHostedZoneResult> => {
+  const { data, errors }: any = await fetch({
+    query: queries.get_dns_hosted_zone,
+    variables: { id }
+  });
+
+  logger.child({ errors, data }).info('dns_hosted_zones.get');
+  
+  const dnsHostedZone = data.dns_hosted_zones_by_pk;
+  return {
+    ...dnsHostedZone,
+    hosted_zone: dnsHostedZone.hosted_zone || dnsHostedZone.hosted_zone_rest,
+    name_servers: dnsHostedZone.name_servers || dnsHostedZone.name_servers_rest
+  };
 }
