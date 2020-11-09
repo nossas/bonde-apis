@@ -66,6 +66,19 @@ export const queries = {
       }
     }
   `,
+  delete_dns_records: `
+    mutation ($ids: [Int!]) {
+      delete_dns_records(where: {
+        id: { _in: $ids }
+      }) {
+        returning {
+          id
+          name
+          record_type
+        }
+      }
+    }
+  `,
   get_dns_hosted_zone: `
     query ($id: Int!) {
       dns_hosted_zones_by_pk(id: $id) {
@@ -169,6 +182,15 @@ export const remove = async (id: number): Promise<void> => {
   });
 
   logger.child({ errors, data }).info('dns_hosted_zones.delete');
+}
+
+export const remove_records = async (ids: number[]): Promise<void> => {
+  const { data, errors }: any = await fetch({
+    query: queries.delete_dns_records,
+    variables: { ids }
+  });
+
+  logger.child({ errors, data }).info('dns_hosted_zones.remove_records');
 }
 
 export const get = async (id: number): Promise<DNSHostedZoneResult> => {

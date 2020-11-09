@@ -26,7 +26,7 @@ export default (route53: any) => async ({ hostedZoneId }: any): Promise<DNSRecor
       name: r.Name.slice(0, -1),
       record_type: r.Type,
       ttl: r.TTL,
-      value: r.Type === 'NS'
+      value: (r.Type === 'NS' || r.Type === 'MX')
         ? r.ResourceRecords.map((rr: ResourceRecord) => rr.Value).join(' ')
         : r.ResourceRecords[0].Value
     }));

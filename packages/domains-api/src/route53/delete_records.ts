@@ -47,9 +47,13 @@ export default (route53: any) => async ({ dnsRecords, hostedZoneId }: Args) => {
         Action: 'DELETE',
         ResourceRecordSet: {
           Name: r.name,
-          ResourceRecords: [
-            { Value: r.value }
-          ],
+          ResourceRecords: r.record_type === 'MX'
+            ? r.value.split(/\. /).map((v: string) => ({
+                Value: v
+              }))
+            : [
+              { Value: r.value }
+            ],
           TTL: r.ttl,
           Type: r.record_type
         }
@@ -60,11 +64,6 @@ export default (route53: any) => async ({ dnsRecords, hostedZoneId }: Args) => {
   }
   logger.child({ params }).info('changeResourceRecordSets');
 
-  try {
-    const result = await route53.changeResourceRecordSets(params).promise();
-    logger.child({ result }).info('changeResourceRecordSets');
-  } catch (err) {
-    logger.child({ err }).info('error');
-    return [];
-  }
+  const result = await route53.changeResourceRecordSets(params).promise();
+  logger.child({ result }).info('changeResourceRecordSets');
 }

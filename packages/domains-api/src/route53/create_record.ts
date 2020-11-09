@@ -57,6 +57,7 @@ export default (route53: any) => async ({ name, value, ttl, record_type, hosted_
     },
     HostedZoneId: hosted_zone_id
   }
+
   logger.child({ records }).info('changeResourceRecordSets');
 
   try {

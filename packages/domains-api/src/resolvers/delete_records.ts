@@ -7,13 +7,14 @@ import { DNSRecordResult } from '../graphql-api/dns_hosted_zones';
 type Input = {
   dns_hosted_zone_id: number
   records: number[]
+  community_id: number
 }
 
 type Args = {
   input: Input
 }
 
-const delete_record = async (_: void, args: Args): Promise<void> => {
+const delete_records = async (_: void, args: Args): Promise<void> => {
   const { input: { dns_hosted_zone_id, records } } = args;
 
   try {
@@ -23,22 +24,27 @@ const delete_record = async (_: void, args: Args): Promise<void> => {
     logger.child({ dnsHostedZone }).info('delete_hosted_zone');
 
     const delete_records: DNSRecordResult[] | undefined = dnsHostedZone.dns_records?.filter(
-      (dr: any) => records.findIndex((r: any) => r.id === dr.id) !== -1)
+      (dr: any) => !!records.find((r: any) => r === dr.id));
 
     await route53.delete_records({
       hostedZoneId,
-      dnsRecords: delete_records?.map((dr: DNSRecordResult) => ({
-        type: dr.record_type,
-        value: typeof dr.value === 'string' ? dr.value : dr.value.join(' '),
-        name: dr.name,
-        ttl: dr.ttl
-      })) 
+      dnsRecords: delete_records?.map((dr: DNSRecordResult) => {
+        const dnsRecord = {
+          record_type: dr.record_type,
+          value: dr.value,
+          name: dr.name.replace(/(\.)$/, ''),
+          ttl: dr.ttl
+        };
+
+        logger.child({ dnsRecord }).info('delete_records');
+        return dnsRecord;
+      })
     });
-    await route53.delete_hosted_zone({ hostedZoneId });
-    await DNSHostedZonesAPI.remove(dns_hosted_zone_id)
+
+    await DNSHostedZonesAPI.remove_records(records);
   } catch (err) {
     logger.child({ err }).info('delete_hosted_zone');
   }
 }
 
-export default check_user(delete_record, Roles.ADMIN);
+export default check_user(delete_records, Roles.ADMIN);

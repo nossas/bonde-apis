@@ -46,4 +46,5 @@ input RecordInput {
 input DeleteRecordsInput {
   dns_hosted_zone_id: Int!
   records: [Int]!
+  community_id: Int!
 }
