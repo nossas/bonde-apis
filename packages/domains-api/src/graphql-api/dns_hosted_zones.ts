@@ -43,6 +43,7 @@ export const queries = {
           ttl
           created_at
           updated_at
+          dns_hosted_zone_id
         }
       }
     }
@@ -125,7 +126,7 @@ export const upsert = async (input: DNSHostedZoneInput): Promise<DNSHostedZoneRe
 
 type DNSRecordInput = {
   dns_hosted_zone_id: number
-  value: string
+  value: string | string[]
   name: string
   record_type: string
   ttl: number
@@ -135,9 +136,9 @@ type DNSRecordInput = {
 export type DNSRecordResult = {
   id: number
   dns_hosted_zone_id?: number
-  value: string
+  value: string | string[]
   name: string
-  record_type: string
+  record_type: 'A' | 'MX' | 'TXT' | 'CNAME' | 'AAA'
   ttl: number
   comment?: string
   created_at?: string
@@ -145,9 +146,15 @@ export type DNSRecordResult = {
 }
 
 export const records_upsert = async (objects: DNSRecordInput[]): Promise<DNSRecordResult[]> => {
+  const input = objects.map((o: any) => ({
+    ...o,
+    value: typeof o.value === "string" ? o.value : o.value.join(' ')
+  }));
+
+  logger.child({ input }).info('dns_hosted_zones.records_upsert');
   const { data, errors }: any = await fetch({
     query: queries.insert_dns_records,
-    variables: { objects }
+    variables: { objects: input }
   });
 
   logger.child({ errors, data }).info('dns_hosted_zones.records_upsert');

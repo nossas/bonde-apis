@@ -30,7 +30,7 @@ type RecordParams = {
 type DNSRecord = {
   name: string
   value: string
-  record_type: string
+  record_type: 'A' | 'MX' | 'CNAME' | 'TXT' | 'AAA'
   ttl: number
 }
 

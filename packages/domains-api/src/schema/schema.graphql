@@ -5,6 +5,8 @@ type Query {
 type Mutation {
   create_domain(input: DomainInput): DomainResult
   delete_domain(input: DeleteDomainInput): Void
+  create_record(input: RecordInput): Void
+  delete_records(input: DeleteRecordsInput): Void
 }
 
 scalar Void
@@ -29,4 +31,19 @@ input DomainInput {
 input DeleteDomainInput {
   dns_hosted_zone_id: Int!
   community_id: Int!
+}
+
+input RecordInput {
+  name: String!
+  value: [String]!
+  ttl: Int!
+  record_type: String!
+  hosted_zone_id: String!
+  dns_hosted_zone_id: Int!
+  community_id: Int!
+}
+
+input DeleteRecordsInput {
+  dns_hosted_zone_id: Int!
+  records: [Int]!
 }
