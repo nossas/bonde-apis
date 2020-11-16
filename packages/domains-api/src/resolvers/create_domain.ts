@@ -18,6 +18,13 @@ type Args = {
 // Resolver create domain
 const create_domain = async (_: void, args: Args): Promise<DNSHostedZonesAPI.DNSHostedZoneResult> => {
   const { input: { domain, comment, community_id } } = args;
+
+  // Fetch DNSHostedZone
+  const dnsHostedZones = await DNSHostedZonesAPI.find({ domain_name: { _eq: domain } });
+  logger.child({ dnsHostedZones }).info('fetch hosted zone');
+  if (dnsHostedZones && dnsHostedZones.length > 0 && dnsHostedZones[0].community_id !== community_id) {
+    throw new Error('domain_name_exists');
+  }
   
   // Create Hosted Zone on AWS
   const data = await route53.create_or_update_hosted_zone({ domain, comment });

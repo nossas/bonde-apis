@@ -86,6 +86,7 @@ export const queries = {
         comment
         domain_name
         ns_ok
+        community_id
 
         hosted_zone_rest: response(path: "hosted_zone")
         hosted_zone: response(path: "HostedZone")
@@ -100,6 +101,31 @@ export const queries = {
           comment
           ttl
         }   
+      }
+    }
+  `,
+  find_dns_hosted_zone: `
+    query ($params: dns_hosted_zones_bool_exp) {
+      dns_hosted_zones(where: $params) {
+        id
+        comment
+        domain_name
+        ns_ok
+        community_id
+
+        hosted_zone_rest: response(path: "hosted_zone")
+        hosted_zone: response(path: "HostedZone")
+        name_servers_rest: response(path: "delegation_set.name_servers")
+        name_servers: response(path: "DelegationSet.NameServers")
+
+        dns_records {
+          id
+          name
+          value
+          record_type
+          comment
+          ttl
+        }
       }
     }
   `
@@ -207,4 +233,19 @@ export const get = async (id: number): Promise<DNSHostedZoneResult> => {
     hosted_zone: dnsHostedZone.hosted_zone || dnsHostedZone.hosted_zone_rest,
     name_servers: dnsHostedZone.name_servers || dnsHostedZone.name_servers_rest
   };
+}
+
+export const find = async (params: any): Promise<DNSHostedZoneResult[]> => {
+  const { data, errors }: any = await fetch({
+    query: queries.find_dns_hosted_zone,
+    variables: { params }
+  });
+
+  logger.child({ errors, data }).info('dns_hosted_zones.find');
+
+  return data.dns_hosted_zones.map((dnsHostedZone: any) => ({
+    ...dnsHostedZone,
+    hosted_zone: dnsHostedZone.hosted_zone || dnsHostedZone.hosted_zone_rest,
+    name_servers: dnsHostedZone.name_servers || dnsHostedZone.name_servers_rest
+  }));
 }
