@@ -8,11 +8,13 @@ import expressPino from 'express-pino-logger';
 import config from './config';
 import schema from './schema';
 import logger from './logger';
+import { handle_context } from 'permissions-utils';
 
 const app = express();
 const server = new ApolloServer({
   schema: schema,
-  validationRules: [depthLimit(7)]
+  validationRules: [depthLimit(7)],
+  context: handle_context({ jwtSecret: config.jwtSecret, logger })
 } as any);
 const expressLogger = expressPino({ logger });
 
