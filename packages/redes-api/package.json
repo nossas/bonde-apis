@@ -9,5 +9,10 @@
     "lint": "eslint . --ext ts,tsx --fix",
     "test": "jest",
     "coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "apollo-fetch": "^0.7.0",
+    "node-zendesk": "^2.0.3",
+    "permissions-utils": "workspace:^0.0.1"
   }
 }
