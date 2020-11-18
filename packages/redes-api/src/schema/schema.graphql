@@ -1,39 +1,44 @@
 type Query {
-  version: String
+  redes_version: String
 }
 
 type Mutation {
   create_volunteer_ticket(input: VolunteerTicketInput): Ticket
 }
 
-type Ticket {
+type CustomFields {
   id: Int
-  external_id: bigint
-  requester_id: bigint
-  submitter_id: bigint
-  assignee_id: bigint
-  status: String
-  subject: String
-  organization_id: bigint
-  custom_fields(path: String): jsonb
+  value: String
 }
 
-type VolunteerUser {
+type Ticket {
   id: Int
-  user_id: bigint!
-  organization_id: bigint!
+  external_id: Int
+  requester_id: Int
+  submitter_id: Int
+  assignee_id: Int
+  status: String
+  subject: String
+  organization_id: Int
+  custom_fields: [CustomFields]
+}
+
+input VolunteerUser {
+  id: Int
+  user_id: Int!
+  organization_id: Int!
   name: String!
 }
 
-type RecipientTicket {
+input RecipientTicket {
   id: Int
-  external_id: bigint!
+  external_id: Int!
   nome_msr: String!
-  ticket_id: bigint!
+  ticket_id: Int!
 }
 
 input VolunteerTicketInput {
   recipient_ticket: RecipientTicket
   volunteer_user: VolunteerUser
-  agent: number
+  agent: Int
 }
