@@ -1,19 +1,13 @@
-type HelloArgs = {
-  name: string
-};
-
-const hello = (_: void, args: HelloArgs): string => {
-  if (!!args.name) return `Hello, ${args.name}!`;
-  
-  return `Hello anonymous`;
-};
+import create_volunteer_ticket from './create_volunteer_ticket'
+// import create_match from './create_match'
+// import update_ticket from './update_ticket'
 
 const resolverMap = {
-  Query: {
-    hello
-  },
+  Query: {},
   Mutation: {
-    hello
+    create_volunteer_ticket
+    // create_match,
+    // update_ticket
   }
 };
 

@@ -1,7 +1,39 @@
 type Query {
-  hello(name: String): String
+  version: String
 }
 
 type Mutation {
-  hello(name: String): String
+  create_volunteer_ticket(input: VolunteerTicketInput): Ticket
+}
+
+type Ticket {
+  id: Int
+  external_id: bigint
+  requester_id: bigint
+  submitter_id: bigint
+  assignee_id: bigint
+  status: String
+  subject: String
+  organization_id: bigint
+  custom_fields(path: String): jsonb
+}
+
+type VolunteerUser {
+  id: Int
+  user_id: bigint!
+  organization_id: bigint!
+  name: String!
+}
+
+type RecipientTicket {
+  id: Int
+  external_id: bigint!
+  nome_msr: String!
+  ticket_id: bigint!
+}
+
+input VolunteerTicketInput {
+  recipient_ticket: RecipientTicket
+  volunteer_user: VolunteerUser
+  agent: number
 }
