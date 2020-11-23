@@ -1,6 +1,5 @@
 import fetch from './client';
 import logger from '../logger';
-import { HasuraTicket } from "../types"
 
 export const queries = {
   create_ticket: `  
@@ -51,14 +50,21 @@ export const queries = {
       ) {
         returning {
           ticket_id
+          assignee_id
+          status
+          organization_id
+          nome_voluntaria
+          status_acolhimento
+          link_match
+          data_encaminhamento
+          custom_fields
         }
       }
     }
   `
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const update = async (ticket: HasuraTicket, ids: number[]): Promise<{ ticket_id: number }[]> => {   
+export const update = async (ticket: any, ids: number[]): Promise<any> => {   
   const { data, ...props } = await fetch({
     query: queries.update_ticket,
     variables: { ids, ticket }

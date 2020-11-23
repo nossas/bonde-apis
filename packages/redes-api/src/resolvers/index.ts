@@ -1,13 +1,13 @@
 import create_volunteer_ticket from './create_volunteer_ticket'
+import update_recipient_ticket from './update_recipient_ticket'
 // import create_match from './create_match'
-// import update_ticket from './update_ticket'
 
 const resolverMap = {
   Query: {},
   Mutation: {
-    create_volunteer_ticket
+    create_volunteer_ticket,
+    update_recipient_ticket
     // create_match,
-    // update_ticket
   }
 };
 

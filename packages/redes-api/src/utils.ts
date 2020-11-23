@@ -1,5 +1,5 @@
 import config from "./config"
-import { CreateVolunteerTicket, Ticket } from "./types"
+import { CreateVolunteerTicket, Ticket, UpdateRecipientTicket } from "./types"
 
 if (!config.zendeskOrganizations) throw new Error('ZENDESK_ORGANIZATIONS not found');
 
@@ -82,6 +82,36 @@ export const volunteerTicket = ({ recipient_ticket, volunteer_user, agent }: Cre
       value: String(getCurrentDate())
     }
   ]
+})
+
+export const recipientTicket = ({ recipient_ticket, volunteer_user, agent }: UpdateRecipientTicket): Ticket & { ticket_id: number } => ({
+  ticket_id: recipient_ticket.ticket_id,
+  assignee_id: getAgentZendeskUserId(agent),
+  status: "pending",
+  organization_id: recipient_ticket.organization_id,
+  comment: {
+    body: `Voluntária recebeu um pedido de acolhimento de ${recipient_ticket.nome_msr}`,
+    author_id: getAgentZendeskUserId(agent),
+    public: false
+  },
+  custom_fields: [
+    {
+      id: 360016631592,
+      value: volunteer_user.name
+    },
+    {
+      id: 360014379412,
+      value: "encaminhamento__realizado"
+    },
+    {
+      id: 360016631632,
+      value: `https://mapadoacolhimento.zendesk.com/agent/tickets/${volunteer_user.ticket_id}`
+    },
+    {
+      id: 360017432652,
+      value: String(getCurrentDate())
+    }
+  ],
 })
 
 export const customFieldsDicio: Record<number, string> = {
