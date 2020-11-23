@@ -12,7 +12,7 @@ import { handle_context } from 'permissions-utils';
 
 const app = express();
 const server = new ApolloServer({
-  schema: schema,
+  schema,
   validationRules: [depthLimit(7)],
   context: handle_context({ jwtSecret: config.jwtSecret, logger })
 } as any);
