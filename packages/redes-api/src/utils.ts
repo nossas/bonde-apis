@@ -27,12 +27,12 @@ export const getAgentZendeskUserId = (
 };
 
 export const getVolunteerType = (id: number): { type: string; registry_type: string } => {
-  if (id === zendeskOrganizations["lawyer"])
+  if (Number(id) === zendeskOrganizations["lawyer"])
     return {
       type: "Advogada",
       registry_type: "OAB"
     };
-  if (id === zendeskOrganizations["therapist"])
+  if (Number(id) === zendeskOrganizations["therapist"])
     return {
       type: "Psicóloga",
       registry_type: "CRP"
@@ -83,3 +83,26 @@ export const volunteerTicket = ({ recipient_ticket, volunteer_user, agent }: Cre
     }
   ]
 })
+
+export const customFieldsDicio: Record<number, string> = {
+  360014379412: "status_acolhimento",
+  360016631592: "nome_voluntaria",
+  360016631632: "link_match",
+  360016681971: "nome_msr",
+  360017056851: "data_inscricao_bonde",
+  360017432652: "data_encaminhamento",
+  360021665652: "status_inscricao",
+  360021812712: "telefone",
+  360021879791: "estado",
+  360021879811: "cidade",
+  360032229831: "atrelado_ao_ticket"
+};
+
+export const composeCustomFields = (custom_fields: Array<{ id: number; value: any }>): Record<string, any> =>
+  custom_fields.reduce((newObj, old) => {
+    const key = customFieldsDicio[old.id] && customFieldsDicio[old.id];
+    return {
+      ...newObj,
+      [key]: old.value
+    };
+  }, {});
