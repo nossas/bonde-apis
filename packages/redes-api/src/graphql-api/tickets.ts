@@ -24,7 +24,18 @@ export const queries = {
         }
       ) {
         returning {
-          ticket_id
+          external_id
+          requester_id
+          submitter_id
+          assignee_id
+          status
+          subject
+          organization_id
+          nome_msr
+          link_match
+          status_acolhimento
+          data_encaminhamento
+          custom_fields
         }
       }
     }
@@ -59,13 +70,12 @@ export const update = async (ticket: HasuraTicket, ids: number[]): Promise<{ tic
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const create = async (tickets: HasuraTicket[]): Promise<{ ticket_id: number }[]> => {
+export const create = async (tickets: any): Promise<Array<any>> => {
   const { data, ...props } = await fetch({
     query: queries.create_ticket,
     variables: { tickets }
   });
 
-  
   logger.child({ props }).info('create_ticket');
 
   return data.insert_solidarity_tickets.returning;
