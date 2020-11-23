@@ -9,9 +9,9 @@ export interface Ticket {
   }>
   tags?: string[] | null
   updated_at?: string
-  subject: string
-  requester_id: number
-  external_id: number
+  subject?: string
+  requester_id?: number
+  external_id?: number
   organization_id: number
   comment: {
     body: string
