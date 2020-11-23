@@ -3,7 +3,12 @@ type Query {
 }
 
 type Mutation {
-  create_volunteer_ticket(input: VolunteerTicketInsertInput): VolunteerTicketInsertResponse
+  create_volunteer_ticket(
+    input: VolunteerTicketInsertInput
+  ): VolunteerTicketInsertResponse
+  update_recipient_ticket(
+    input: RecipientTicketUpdateInput
+  ): RecipientTicketUpdateResponse
 }
 
 type CustomFields {
@@ -27,22 +32,50 @@ type VolunteerTicketInsertResponse {
   custom_fields: [CustomFields]
 }
 
-input VolunteerUser {
-  id: ID
+input VolunteerUserInsert {
   user_id: ID!
   organization_id: ID!
   name: String!
 }
 
-input RecipientTicket {
-  id: ID
+input RecipientTicketInsert {
   external_id: ID!
   nome_msr: String!
   ticket_id: ID!
 }
 
+input VolunteerUserUpdate {
+  name: String!
+  ticket_id: ID!
+}
+
+input RecipientTicketUpdate {
+  nome_msr: String!
+  ticket_id: ID!
+  organization_id: ID!
+}
+
 input VolunteerTicketInsertInput {
-  recipient_ticket: RecipientTicket!
-  volunteer_user: VolunteerUser!
+  recipient_ticket: RecipientTicketInsert!
+  volunteer_user: VolunteerUserInsert!
+  agent: ID!
+}
+
+type RecipientTicketUpdateResponse {
+  id: ID
+  ticket_id: ID
+  assignee_id: ID
+  status: String
+  organization_id: ID
+  nome_voluntaria: String
+  status_acolhimento: String
+  link_match: String
+  data_encaminhamento: String
+  custom_fields: [CustomFields]
+}
+
+input RecipientTicketUpdateInput {
+  recipient_ticket: RecipientTicketUpdate!
+  volunteer_user: VolunteerUserUpdate!
   agent: ID!
 }
