@@ -13,6 +13,10 @@
   "dependencies": {
     "apollo-fetch": "^0.7.0",
     "node-zendesk": "^2.0.3",
-    "permissions-utils": "workspace:^0.0.1"
+    "permissions-utils": "workspace:^0.0.1",
+    "yup": "^0.30.0"
+  },
+  "devDependencies": {
+    "@types/yup": "^0.29.9"
   }
 }

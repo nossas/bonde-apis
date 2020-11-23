@@ -131,10 +131,15 @@ importers:
       apollo-fetch: 0.7.0
       node-zendesk: 2.0.3
       permissions-utils: 'link:../../utils/permissions-utils'
+      yup: 0.30.0
+    devDependencies:
+      '@types/yup': 0.29.9
     specifiers:
+      '@types/yup': ^0.29.9
       apollo-fetch: ^0.7.0
       node-zendesk: ^2.0.3
       permissions-utils: 'workspace:^0.0.1'
+      yup: ^0.30.0
   utils/permissions-utils:
     specifiers: {}
 lockfileVersion: 5.1
@@ -410,6 +415,12 @@ packages:
       '@babel/core': ^7.0.0-0
     resolution:
       integrity: sha512-KoK9ErH1MBlCPxV0VANkXW2/dw4vlbGDrFgz8bmUsBGYkFRcbRwMh6cIJubdPrkxRwuGdtCk0v/wPTKbQgBjkg==
+  /@babel/runtime/7.12.5:
+    dependencies:
+      regenerator-runtime: 0.13.7
+    dev: false
+    resolution:
+      integrity: sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
   /@babel/template/7.10.4:
     dependencies:
       '@babel/code-frame': 7.10.4
@@ -1072,6 +1083,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Dk/IDOPtOgubt/IaevIUbTgV7doaKkoorvOyYM2CMwuDyP89bekI7H4xLIwunNYiK9jhCkmc6pUrJk3cj2AB9w==
+  /@types/yup/0.29.9:
+    dev: true
+    resolution:
+      integrity: sha512-ZtjjlrHuHTYctHDz3c8XgInjj0v+Hahe32N/4cDa2banibf9w6aAgxwx0jZtBjKKzmGIU4NXhofEsBW1BbqrNg==
   /@typescript-eslint/eslint-plugin/3.8.0_9195d7e59c976ef8295ee5e80b40ac89:
     dependencies:
       '@typescript-eslint/experimental-utils': 3.8.0_eslint@7.6.0+typescript@3.9.7
@@ -4560,6 +4575,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==
+  /lodash-es/4.17.15:
+    dev: false
+    resolution:
+      integrity: sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
   /lodash.includes/4.3.0:
     dev: false
     resolution:
@@ -4598,6 +4617,10 @@ packages:
   /lodash/4.17.19:
     resolution:
       integrity: sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
+  /lodash/4.17.20:
+    dev: false
+    resolution:
+      integrity: sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
   /loglevel/1.6.8:
     dev: false
     engines:
@@ -5492,6 +5515,10 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-Q06uKs2CkNYVID0VqwfAl9mipo99zkBv/n2JtWY89Yxa3ZabWSrs0e2KTudKVa3peLUvYXMefDqIleLPVUBZMA==
+  /property-expr/2.0.4:
+    dev: false
+    resolution:
+      integrity: sha512-sFPkHQjVKheDNnPvotjQmm3KD3uk1fWKUN7CrpdbwmUx3CrG3QiM8QpTSimvig5vTXmTvjz7+TDvXOI9+4rkcg==
   /proxy-addr/2.0.6:
     dependencies:
       forwarded: 0.1.2
@@ -5637,6 +5664,10 @@ packages:
       node: '>=8.10.0'
     resolution:
       integrity: sha512-0xe001vZBnJEK+uKcj8qOhyAKPzIT+gStxWr3LCB0DwcXR5NZJ3IaC+yGnHCYzB/S7ov3m3EEbZI2zeNvX+hGQ==
+  /regenerator-runtime/0.13.7:
+    dev: false
+    resolution:
+      integrity: sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
   /regex-not/1.0.2:
     dependencies:
       extend-shallow: 3.0.2
@@ -6453,6 +6484,10 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
+  /toposort/2.0.2:
+    dev: false
+    resolution:
+      integrity: sha1-riF2gXXRVZ1IvvNUILL0li8JwzA=
   /touch/3.1.0:
     dependencies:
       nopt: 1.0.10
@@ -7046,6 +7081,18 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
+  /yup/0.30.0:
+    dependencies:
+      '@babel/runtime': 7.12.5
+      lodash: 4.17.20
+      lodash-es: 4.17.15
+      property-expr: 2.0.4
+      toposort: 2.0.2
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-GX3vqpC9E+Ow0fmQPgqbEg7UV40XRrN1IOEgKF5v04v6T4ha2vBas/hu0thWgewk8L4wUEBLRO/EnXwYyP+p+A==
   /zen-observable-ts/0.8.21:
     dependencies:
       tslib: 1.13.0
