@@ -6,3 +6,20 @@ export type MatchTicket = {
   community_id: number
   status: string
 }
+
+export type CreateMatch = {
+  recipient: {
+    external_id: number
+    nome_msr: string
+    ticket_id: number
+    organization_id: number
+    requester_id: number
+  }
+  volunteer: {
+    user_id: number
+    organization_id: number
+    name: string
+    ticket_id?: number
+  }
+  agent: number
+}

@@ -1,4 +1,4 @@
-import { RecipientTicket } from "./"
+import { HasuraTicket } from "./"
 
 export type VolunteerUser = {
   user_id: number
@@ -16,7 +16,7 @@ export type VolunteerUser = {
 };
 
 export type CreateVolunteerTicket = {
-  recipient_ticket: RecipientTicket
-  volunteer_user: VolunteerUser
+  recipient_ticket: Pick<HasuraTicket, 'external_id' | 'nome_msr' | 'ticket_id'>
+  volunteer_user: Pick<VolunteerUser, 'user_id' | 'organization_id' | 'name'>
   agent: number
 }

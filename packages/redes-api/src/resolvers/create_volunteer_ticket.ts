@@ -79,8 +79,8 @@ const create_volunteer_ticket = async (_: void, args: Args): Promise<any> => {
 
     return res[0]
   } catch(e) {
-    logger.error(e)
-    return undefined
+    logger.child({ e }).error('create_volunteer_ticket')
+    return e
   }
 }
 

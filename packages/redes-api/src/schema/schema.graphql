@@ -9,6 +9,7 @@ type Mutation {
   update_recipient_ticket(
     input: RecipientTicketUpdateInput
   ): RecipientTicketUpdateResponse
+  create_match(input: CreateMatchInput): CreateMatchResponse
 }
 
 type CustomFields {
@@ -18,6 +19,7 @@ type CustomFields {
 
 type VolunteerTicketInsertResponse {
   id: ID
+  ticket_id: ID
   external_id: ID
   requester_id: ID
   submitter_id: ID
@@ -32,10 +34,10 @@ type VolunteerTicketInsertResponse {
   custom_fields: [CustomFields]
 }
 
-input VolunteerUserInsert {
-  user_id: ID!
-  organization_id: ID!
-  name: String!
+input VolunteerTicketInsertInput {
+  recipient_ticket: RecipientTicketInsert!
+  volunteer_user: VolunteerUserInsert!
+  agent: ID!
 }
 
 input RecipientTicketInsert {
@@ -44,9 +46,16 @@ input RecipientTicketInsert {
   ticket_id: ID!
 }
 
-input VolunteerUserUpdate {
+input VolunteerUserInsert {
+  user_id: ID!
+  organization_id: ID!
   name: String!
-  ticket_id: ID!
+}
+
+input RecipientTicketUpdateInput {
+  recipient_ticket: RecipientTicketUpdate!
+  volunteer_user: VolunteerUserUpdate!
+  agent: ID!
 }
 
 input RecipientTicketUpdate {
@@ -55,10 +64,9 @@ input RecipientTicketUpdate {
   organization_id: ID!
 }
 
-input VolunteerTicketInsertInput {
-  recipient_ticket: RecipientTicketInsert!
-  volunteer_user: VolunteerUserInsert!
-  agent: ID!
+input VolunteerUserUpdate {
+  name: String!
+  ticket_id: ID!
 }
 
 type RecipientTicketUpdateResponse {
@@ -74,8 +82,31 @@ type RecipientTicketUpdateResponse {
   custom_fields: [CustomFields]
 }
 
-input RecipientTicketUpdateInput {
-  recipient_ticket: RecipientTicketUpdate!
-  volunteer_user: VolunteerUserUpdate!
+type CreateMatchResponse {
+  individuals_ticket_id: ID
+  volunteers_ticket_id: ID
+  individuals_user_id: ID
+  volunteers_user_id: ID
+  status: String
+}
+
+input MatchRecipient {
+  external_id: ID!
+  nome_msr: String!
+  ticket_id: ID!
+  organization_id: ID!
+  requester_id: ID!
+}
+
+input MatchVolunteer {
+  user_id: ID!
+  organization_id: ID!
+  name: String!
+  ticket_id: ID!
+}
+
+input CreateMatchInput {
+  recipient: MatchRecipient!
+  volunteer: MatchVolunteer!
   agent: ID!
 }

@@ -1,4 +1,4 @@
-export interface Ticket {
+export type Ticket = {
   id?: number
   status: string
   assignee_id?: number
@@ -20,7 +20,7 @@ export interface Ticket {
   }
 }
 
-export interface HasuraTicket extends Ticket {
+export type HasuraTicket = {
   link_match: string
   data_encaminhamento: string
   nome_voluntaria: string
@@ -28,4 +28,4 @@ export interface HasuraTicket extends Ticket {
   status_acolhimento: string
   atrelado_ao_ticket: number | null
   nome_msr: string
-}
+} & Ticket

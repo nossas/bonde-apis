@@ -19,21 +19,31 @@ export const queries = {
           ]
         }
       ) {
-        id
+        created_at
+        community_id
+        individuals_user_id
+        volunteers_user_id
+        volunteers_ticket_id
+        status
       }
     }
   `,
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const create = async (match: MatchTicket): Promise<{ id: number }> => {
-  const { data, ...props } = await fetch({
-    query: queries.create_match,
-    variables: { match }
-  });
-
+export const create = async (match: MatchTicket): Promise<MatchTicket> => {
+  try {
+    const { data, ...props } = await fetch({
+      query: queries.create_match,
+      variables: { match }
+    });
   
-  logger.child({ props }).info('create_match');
-
-  return data.insert_solidarity_matches_one;
+    
+    logger.child({ props }).info('create_match');
+  
+    return data.insert_solidarity_matches_one;
+  } catch (e) {
+    logger.child({ e }).error('create_match');
+    return e
+  }
 };
