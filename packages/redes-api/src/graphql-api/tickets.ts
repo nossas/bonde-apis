@@ -23,6 +23,7 @@ export const queries = {
         }
       ) {
         returning {
+          ticket_id
           external_id
           requester_id
           submitter_id
@@ -64,25 +65,34 @@ export const queries = {
   `
 };
 
-export const update = async (ticket: any, ids: number[]): Promise<any> => {   
-  const { data, ...props } = await fetch({
-    query: queries.update_ticket,
-    variables: { ids, ticket }
-  });
-
-  logger.child({ props }).info('update_ticket');
-
-  return data.update_solidarity_tickets.returning;
+export const update = async (ticket: any, ids: number[]): Promise<any> => {
+  try {
+    const { data, ...props } = await fetch({
+      query: queries.update_ticket,
+      variables: { ids, ticket }
+    });
+  
+    logger.child({ props }).info('update_ticket');
+  
+    return data.update_solidarity_tickets.returning;
+  } catch (e) {
+    logger.child({ e }).error('update_ticket')
+    return e
+  }
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const create = async (tickets: any): Promise<Array<any>> => {
-  const { data, ...props } = await fetch({
-    query: queries.create_ticket,
-    variables: { tickets }
-  });
-
-  logger.child({ props }).info('create_ticket');
-
-  return data.insert_solidarity_tickets.returning;
+  try {
+    const { data, ...props } = await fetch({
+      query: queries.create_ticket,
+      variables: { tickets }
+    });
+  
+    logger.child({ props }).info('create_ticket');
+  
+    return data.insert_solidarity_tickets.returning;
+  } catch (e) {
+    logger.child({ e }).error('create_ticket')
+    return e
+  }
 };

@@ -74,7 +74,7 @@ const update_recipient_ticket = async (_: void, args: Args): Promise<any> => {
 
     return res[0]
   } catch(e) {
-    logger.error(e)
+    logger.child({ e }).error('update_recipient_ticket')
     return e
   }
 }
