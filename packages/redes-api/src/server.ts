@@ -10,6 +10,8 @@ import schema from './schema';
 import logger from './logger';
 import { handle_context } from 'permissions-utils';
 
+if (!config.jwtSecret) throw new Error('No JWT_SECRET provided.');
+
 const app = express();
 const server = new ApolloServer({
   schema,

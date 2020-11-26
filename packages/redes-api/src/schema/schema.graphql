@@ -38,6 +38,7 @@ input VolunteerTicketInsertInput {
   recipient_ticket: RecipientTicketInsert!
   volunteer_user: VolunteerUserInsert!
   agent: ID!
+  community_id: Int!
 }
 
 input RecipientTicketInsert {
@@ -56,6 +57,7 @@ input RecipientTicketUpdateInput {
   recipient_ticket: RecipientTicketUpdate!
   volunteer_user: VolunteerUserUpdate!
   agent: ID!
+  community_id: Int!
 }
 
 input RecipientTicketUpdate {
@@ -102,11 +104,11 @@ input MatchVolunteer {
   user_id: ID!
   organization_id: ID!
   name: String!
-  ticket_id: ID!
 }
 
 input CreateMatchInput {
   recipient: MatchRecipient!
   volunteer: MatchVolunteer!
   agent: ID!
+  community_id: Int!
 }

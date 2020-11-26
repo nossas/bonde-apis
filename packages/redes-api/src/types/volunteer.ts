@@ -19,4 +19,5 @@ export type CreateVolunteerTicket = {
   recipient_ticket: Pick<HasuraTicket, 'external_id' | 'nome_msr' | 'ticket_id'>
   volunteer_user: Pick<VolunteerUser, 'user_id' | 'organization_id' | 'name'>
   agent: number
+  community_id: number
 }

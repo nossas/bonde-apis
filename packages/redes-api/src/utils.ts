@@ -27,17 +27,17 @@ export const getAgentZendeskUserId = (
 };
 
 export const getVolunteerType = (id: number): { type: string; registry_type: string } => {
-  if (Number(id) === zendeskOrganizations["lawyer"])
+  if (Number(id) === Number(zendeskOrganizations["lawyer"]))
     return {
       type: "Advogada",
       registry_type: "OAB"
     };
-  if (Number(id) === zendeskOrganizations["therapist"])
+  if (Number(id) === Number(zendeskOrganizations["therapist"]))
     return {
       type: "Psicóloga",
       registry_type: "CRP"
     };
-  throw new Error("Volunteer organization_id not supported in search for type");
+  throw new Error(`Volunteer organization_id '${id}' not supported in search for type`);
 };
 
 export const getCurrentDate = (): string => {

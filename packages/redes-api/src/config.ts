@@ -14,7 +14,6 @@ type Config = {
   zendeskApiUrl?: string
   zendeskApiUser?: string
   zendeskOrganizations?: string
-  communityId?: string
 }
 
 const config: Config = {
@@ -29,7 +28,6 @@ const config: Config = {
   zendeskApiUrl: process.env.ZENDESK_API_URL,
   zendeskApiUser: process.env.ZENDESK_API_USER,
   zendeskOrganizations: process.env.ZENDESK_ORGANIZATIONS,
-  communityId: process.env.COMMUNITY_ID
 };
 
 export default config;

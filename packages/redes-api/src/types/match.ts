@@ -22,4 +22,5 @@ export type CreateMatch = {
     ticket_id?: number
   }
   agent: number
+  community_id: number
 }

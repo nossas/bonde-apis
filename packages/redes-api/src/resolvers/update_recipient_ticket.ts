@@ -2,7 +2,7 @@ import * as yup from "yup";
 import * as zendesk from "node-zendesk";
 
 import * as tickets from '../graphql-api/tickets';
-import { check_user, Roles } from '../permissions';
+import { check_user, Roles, Context } from '../permissions';
 
 import config from '../config';
 import { recipientTicket, composeCustomFields } from "../utils";
@@ -46,7 +46,7 @@ const hasuraSchema = yup
   .required();
 
 
-const update_recipient_ticket = async (_: void, args: Args): Promise<any> => {
+const update_recipient_ticket = async (_: void, args: Args, _context: Context): Promise<any> => {
   const client = zendesk.createClient({
     username: process.env.ZENDESK_API_USER,
     token: process.env.ZENDESK_API_TOKEN,

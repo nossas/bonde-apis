@@ -3,7 +3,7 @@ import logger from '../logger';
 import * as zendesk from "node-zendesk";
 import * as tickets from '../graphql-api/tickets';
 import { CreateVolunteerTicket } from "../types"
-import { check_user, Roles } from '../permissions';
+import { check_user, Roles, Context } from '../permissions';
 import config from '../config';
 import { volunteerTicket, composeCustomFields } from "../utils";
 
@@ -52,7 +52,7 @@ const hasuraSchema = yup
   .required();
 
 
-const create_volunteer_ticket = async (_: void, args: Args): Promise<any> => {
+const create_volunteer_ticket = async (_: void, args: Args, _context: Context): Promise<any> => {
   const client = zendesk.createClient({
     username: process.env.ZENDESK_API_USER,
     token: process.env.ZENDESK_API_TOKEN,
@@ -68,7 +68,7 @@ const create_volunteer_ticket = async (_: void, args: Args): Promise<any> => {
       ...zendeskTicket,
       ...composeCustomFields(zendeskTicket.custom_fields),
       ticket_id: zendeskTicket.id,
-      community_id: config.communityId
+      community_id: args.input.community_id
     };
 
     const validatedHasuraTicket = await hasuraSchema.validate(hasuraTicket, {

@@ -3,7 +3,7 @@ import * as match from '../graphql-api/match';
 import create_volunteer_ticket from "./create_volunteer_ticket"
 import update_recipient_ticket  from "./update_recipient_ticket"
 import { CreateMatch, MatchTicket } from "../types"
-import { check_user, Roles } from '../permissions';
+import { check_user, Roles, Context } from '../permissions';
 import config from '../config';
 
 if (!config.zendeskApiToken) throw new Error('ZENDESK_API_TOKEN not found');
@@ -14,8 +14,8 @@ type Args = {
   input: CreateMatch
 }
 
-const create_match = async (_: void, args: Args): Promise<any> => {
-  const { input: { recipient, volunteer, agent } } = args
+const create_match = async (_: void, args: Args, context: Context): Promise<any> => {
+  const { input: { recipient, volunteer, agent, community_id } } = args
   try {
     const volunteerRes = await create_volunteer_ticket(undefined, {
       input: {
@@ -29,9 +29,10 @@ const create_match = async (_: void, args: Args): Promise<any> => {
           organization_id: volunteer.organization_id,
           name: volunteer.name,
         },
-        agent: agent
+        agent,
+        community_id
       }
-    })
+    }, context)
 
     await update_recipient_ticket(undefined, {
       input: {
@@ -44,16 +45,17 @@ const create_match = async (_: void, args: Args): Promise<any> => {
           name: volunteer.name,
           ticket_id: volunteerRes.ticket_id
         },
-        agent
+        agent,
+        community_id
       }
-    })
+    }, context)
 
     const matchTicket: MatchTicket = {
       individuals_ticket_id: recipient.ticket_id,
       volunteers_ticket_id: volunteerRes.ticket_id,
       individuals_user_id: recipient.requester_id,
       volunteers_user_id: volunteer.user_id,
-      community_id: Number(config.communityId),
+      community_id,
       status: "encaminhamento__realizado"
     }
 

@@ -38,7 +38,6 @@ export const create = async (match: MatchTicket): Promise<MatchTicket> => {
       variables: { match }
     });
   
-    
     logger.child({ props }).info('create_match');
   
     return data.insert_solidarity_matches_one;

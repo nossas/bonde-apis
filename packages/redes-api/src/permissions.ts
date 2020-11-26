@@ -4,4 +4,4 @@ import { handle_check_user } from 'permissions-utils';
 
 export const check_user = handle_check_user({ fetch, logger });
 
-export { Roles } from 'permissions-utils';
+export { Roles, Context } from 'permissions-utils';
