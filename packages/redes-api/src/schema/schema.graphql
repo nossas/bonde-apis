@@ -1,0 +1,114 @@
+type Query {
+  redes_version: String
+}
+
+type Mutation {
+  create_volunteer_ticket(
+    input: VolunteerTicketInsertInput
+  ): VolunteerTicketInsertResponse
+  update_recipient_ticket(
+    input: RecipientTicketUpdateInput
+  ): RecipientTicketUpdateResponse
+  create_match(input: CreateMatchInput): CreateMatchResponse
+}
+
+type CustomFields {
+  id: ID
+  value: String
+}
+
+type VolunteerTicketInsertResponse {
+  id: ID
+  ticket_id: ID
+  external_id: ID
+  requester_id: ID
+  submitter_id: ID
+  assignee_id: ID
+  status: String
+  subject: String
+  organization_id: ID
+  nome_msr: String
+  link_match: String
+  status_acolhimento: String
+  data_encaminhamento: String
+  custom_fields: [CustomFields]
+}
+
+input VolunteerTicketInsertInput {
+  recipient_ticket: RecipientTicketInsert!
+  volunteer_user: VolunteerUserInsert!
+  agent: ID!
+  community_id: Int!
+}
+
+input RecipientTicketInsert {
+  external_id: ID!
+  nome_msr: String!
+  ticket_id: ID!
+}
+
+input VolunteerUserInsert {
+  user_id: ID!
+  organization_id: ID!
+  name: String!
+}
+
+input RecipientTicketUpdateInput {
+  recipient_ticket: RecipientTicketUpdate!
+  volunteer_user: VolunteerUserUpdate!
+  agent: ID!
+  community_id: Int!
+}
+
+input RecipientTicketUpdate {
+  nome_msr: String!
+  ticket_id: ID!
+  organization_id: ID!
+}
+
+input VolunteerUserUpdate {
+  name: String!
+  ticket_id: ID!
+}
+
+type RecipientTicketUpdateResponse {
+  id: ID
+  ticket_id: ID
+  assignee_id: ID
+  status: String
+  organization_id: ID
+  nome_voluntaria: String
+  status_acolhimento: String
+  link_match: String
+  data_encaminhamento: String
+  custom_fields: [CustomFields]
+}
+
+type CreateMatchResponse {
+  individuals_ticket_id: ID
+  volunteers_ticket_id: ID
+  individuals_user_id: ID
+  volunteers_user_id: ID
+  status: String
+}
+
+input MatchRecipient {
+  external_id: ID!
+  nome_msr: String!
+  ticket_id: ID!
+  organization_id: ID!
+  requester_id: ID!
+}
+
+input MatchVolunteer {
+  user_id: ID!
+  organization_id: ID!
+  name: String!
+}
+
+input CreateMatchInput {
+  recipient: MatchRecipient!
+  volunteer: MatchVolunteer!
+  agent: ID!
+  community_id: Int!
+}

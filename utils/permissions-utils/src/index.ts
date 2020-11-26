@@ -8,7 +8,7 @@ type Session = {
   aud: string
 }
 
-type Context = {
+export type Context = {
   session: Session
 }
 
