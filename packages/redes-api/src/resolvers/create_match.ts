@@ -43,7 +43,11 @@ const create_match = async (_: void, args: Args, context: Context): Promise<any>
         },
         volunteer_user: {
           name: volunteer.name,
-          ticket_id: volunteerRes.ticket_id
+          ticket_id: volunteerRes.ticket_id,
+          registration_number: volunteer.registration_number,
+          organization_id: volunteer.organization_id,
+          whatsapp: volunteer.whatsapp,
+          phone: volunteer.phone
         },
         agent,
         community_id

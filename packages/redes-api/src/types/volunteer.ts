@@ -9,8 +9,8 @@ export type VolunteerUser = {
   organization_id: number
   latitude: string
   longitude: string
-  whatsapp: string
-  phone: string
+  whatsapp?: string
+  phone?: string
   registration_number: string
   ticket_id?: number
 };

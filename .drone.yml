@@ -92,7 +92,7 @@ pipeline:
       status: success
       event: [push]
 
-  domains-staging-deploy:
+  redes-staging-deploy:
     image: peloton/drone-rancher
     url: http://cluster.bonde.org
     service: apis/redes
@@ -190,7 +190,7 @@ pipeline:
       status: success
       event: [tag]
 
-  domains-production-deploy:
+  redes-production-deploy:
     image: peloton/drone-rancher
     url: http://cluster.bonde.org
     service: apis/redes
