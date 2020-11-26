@@ -117,19 +117,19 @@ ${assignee_name} do Mapa do Acolhimento`;
 export const agentDicio = {
   377510044432: "Larissa",
   377577169651: "Ana",
-  377511446392: "Gabriela"
+  377511446392: "Gabriela",
 };
 
 export const recipientTicket = ({ recipient_ticket, volunteer_user, agent }: UpdateRecipientTicket): Ticket & { ticket_id: number } => ({
   ticket_id: recipient_ticket.ticket_id,
-  assignee_id: agentDicio[getAgentZendeskUserId(agent)],
+  assignee_id: getAgentZendeskUserId(agent),
   status: "pending",
   organization_id: recipient_ticket.organization_id,
   comment: {
     body: recipientComment({
       volunteer_user,
       recipient_name: recipient_ticket.nome_msr,
-      assignee_name: getAgentZendeskUserId(agent)
+      assignee_name: agentDicio[getAgentZendeskUserId(agent)] || "Voluntária"
     }),
     author_id: getAgentZendeskUserId(agent),
     public: true

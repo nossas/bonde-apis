@@ -108,7 +108,7 @@ input MatchVolunteer {
   user_id: ID!
   organization_id: ID!
   name: String!
-  registration_number: Int!
+  registration_number: String!
   whatsapp: String
   phone: String
 }

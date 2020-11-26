@@ -22,6 +22,7 @@ export const queries = {
         created_at
         community_id
         individuals_user_id
+        individuals_ticket_id
         volunteers_user_id
         volunteers_ticket_id
         status
