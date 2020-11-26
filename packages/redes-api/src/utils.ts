@@ -9,7 +9,7 @@ export const zendeskOrganizations = JSON.parse(
 
 export const getAgentZendeskUserId = (
   id?: number | null
-): number | undefined => {
+): number => {
   switch (id) {
     case 281: //"Larissa"
       return 377510044432;
@@ -17,9 +17,6 @@ export const getAgentZendeskUserId = (
       return 377577169651;
     case 339: //"Gabriela",
       return 377511446392;
-    case null:
-    case undefined:
-      return undefined;
     default:
       // "Voluntária"
       return 373018450472;
@@ -84,15 +81,58 @@ export const volunteerTicket = ({ recipient_ticket, volunteer_user, agent }: Cre
   ]
 })
 
+const recipientComment = ({ volunteer_user, assignee_name, recipient_name }) => {
+  const {
+    registration_number,
+    organization_id,
+    name,
+    whatsapp,
+    phone
+  } = volunteer_user;
+  const { type, registry_type } = getVolunteerType(organization_id);
+
+  return `Olá, ${recipient_name}!
+
+Boa notícia!
+
+Conseguimos localizar uma ${type.toLowerCase()} disponível próxima a você. Estamos te enviando os dados abaixo para que entre em contato em até 30 dias. É muito importante atentar-se a esse prazo pois, após esse período, a sua vaga pode expirar. Não se preocupe, caso você não consiga, poderá retornar à fila de atendimento se cadastrando novamente pelo site.
+
+${type}: ${name.split(" ")[0]}
+
+Telefone: ${phone || whatsapp}
+
+${registry_type}: ${registration_number}
+
+Diante do contexto da pandemia do covid-19, sabemos que podem surgir algumas dificuldades para que receba o acolhimento necessário, especialmente à distância, que é a recomendação neste momento. Por isso, caso haja algum obstáculo que impossibilite que o seu atendimento aconteça de forma segura, por favor nos escreva e para te oferecermos mais informações sobre como buscar ajuda na rede pública de atendimento. Não se preocupe, você também poderá iniciar os atendimentos de modo presencial quando esse período tão difícil passar.
+
+Todos os atendimentos do Mapa devem ser gratuitos pelo tempo que durarem. Caso você seja cobrada, comunique imediatamente a nossa equipe. No momento de contato com a voluntária, por favor, identifique que você buscou ajuda via Mapa do Acolhimento.
+
+Agradecemos pela coragem, pela confiança e esperamos que seja bem acolhida! Pedimos que entre em contato para compartilhar a sua experiência de atendimento.
+
+Um abraço,
+
+${assignee_name} do Mapa do Acolhimento`;
+};
+
+export const agentDicio = {
+  377510044432: "Larissa",
+  377577169651: "Ana",
+  377511446392: "Gabriela"
+};
+
 export const recipientTicket = ({ recipient_ticket, volunteer_user, agent }: UpdateRecipientTicket): Ticket & { ticket_id: number } => ({
   ticket_id: recipient_ticket.ticket_id,
-  assignee_id: getAgentZendeskUserId(agent),
+  assignee_id: agentDicio[getAgentZendeskUserId(agent)],
   status: "pending",
   organization_id: recipient_ticket.organization_id,
   comment: {
-    body: `Voluntária recebeu um pedido de acolhimento de ${recipient_ticket.nome_msr}`,
+    body: recipientComment({
+      volunteer_user,
+      recipient_name: recipient_ticket.nome_msr,
+      assignee_name: getAgentZendeskUserId(agent)
+    }),
     author_id: getAgentZendeskUserId(agent),
-    public: false
+    public: true
   },
   custom_fields: [
     {

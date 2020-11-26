@@ -69,6 +69,10 @@ input RecipientTicketUpdate {
 input VolunteerUserUpdate {
   name: String!
   ticket_id: ID!
+  registration_number: String!
+  organization_id: ID!
+  whatsapp: String
+  phone: String
 }
 
 type RecipientTicketUpdateResponse {
@@ -104,6 +108,9 @@ input MatchVolunteer {
   user_id: ID!
   organization_id: ID!
   name: String!
+  registration_number: Int!
+  whatsapp: String
+  phone: String
 }
 
 input CreateMatchInput {

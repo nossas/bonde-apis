@@ -16,7 +16,7 @@ export type Ticket = {
   comment: {
     body: string
     author_id?: number
-    public: false
+    public: boolean
   }
 }
 

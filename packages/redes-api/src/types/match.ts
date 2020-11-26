@@ -20,6 +20,9 @@ export type CreateMatch = {
     organization_id: number
     name: string
     ticket_id?: number
+    registration_number: string
+    whatsapp?: string
+    phone?: string
   }
   agent: number
   community_id: number
