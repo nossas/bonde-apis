@@ -84,4 +84,4 @@ const create_volunteer_ticket = async (_: void, args: Args, _context: Context): 
   }
 }
 
-export default check_user(create_volunteer_ticket, Roles.USER)
+export default check_user(create_volunteer_ticket, [Roles.USER, Roles.ADMIN]);

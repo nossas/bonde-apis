@@ -18,7 +18,7 @@ export enum Roles {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const handle_check_user = ({ fetch, logger }: Options) => (next: any, role: Roles) => async (_: void, args: any, context: Context) => {
+export const handle_check_user = ({ fetch, logger }: Options) => (next: any, role: Roles | [Roles]) => async (_: void, args: any, context: Context) => {
   const get_permission = handle_get_permission({ fetch, logger });
   const { session }: Context = context;
 
@@ -27,7 +27,10 @@ export const handle_check_user = ({ fetch, logger }: Options) => (next: any, rol
     // Get permission on API-GraphQL (Hasura)
     const { permission, user } = await get_permission({ user_id: session.user_id, community_id });
     // Execute only when role is permitted from relationship between community users
-    if (permission?.role === role || user.is_admin) return next(_, args, context);
+    const roleInArray = typeof role === 'number' ? [role] : role
+    if (
+      roleInArray.includes(permission?.role) || user.is_admin
+    ) return next(_, args, context);
   }
   // Permission denied
   throw new Error('invalid_permission');

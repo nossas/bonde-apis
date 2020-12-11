@@ -79,4 +79,4 @@ const update_recipient_ticket = async (_: void, args: Args, _context: Context): 
   }
 }
 
-export default check_user(update_recipient_ticket, Roles.USER)
+export default check_user(update_recipient_ticket, [Roles.USER, Roles.ADMIN]);
