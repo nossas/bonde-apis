@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { mocked } from 'ts-jest/utils';
 import fetch from './graphql-api/client';
 import * as ActionsAPI from './graphql-api/actions';
@@ -28,11 +29,12 @@ describe('tests on api graphql', () => {
     return NotificationsAPI
       .send(input)
       .then(({ data }) => {
+        // @ts-ignore
         expect(fetchMocked).toBeCalledWith({
           query: NotificationsAPI.queries.send,
-          variables: { input }
+          variables: { input },
         });
-        expect(data).toEqual({ status: 'OK!' });
+        expect(data).toEqual({ status: "OK!" });
       });
   });
 
@@ -50,9 +52,10 @@ describe('tests on api graphql', () => {
     return ActivistsAPI
       .get_or_create(input)
       .then((activist) => {
+        // @ts-ignore
         expect(fetchMocked).toBeCalledWith({
           query: ActivistsAPI.queries.get_or_create,
-          variables: { activist: input }
+          variables: { activist: input },
         });
         expect(activist).toEqual({ ...input, id: 2 });
       });
@@ -70,9 +73,10 @@ describe('tests on api graphql', () => {
     return WidgetsAPI
       .get(widgetReturned.id)
       .then((widget) => {
+        // @ts-ignore
         expect(fetchMocked).toBeCalledWith({
           query: WidgetsAPI.queries.get,
-          variables: { widget_id: widgetReturned.id }
+          variables: { widget_id: widgetReturned.id },
         });
         expect(widget).toEqual(widgetReturned);
       });
@@ -91,9 +95,10 @@ describe('tests on api graphql', () => {
     return ActionsAPI
       .pressure(input)
       .then((activist_pressure) => {
+        // @ts-ignore
         expect(fetchMocked).toBeCalledWith({
           query: ActionsAPI.queries.pressure,
-          variables: { input }
+          variables: { input },
         });
         expect(activist_pressure).toEqual({ id: 2 });
       });
@@ -110,9 +115,10 @@ describe('tests on api graphql', () => {
     return ActionsAPI
       .pressure_sync_done(input)
       .then((activist_pressure: any) => {
+        // @ts-ignore
         expect(fetchMocked).toBeCalledWith({
           query: ActionsAPI.queries.pressure_sync_done,
-          variables: input
+          variables: input,
         });
         expect(activist_pressure).toEqual({ id: 2 });
       })
