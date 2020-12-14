@@ -14,8 +14,14 @@ type Args = {
   input: CreateMatch
 }
 
-const create_match = async (_: void, args: Args, context: Context): Promise<any> => {
-  const { input: { recipient, volunteer, agent, community_id } } = args
+const create_match = async (
+  _: void,
+  args: Args,
+  context: Context
+): Promise<any> => {
+  const {
+    input: { recipient, volunteer, agent, community_id },
+  } = args;
   try {
     const volunteerRes = await create_volunteer_ticket(undefined, {
       input: {
@@ -63,11 +69,11 @@ const create_match = async (_: void, args: Args, context: Context): Promise<any>
       status: "encaminhamento__realizado"
     }
 
-    return await match.create(matchTicket)
-  } catch(e) {
+    return await match.create(matchTicket);
+  } catch (e) {
     logger.error(e)
     return undefined
   }
 }
 
-export default check_user(create_match, Roles.USER)
+export default check_user(create_match, [Roles.USER, Roles.ADMIN]);
