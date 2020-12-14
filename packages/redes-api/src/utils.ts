@@ -7,22 +7,6 @@ export const zendeskOrganizations = JSON.parse(
   process.env.ZENDESK_ORGANIZATIONS || "{}"
 );
 
-export const getAgentZendeskUserId = (
-  id?: number | null
-): number => {
-  switch (id) {
-    case 281: //"Larissa"
-      return 377510044432;
-    case 346: //"Ana",
-      return 377577169651;
-    case 339: //"Gabriela",
-      return 377511446392;
-    default:
-      // "Voluntária"
-      return 373018450472;
-  }
-};
-
 export const getVolunteerType = (id: number): { type: string; registry_type: string } => {
   if (Number(id) === Number(zendeskOrganizations["lawyer"]))
     return {
@@ -49,8 +33,8 @@ export const getCurrentDate = (): string => {
 export const volunteerTicket = ({ recipient_ticket, volunteer_user, agent }: CreateVolunteerTicket): Ticket => ({
   external_id: recipient_ticket.external_id,
   requester_id: volunteer_user.user_id,
-  submitter_id: getAgentZendeskUserId(agent),
-  assignee_id: getAgentZendeskUserId(agent),
+  submitter_id: agent,
+  assignee_id: agent,
   status: "pending",
   subject: `[${getVolunteerType(volunteer_user.organization_id).type}] ${
     volunteer_user.name
@@ -58,7 +42,7 @@ export const volunteerTicket = ({ recipient_ticket, volunteer_user, agent }: Cre
   organization_id: volunteer_user.organization_id,
   comment: {
     body: `Voluntária recebeu um pedido de acolhimento de ${recipient_ticket.nome_msr}`,
-    author_id: getAgentZendeskUserId(agent),
+    author_id: agent,
     public: false
   },
   custom_fields: [
@@ -122,16 +106,16 @@ export const agentDicio = {
 
 export const recipientTicket = ({ recipient_ticket, volunteer_user, agent }: UpdateRecipientTicket): Ticket & { ticket_id: number } => ({
   ticket_id: recipient_ticket.ticket_id,
-  assignee_id: getAgentZendeskUserId(agent),
+  assignee_id: agent,
   status: "pending",
   organization_id: recipient_ticket.organization_id,
   comment: {
     body: recipientComment({
       volunteer_user,
       recipient_name: recipient_ticket.nome_msr,
-      assignee_name: agentDicio[getAgentZendeskUserId(agent)] || "Voluntária"
+      assignee_name: agentDicio[agent] || "Voluntária"
     }),
-    author_id: getAgentZendeskUserId(agent),
+    author_id: agent,
     public: true
   },
   custom_fields: [
