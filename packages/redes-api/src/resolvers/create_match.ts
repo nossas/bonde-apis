@@ -23,22 +23,26 @@ const create_match = async (
     input: { recipient, volunteer, agent, community_id },
   } = args;
   try {
-    const volunteerRes = await create_volunteer_ticket(undefined, {
-      input: {
-        recipient_ticket: {
-          external_id: recipient.external_id,
-          nome_msr: recipient.nome_msr,
-          ticket_id: recipient.ticket_id,
+    const volunteerRes = await create_volunteer_ticket(
+      undefined,
+      {
+        input: {
+          recipient_ticket: {
+            external_id: recipient.external_id || null,
+            nome_msr: recipient.nome_msr,
+            ticket_id: recipient.ticket_id,
+          },
+          volunteer_user: {
+            user_id: volunteer.user_id,
+            organization_id: volunteer.organization_id,
+            name: volunteer.name,
+          },
+          agent,
+          community_id,
         },
-        volunteer_user: {
-          user_id: volunteer.user_id,
-          organization_id: volunteer.organization_id,
-          name: volunteer.name,
-        },
-        agent,
-        community_id
-      }
-    }, context)
+      },
+      context
+    );
 
     await update_recipient_ticket(undefined, {
       input: {

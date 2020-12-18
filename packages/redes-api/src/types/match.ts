@@ -9,7 +9,7 @@ export type MatchTicket = {
 
 export type CreateMatch = {
   recipient: {
-    external_id: number
+    external_id?: number
     nome_msr: string
     ticket_id: number
     organization_id: number

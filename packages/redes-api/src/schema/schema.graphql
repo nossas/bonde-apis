@@ -42,7 +42,7 @@ input VolunteerTicketInsertInput {
 }
 
 input RecipientTicketInsert {
-  external_id: ID!
+  external_id: ID
   nome_msr: String!
   ticket_id: ID!
 }
@@ -97,7 +97,7 @@ type CreateMatchResponse {
 }
 
 input MatchRecipient {
-  external_id: ID!
+  external_id: ID
   nome_msr: String!
   ticket_id: ID!
   organization_id: ID!

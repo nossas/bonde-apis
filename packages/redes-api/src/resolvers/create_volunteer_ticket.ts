@@ -24,7 +24,7 @@ const hasuraSchema = yup
     status: yup.string().required(),
     subject: yup.string().required(),
     description: yup.string().required(),
-    external_id: yup.number().required(),
+    external_id: yup.number().nullable(),
     custom_fields: yup
       .array()
       .of(
@@ -32,7 +32,7 @@ const hasuraSchema = yup
           .object()
           .shape({
             id: yup.number(),
-            value: yup.string().nullable()
+            value: yup.string().nullable(),
           })
           .required()
       )
@@ -47,7 +47,7 @@ const hasuraSchema = yup
     link_match: yup.string().required(),
     data_encaminhamento: yup.string().required(),
     nome_msr: yup.string().required(),
-    status_acolhimento: yup.string().required()
+    status_acolhimento: yup.string().required(),
   })
   .required();
 
