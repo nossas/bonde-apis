@@ -28,7 +28,11 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
       targets = group.targets;
     }
   } else {
-    targets = settingsTargets.split(';');
+    if (typeof settingsTargets === 'string') {
+      targets = settingsTargets.split(';');
+    } else {
+      targets = settingsTargets
+    }
   }
 
   // Subject and Body orders
