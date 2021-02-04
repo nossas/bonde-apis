@@ -33,14 +33,14 @@ scalar JSON
 
 scalar JSONObject
 
-input DonationInput {
-  payment_method: String!
-  amount: Int!
-  card_hash: String
-  customer: JSON
-  period: Int
-  checkout_data: JSON
-}
+# input DonationInput {
+#   payment_method: String!
+#   amount: Int!
+#   card_hash: String
+#   customer: JSON
+#   period: Int
+#   checkout_data: JSON
+# }
 
 input FormEntryField {
   uid: String!
@@ -59,6 +59,13 @@ input EmailPressureInput {
   targets_id: String
   email_subject: String
   email_body: String
+}
+
+input DonationInput {
+  amount: Int!
+  payment_method: String!
+  checkout_data: JSON
+  gateway_data: JSON
 }
 
 input ActivistInput {
@@ -81,5 +88,6 @@ type Status {
 type Mutation {
   create_email_pressure(widget_id: Int!, activist: ActivistInput!, input: EmailPressureInput): Response
   create_form_entry(widget_id: Int!, activist: ActivistInput!, input: FormEntryInput!): Response
+  create_donation(widget_id: Int!, activist: ActivistInput!, input: DonationInput!): Response
   update_mailchimp_settings(api_key: String!, list_id: String!): Status
 }

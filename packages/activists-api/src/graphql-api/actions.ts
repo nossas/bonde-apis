@@ -64,6 +64,16 @@ export const queries = {
         }
       }
     }
+  `,
+  send_donation: `
+    mutation InsertDonation($input:  [donations_insert_input!]!) {
+      insert_donations(objects: $input) {
+        returning {
+          id
+          created_at
+        }
+      }
+    }
   `
 };
 
@@ -112,4 +122,21 @@ export const send_form_sync_done = async ({ id, sync_at }: DoneOpts): Promise<an
   });
 
   return data.update_form_entries.returning[0];
+};
+
+export interface Donation extends WidgetAction {
+  amount: number
+  payment_method: string
+  checkout_data: any
+  gateway_data: any
+  email: string
+}
+
+export const send_donation = async (donation: Donation): Promise<any> => {
+  const { data } = await fetch({
+    query: queries.send_donation,
+    variables: { input: donation }
+  });
+
+  return data.insert_donations.returning[0];
 };
