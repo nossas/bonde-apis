@@ -43,7 +43,8 @@ const create_or_update = async (_: void, args: Args): Promise<RecipientEntity | 
   const { input: { id, recipient, community_id } } = args;
   const client: any = await pagarme.client.connect({ api_key: config.pagarmeApiKey });
 
-  
+  recipient.bank_account.legal_name = recipient.bank_account.legal_name.substring(0,29);
+
   if (!!id) {
     // The next line ensures only 1 recipient by Community on Pagarme
     if (!recipient.id) throw new Error('recipient.id is required');
@@ -70,7 +71,7 @@ const create_or_update = async (_: void, args: Args): Promise<RecipientEntity | 
     transfer_enabled: pagarmeCreated.transfer_enabled,
     community_id
   });
-  
+
   return { id: bondeCreated.id, recipient: pagarmeCreated, community_id };
 }
 
