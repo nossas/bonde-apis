@@ -59,6 +59,7 @@ input EmailPressureInput {
   targets_id: String
   email_subject: String
   email_body: String
+  token: String!
 }
 
 input DonationInput {
