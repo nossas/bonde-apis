@@ -22,7 +22,7 @@ const server = new ApolloServer({
   context: handle_context({ jwtSecret: config.jwtSecret, logger })
 } as any);
 
-app.use('*', cors());
+app.use('*', cors() as any);
 app.use(compression());
 app.use(expressLogger);
 

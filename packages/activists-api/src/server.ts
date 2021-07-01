@@ -16,7 +16,7 @@ const server = new ApolloServer({
 } as any);
 const expressLogger = expressPino({ logger });
 
-app.use('*', cors());
+app.use('*', cors() as any);
 app.use(compression());
 app.use(expressLogger);
 

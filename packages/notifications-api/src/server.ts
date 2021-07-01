@@ -11,13 +11,14 @@ import schema from './schema';
 import logger from './logger';
 
 const app = express();
+
 const server = new ApolloServer({
   schema: schema,
   validationRules: [depthLimit(9)]
 } as any);
 const expressLogger = expressPino({ logger });
 
-app.use('*', cors());
+app.use('*', cors() as any);
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(compression());
 app.use(expressLogger);
