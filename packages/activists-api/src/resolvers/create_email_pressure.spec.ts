@@ -1,8 +1,9 @@
 import { mocked } from 'ts-jest/utils';
+import jwt from "jsonwebtoken";
 import * as ActionsAPI from '../graphql-api/actions';
 import * as NotificationsAPI from '../graphql-api/notifications';
 import { Activist, Widget } from '../types';
-import { create_email_pressure as pressure } from './create_email_pressure';
+import { create_email_pressure as pressure, PressureAction } from './create_email_pressure';
 
 jest.mock('../graphql-api/actions', () => ({
   pressure: jest.fn(),
@@ -16,6 +17,20 @@ jest.mock('../graphql-api/notifications', () => ({
 const mockedNotifications = mocked(NotificationsAPI, true);
 
 describe('actions functions tests', () => {
+  const OLD_ENV = process.env;
+  const SECRET_KEY = "token-de-teste";
+
+  beforeEach(() => {
+    jest.resetModules(); // Most important - it clears the cache
+    process.env = { ...OLD_ENV }; // Make a copy
+    process.env.ACTION_SECRET_KEY = SECRET_KEY;
+  });
+
+  afterAll(() => {
+    process.env = OLD_ENV; // Restore old environment
+  });
+
+
   const activist: Activist = {
     id: 35,
     email: 'activist@test.org',
@@ -42,12 +57,15 @@ describe('actions functions tests', () => {
       }
     }
   };
+  const action: PressureAction = {
+    token: jwt.sign({}, SECRET_KEY, { expiresIn: "1m" })
+  }
 
   it('pressure called notifications.send with widget.settings params', () => {
     mockedActions.pressure.mockResolvedValue({ id: 3, created_at: new Date().toISOString() });
     mockedNotifications.send.mockResolvedValue({});
 
-    return pressure({ widget, activist })
+    return pressure({ widget, activist, action })
       .then(() => {
         const expectedMail = widget.settings.targets.split(';').map((target: string) => ({
           context: { activist },
@@ -78,7 +96,7 @@ describe('actions functions tests', () => {
     });
     mockedNotifications.send.mockResolvedValue({});
 
-    return pressure({ widget, activist })
+    return pressure({ widget, activist, action })
       .then(async ({ data, syncronize }) => {
         await syncronize();
 
@@ -89,4 +107,16 @@ describe('actions functions tests', () => {
         });
       });
   });
+
+  it('throw Error when not config ENVIRONMENT', async () => {
+    process.env.ACTION_SECRET_KEY = undefined;
+    await expect(pressure({ widget, activist, action }))
+      .rejects.toThrow("invalid_action_token");
+  });
+
+  it('throw Error when not pass action.token', async () => {
+    await expect(pressure({ widget, activist, action: { token: undefined } } as any))
+      .rejects.toThrow("invalid_action_token");
+  });
+
 });

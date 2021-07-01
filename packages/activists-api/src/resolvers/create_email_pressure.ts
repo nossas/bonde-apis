@@ -1,13 +1,15 @@
+import jwt from "jsonwebtoken";
 import logger from '../logger';
 import { IActionData, IBaseAction, GroupTarget } from '../types';
 import * as NotificationsAPI from '../graphql-api/notifications';
 import * as ActionsAPI from '../graphql-api/actions';
 import makeActionResolver from './action';
 
-type PressureAction = {
+export type PressureAction = {
   targets_id?: string
   email_subject?: string
   email_body?: string
+  token: string
 }
 
 /**
@@ -18,7 +20,17 @@ type PressureAction = {
  */
 export const create_email_pressure = async ({ widget, activist, action }: IBaseAction<PressureAction>): Promise<IActionData> => {
   const { settings: { targets: settingsTargets, pressure_subject, pressure_body }, pressure_targets } = widget;
-  const { targets_id, email_subject, email_body } = action || {};
+  const { targets_id, email_subject, email_body, token } = action || {};
+
+  // Validate pressure token
+  if (!token || !process.env.ACTION_SECRET_KEY) throw new Error("invalid_action_token");
+
+  try {
+    jwt.verify(token, process.env.ACTION_SECRET_KEY);
+  } catch (e) {
+    logger.error("Invalid token", e);
+    throw new Error("invalid_action_token");
+  }
 
   let targets: string[] = [];
   let group: GroupTarget | null = null;
