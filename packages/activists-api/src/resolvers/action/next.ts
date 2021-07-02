@@ -6,12 +6,15 @@ import * as NotificationsAPI from '../../graphql-api/notifications';
 
 export default async <T>({ activist, widget }: IBaseAction<T>, done: DoneAction): Promise<any> => {
   const { community } = widget.block.mobilization;
-  if (community.mailchimp_api_key && community.mailchimp_list_id) {
+  if (!!community.mailchimp_api_key && !!community.mailchimp_list_id) {
     // Update Contact on Mailchimp
     const { subscribe } = mailchimp({ activist, widget });
-    subscribe().then(done).catch((err: any) => {
+    try {
+      await subscribe();
+      done && await done();
+    } catch (err) {
       logger.child({ err }).error('subscribe mailchimp');
-    });
+    }
   }
 
   // Post-action
