@@ -12,6 +12,7 @@ interface WidgetAction {
 
 interface Pressure extends WidgetAction {
   targets?: any
+  status: "sent" | "sent_optimized" | "awaiting_optimized" | "batch_optimized" | "exceeded_optimized" | "draft"
 }
 
 export const queries = {
@@ -21,6 +22,57 @@ export const queries = {
         returning {
           id
           created_at
+        }
+      }
+    }
+  `,
+  pressure_optimized: `
+    mutation ($input: [activist_pressures_insert_input!]!, $widget_id: Int!) {
+      insert_activist_pressures(objects: $input) {
+        returning {
+          id
+          created_at
+        }
+      }
+      
+      update_activist_pressures(
+        where: {
+          widget_id: { _eq: $widget_id },
+          status: { _eq: "awaiting_optimized" }
+        },
+        _set: { status: "batch_optimized" }
+      ) {
+        returning {
+          id
+        }
+      }
+    }
+  `,
+  get_pressure_info: `
+    query ($widget_id: Int!) {
+      batch_count: activist_pressures_aggregate(
+        where: {
+          widget: { id: { _eq: $widget_id } },
+          status: {
+            _in: ["awaiting_optimized"]
+          }
+        }
+      ) {
+        aggregate {
+          count
+        }
+      }
+      
+      mail_count: activist_pressures_aggregate(
+        where: {
+          widget: { id: { _eq: $widget_id } },
+          status: {
+            _in: ["sent", "sent_optimized"]
+          }
+        }
+      ) {
+        aggregate {
+          count
         }
       }
     }
@@ -86,6 +138,34 @@ export const pressure = async (input: Pressure): Promise<ActivistPressure> => {
   logger.child({ data, errors }).info('pressure');
   return data.insert_activist_pressures.returning[0];
 };
+
+export const pressure_optimized = async (input: Pressure, widgetId: number): Promise<any> => {
+  const { data, errors } = await fetch({
+    query: queries.pressure_optimized,
+    variables: { input, widget_id: widgetId }
+  });
+
+  logger.child({ data, errors }).info('pressure');
+  return data.insert_activist_pressures.returning[0];
+}
+
+type PressureInfo = {
+  batch_count: number
+  mail_count: number
+}
+
+export const get_pressure_info = async (widgetId: number): Promise<PressureInfo> => {
+  const { data, errors } = await fetch({
+    query: queries.get_pressure_info,
+    variables: { widget_id: widgetId }
+  });
+
+  logger.child({ data, errors }).info('get_pressure_info');
+  return {
+    batch_count: data.batch_count.aggregate.count,
+    mail_count: data.mail_count.aggregate.count
+  };
+}
 
 type DoneOpts = {
   id: number

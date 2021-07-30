@@ -7,7 +7,8 @@ import { create_email_pressure as pressure, PressureAction } from './create_emai
 
 jest.mock('../graphql-api/actions', () => ({
   pressure: jest.fn(),
-  pressure_sync_done: jest.fn()
+  pressure_sync_done: jest.fn(),
+  get_pressure_info: jest.fn()
 }))
 const mockedActions = mocked(ActionsAPI, true);
 
@@ -24,6 +25,8 @@ describe('actions functions tests', () => {
     jest.resetModules(); // Most important - it clears the cache
     process.env = { ...OLD_ENV }; // Make a copy
     process.env.ACTION_SECRET_KEY = SECRET_KEY;
+
+    mockedActions.get_pressure_info.mockResolvedValue({ mail_count: 0, batch_count: 0 })
   });
 
   afterAll(() => {
@@ -81,7 +84,9 @@ describe('actions functions tests', () => {
           widget_id: widget.id,
           mobilization_id: widget.block.mobilization.id,
           cached_community_id: widget.block.mobilization.community.id,
-          targets: { targets: widget.settings.targets.split(';') }
+          targets: { targets: widget.settings.targets.split(';') },
+          status: "sent",
+          group: undefined
         };
         expect(mockedActions.pressure).toBeCalledWith(expectedPressure);
       });

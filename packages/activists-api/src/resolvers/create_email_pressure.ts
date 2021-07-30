@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import logger from '../logger';
-import { IActionData, IBaseAction, GroupTarget } from '../types';
+import { IActionData, IBaseAction, GroupTarget, Activist } from '../types';
 import * as NotificationsAPI from '../graphql-api/notifications';
 import * as ActionsAPI from '../graphql-api/actions';
 import makeActionResolver from './action';
@@ -12,6 +12,36 @@ export type PressureAction = {
   token: string
 }
 
+type PressureEmailArgs = {
+  activist: Activist
+  emailBody: string
+  emailSubject: string
+  targets: any[]
+}
+
+const send_pressure_mail = async ({
+  activist,
+  emailBody,
+  emailSubject,
+  targets
+}: PressureEmailArgs) => {
+  // Subject and Body orders
+  // 1 Changed by activists
+  // 2 Configured in group of targets
+  // 3 Configured in settings of widget
+  const mailInput = targets.map((target: string) => ({
+    context: { activist },
+    body: emailBody,
+    subject: emailSubject, // email_subject || group?.email_subject || pressure_subject,
+    email_from: `${activist.name} <${activist.email}>`,
+    email_to: target
+  }));
+
+  // Envia e-mail de pressão
+  await NotificationsAPI.send(mailInput);
+  logger.child({ mailInput }).info('NotificationsAPI');
+}
+
 /**
  * Make a pressure to email using Notifications and Actions API
  * 
@@ -19,8 +49,23 @@ export type PressureAction = {
  * @param activist
  */
 export const create_email_pressure = async ({ widget, activist, action }: IBaseAction<PressureAction>): Promise<IActionData> => {
-  const { settings: { targets: settingsTargets, pressure_subject, pressure_body }, pressure_targets } = widget;
-  const { targets_id, email_subject, email_body, token } = action || {};
+  const {
+    settings: {
+      targets: settingsTargets,
+      pressure_subject: pressureSubject,
+      pressure_body: pressureBody,
+      batch_limit = 100,
+      mail_limit = 1000,
+      optimization_disabled = false
+    },
+    pressure_targets: pressureTargets
+  } = widget;
+  const {
+    targets_id: targetsId,
+    email_subject: emailSubject,
+    email_body: emailBody,
+    token
+  } = action || {};
 
   // Validate pressure token
   if (!token || !process.env.ACTION_SECRET_KEY) throw new Error("invalid_action_token");
@@ -34,8 +79,8 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
 
   let targets: string[] = [];
   let group: GroupTarget | null = null;
-  if (pressure_targets && pressure_targets.length > 0) {
-    group = pressure_targets.filter((g: GroupTarget) => g.identify === targets_id)[0];
+  if (pressureTargets && pressureTargets.length > 0) {
+    group = pressureTargets.filter((g: GroupTarget) => g.identify === targetsId)[0];
     if (!!group) {
       targets = group.targets;
     }
@@ -47,22 +92,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     }
   }
 
-  // Subject and Body orders
-  // 1 Changed by activists
-  // 2 Configured in group of targets
-  // 3 Configured in settings of widget
-  const mailInput = targets.map((target: string) => ({
-    context: { activist },
-    body: email_body || group?.email_body || pressure_body,
-    subject: email_subject || group?.email_subject || pressure_subject,
-    email_from: `${activist.name} <${activist.email}>`,
-    email_to: target
-  }));
-
-  await NotificationsAPI.send(mailInput);
-  logger.child({ mailInput }).info('NotificationsAPI');
-
-  const { id, created_at } = await ActionsAPI.pressure({
+  const activistPressure = {
     activist_id: activist.id,
     widget_id: widget.id,
     mobilization_id: widget.block.mobilization.id,
@@ -71,9 +101,89 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
       group: group?.identify,
       targets: targets
     }
-  });
-  logger.child({ id, created_at }).info('ActionsAPI');
+  }
 
+  if (!optimization_disabled) {
+    // Pressão otimizado foi habilitada
+    const pressureInfo = await ActionsAPI.get_pressure_info(widget.id);
+    // Como dividir o lote de e-mails a partir da mudança de limite do lote??
+    // Status
+    // draft: envios antigos ou valor de criação padrão
+    // sent: enviado fora do processo de otimização
+    // sent_optimized: enviado como gatilho do processo de otimização
+    // awaiting_optimized: não enviado e aguardando envio do lote
+    // batch_optimized: enviado como parte do processo de otimização
+  
+    if (pressureInfo.mail_count >= mail_limit) {
+      // Esta dentro do limite único, inicia o processo de otimização
+      if ((pressureInfo.batch_count + 1) === batch_limit) {
+        // Limite de lote atingido, enviar e-mail e atualizar pressões
+        await send_pressure_mail({
+          activist,
+          targets,
+          emailBody: emailBody || group?.email_body || pressureBody,
+          emailSubject: emailSubject || group?.email_subject || pressureSubject
+        });
+        // Cria nova pressão e atualiza pressões otimizadas
+        const { id, created_at } = await ActionsAPI
+          .pressure_optimized({ ...activistPressure, status: "sent_optimized" }, widget.id);
+
+        logger.child({ id, created_at }).info('ActionsAPI');
+        return {
+          data: { activist_pressure_id: id },
+          syncronize: async () => await ActionsAPI.pressure_sync_done({
+            id,
+            sync_at: created_at
+          })
+        };
+      }
+      // Cria uma nova pressão aguardando o próximo lote de envio
+      const { id, created_at } = await ActionsAPI.pressure({
+        ...activistPressure,
+        status: "awaiting_optimized"
+      });
+
+      logger.child({ id, created_at }).info('ActionsAPI');
+      return {
+        data: { activist_pressure_id: id },
+        syncronize: async () => await ActionsAPI.pressure_sync_done({
+          id,
+          sync_at: created_at
+        })
+      };
+    }
+    // Limite excedido, cria pressão mas não envia e-mail
+    // exceeded_optimized: pressão não enviado devido ao limite de envio único
+    //
+    // const { id, created_at } = await ActionsAPI.pressure({
+    //   ...activistPressure,
+    //   status: "exceeded_optimized"
+    // });
+
+    // logger.child({ id, created_at }).info('ActionsAPI');
+    // return {
+    //   data: { activist_pressure_id: id },
+    //   syncronize: async () => await ActionsAPI.pressure_sync_done({
+    //     id,
+    //     sync_at: created_at
+    //   })
+    // };
+  }
+
+  // Envio de e-mail para pressão não otimizada
+  await send_pressure_mail({
+    activist,
+    targets,
+    emailBody: emailBody || group?.email_body || pressureBody,
+    emailSubject: emailSubject || group?.email_subject || pressureSubject
+  });
+  // Cria a pressão na base de dados
+  const { id, created_at } = await ActionsAPI.pressure({
+    ...activistPressure,
+    status: "sent"
+  });
+
+  logger.child({ id, created_at }).info('ActionsAPI');
   return {
     data: { activist_pressure_id: id },
     syncronize: async () => await ActionsAPI.pressure_sync_done({ id, sync_at: created_at })
