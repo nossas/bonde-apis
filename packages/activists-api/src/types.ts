@@ -11,6 +11,7 @@ export type Activist = {
 export type ActivistPressure = {
   id: number
   created_at: string
+  activist?: Activist
 };
 
 export type Community = {

@@ -1,4 +1,4 @@
-import { ActivistPressure } from '../types';
+import { Activist, ActivistPressure } from '../types';
 import fetch from './client';
 import logger from '../logger';
 
@@ -44,6 +44,10 @@ export const queries = {
       ) {
         returning {
           id
+          activist {
+            name
+            email
+          }
         }
       }
     }
@@ -82,7 +86,7 @@ export const queries = {
       update_activist_pressures(
         where: { id: { _eq: $id } },
         _set: {
-          syncronized: true,
+          synchronized: true,
           mailchimp_syncronization_at: $sync_at
         }
       ) {
@@ -107,7 +111,7 @@ export const queries = {
       update_form_entries(
         where: { id: { _eq: $id } },
         _set: {
-          syncronized: true,
+          synchronized: true,
           mailchimp_syncronization_at: $sync_at
         }
       ) {
@@ -139,14 +143,22 @@ export const pressure = async (input: Pressure): Promise<ActivistPressure> => {
   return data.insert_activist_pressures.returning[0];
 };
 
-export const pressure_optimized = async (input: Pressure, widgetId: number): Promise<any> => {
+type PressureOptimizedResult = {
+  pressure: ActivistPressure
+  batch_activists: Activist[]
+}
+
+export const pressure_optimized = async (input: Pressure, widgetId: number): Promise<PressureOptimizedResult> => {
   const { data, errors } = await fetch({
     query: queries.pressure_optimized,
     variables: { input, widget_id: widgetId }
   });
 
   logger.child({ data, errors }).info('pressure');
-  return data.insert_activist_pressures.returning[0];
+  return {
+    pressure: data.insert_activist_pressures.returning[0],
+    batch_activists: data.update_activist_pressures.returning.map((ap: ActivistPressure) => ap.activist)
+  };
 }
 
 type PressureInfo = {
