@@ -58,7 +58,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
       pressure_body: pressureBody,
       batch_limit = 100,
       mail_limit = 1000,
-      optimization_disabled = false
+      optimization_enabled = true
     },
     pressure_targets: pressureTargets
   } = widget;
@@ -105,9 +105,10 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     }
   }
 
-  if (!optimization_disabled) {
+  if (optimization_enabled) {
     // Pressão otimizado foi habilitada
     const pressureInfo = await ActionsAPI.get_pressure_info(widget.id);
+    console.log("pressureInfo", pressureInfo);
     // Como dividir o lote de e-mails a partir da mudança de limite do lote??
     // Status
     // draft: envios antigos ou valor de criação padrão
