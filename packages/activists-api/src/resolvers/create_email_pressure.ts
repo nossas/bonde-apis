@@ -136,7 +136,8 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
           ${contentBody}
           _________________
           Assinado,
-          {% for email in activists %}{{ email }}{% endfor %}
+          {% for email in activists %}{{ email }}
+          {% endfor %}
         `;
 
         await send_pressure_mail({
