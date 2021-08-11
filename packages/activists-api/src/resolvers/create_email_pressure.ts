@@ -105,6 +105,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     }
   }
 
+  console.log("optimization_enabled", { optimization_enabled });
   if (optimization_enabled) {
     // Pressão otimizado foi habilitada
     const pressureInfo = await ActionsAPI.get_pressure_info(widget.id);
@@ -119,7 +120,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
   
     if (pressureInfo.mail_count >= mail_limit) {
       // Esta dentro do limite único, inicia o processo de otimização
-      if ((pressureInfo.batch_count + 1) === batch_limit) {
+      if ((pressureInfo.batch_count + 1) >= batch_limit) {
         // Cria nova pressão e atualiza pressões otimizadas
         const { pressure: { id, created_at }, batch_activists } = await ActionsAPI
           .pressure_optimized({ ...activistPressure, status: "sent_optimized" }, widget.id);
