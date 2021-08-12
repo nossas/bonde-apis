@@ -128,11 +128,13 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
         const count = batch_activists.length + 1;
         const activists = batch_activists.map((a) => a.email);
         activists.push(activist.email);
+        activists.filter((item, index) => activists.indexOf(item) === index);
+ 
         // Limite de lote atingido, enviar e-mail e atualizar pressões
         // Enviar e-mail de pressão customizado
         const contentBody = group?.email_body || pressureBody;
         const optimziedBody = `
-          Você recebeu {{ count }} emails de cidadãos diferentes com a seguinte demanda:
+          Você recebeu {{ count }} pressões com a seguinte demanda:
 
           ${contentBody}
           _________________
