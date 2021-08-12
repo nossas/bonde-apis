@@ -126,9 +126,9 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
           .pressure_optimized({ ...activistPressure, status: "sent_optimized" }, widget.id);
 
         const count = batch_activists.length + 1;
-        const activists = batch_activists.map((a) => a.email);
+        let activists = batch_activists.map((a) => a.email);
         activists.push(activist.email);
-        activists.filter((item, index) => activists.indexOf(item) === index);
+        activists = activists.filter((item, index) => activists.indexOf(item) === index);
  
         // Limite de lote atingido, enviar e-mail e atualizar pressões
         // Enviar e-mail de pressão customizado
