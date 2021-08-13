@@ -11,7 +11,7 @@ export const queries = {
           objects: $activist,
           on_conflict: {
             constraint: activists_email_key,
-            update_columns: [name, first_name, last_name, phone, city]
+            update_columns: [name, first_name, last_name, phone, city, state]
           }
         ) {
           returning {
@@ -22,6 +22,7 @@ export const queries = {
             email
             city
             phone
+            state
           }
         }
     }
@@ -35,6 +36,7 @@ export const queries = {
       email
       city
       phone
+      state
     }
 
     fragment communitieFields on communities {

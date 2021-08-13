@@ -6,6 +6,7 @@ export type Activist = {
   last_name?: string
   phone?: string
   city?: string
+  state?: string
 };
 
 export type ActivistPressure = {
@@ -55,6 +56,7 @@ export type ActivistInput = {
   last_name?: string
   phone?: string
   city?: string
+  state?: string
 };
 
 export type Field = {

@@ -16,6 +16,7 @@ type ActivistAction {
   last_name: String
   phone: String
   city: String
+  state: String
 }
 
 type Action {
@@ -76,6 +77,7 @@ input ActivistInput {
   last_name: String
   phone: String
   city: String
+  state: String
 }
 
 type Response {
