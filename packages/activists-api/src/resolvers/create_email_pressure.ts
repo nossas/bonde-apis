@@ -10,6 +10,7 @@ export type PressureAction = {
   email_subject?: string
   email_body?: string
   token: string
+  form_data?: any
 }
 
 type PressureEmailArgs = {
@@ -66,7 +67,8 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     targets_id: targetsId,
     email_subject: emailSubject,
     email_body: emailBody,
-    token
+    token,
+    form_data
   } = action || {};
 
   // Validate pressure token
@@ -102,14 +104,13 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     targets: {
       group: group?.identify,
       targets: targets
-    }
+    },
+    form_data
   }
 
-  console.log("optimization_enabled", { optimization_enabled });
   if (optimization_enabled) {
     // Pressão otimizado foi habilitada
     const pressureInfo = await ActionsAPI.get_pressure_info(widget.id);
-    console.log("pressureInfo", pressureInfo);
     // Como dividir o lote de e-mails a partir da mudança de limite do lote??
     // Status
     // draft: envios antigos ou valor de criação padrão
