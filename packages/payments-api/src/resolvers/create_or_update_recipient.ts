@@ -2,6 +2,7 @@ import pagarme from 'pagarme';
 import * as recipients from '../graphql-api/recipients';
 import { check_user, Roles } from '../permissions';
 import config from '../config';
+import logger from "../logger";
 
 if (!config.pagarmeApiKey) throw new Error('PAGARME_API_KEY not found');
 
@@ -78,7 +79,10 @@ const create_or_update = async (_: void, args: Args): Promise<RecipientEntity | 
 
     return { id: bondeCreated.id, recipient: pagarmeCreated, community_id };
   } catch (err) {
-    if (err.response) throw new Error(err.response);
+    logger.child({ err }).info("update_recipient_failed");
+    if (err.response) throw new Error(JSON.stringify({
+      pagarme: err.response.errors
+    }));
     else throw new Error(err);
   }
 }
