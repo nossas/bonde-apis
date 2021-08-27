@@ -18,7 +18,7 @@ type BankAccount = {
   document_type: string
   document_number: string
   legal_name: string
-
+  pix_key?: string
 }
 
 type Recipient = {
