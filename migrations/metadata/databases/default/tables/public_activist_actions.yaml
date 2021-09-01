@@ -1,0 +1,82 @@
+table:
+  name: activist_actions
+  schema: public
+object_relationships:
+- name: community
+  using:
+    foreign_key_constraint_on: community_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+    columns:
+    - action_created_at
+    - activist_created_at
+    - id
+    - action
+    - widget_id
+    - mobilization_id
+    - community_id
+    - activist_id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - action_created_at
+    - activist_created_at
+    - id
+    - action
+    - widget_id
+    - mobilization_id
+    - community_id
+    - activist_id
+    filter: {}
+  role: common_user
+- permission:
+    allow_aggregations: true
+    columns:
+    - activist_id
+    - community_id
+    - id
+    - mobilization_id
+    - widget_id
+    - action
+    - action_created_at
+    - activist_created_at
+    filter:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - activist_id
+    - community_id
+    - id
+    - mobilization_id
+    - widget_id
+    - action
+    - action_created_at
+    - activist_created_at
+    filter:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+  role: user
+delete_permissions:
+- permission:
+    filter:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+  role: user
