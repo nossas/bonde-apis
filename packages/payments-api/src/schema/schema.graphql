@@ -44,6 +44,7 @@ input BankAccountInput {
   document_type: String!
   document_number: String!
   legal_name: String!
+  pix_key: String
 
 }
 
