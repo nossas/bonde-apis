@@ -57,6 +57,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
       targets: settingsTargets,
       pressure_subject: pressureSubject,
       pressure_body: pressureBody,
+      pressure_type: pressureType,
       batch_limit = 100,
       mail_limit = 1000,
       optimization_enabled = true
@@ -81,20 +82,27 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     throw new Error("invalid_action_token");
   }
 
-  let targets: string[] = [];
-  let group: GroupTarget | null = null;
-  if (pressureTargets && pressureTargets.length > 0) {
+  let group: GroupTarget | undefined = undefined;
+  const targets: string[] = [];
+  if (pressureType === "unique") {
+    if (typeof settingsTargets === 'string') {
+      targets.concat(settingsTargets.split(';'))
+    } else {
+      targets.concat(settingsTargets);
+    }
+  } else if (pressureTargets && pressureTargets.length > 0) {
     group = pressureTargets.filter((g: GroupTarget) => g.identify === targetsId)[0];
     if (!!group) {
-      targets = group.targets;
+      targets.concat(group.targets);
     }
   } else {
     if (typeof settingsTargets === 'string') {
-      targets = settingsTargets.split(';');
+      targets.concat(settingsTargets.split(';'))
     } else {
-      targets = settingsTargets
+      targets.concat(settingsTargets)
     }
   }
+
 
   if (targets.length === 0) {
     logger.child({ widget }).info("Targets is empty");
