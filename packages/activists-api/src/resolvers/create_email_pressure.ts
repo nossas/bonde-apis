@@ -155,7 +155,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
         `;
 
         await send_pressure_mail({
-          context: { count, activists },
+          context: { count, activists, pressure: activistPressure },
           activist,
           targets,
           emailBody: optimziedBody,
@@ -190,6 +190,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
 
   // Envio de e-mail para pressão não otimizada
   await send_pressure_mail({
+    context: { pressure: activistPressure },
     activist,
     targets,
     emailBody: emailBody || group?.email_body || pressureBody,
