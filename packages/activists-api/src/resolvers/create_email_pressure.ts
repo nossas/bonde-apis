@@ -96,6 +96,10 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     }
   }
 
+  if (targets.length === 0) {
+    logger.child({ widget }).info("Targets is empty");
+  }
+
   const activistPressure = {
     activist_id: activist.id,
     widget_id: widget.id,
