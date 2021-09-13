@@ -1,13 +1,10 @@
 import { GraphQLJSONObject } from 'graphql-type-json';
 import notify from './notify';
-
-const hello = async (): Promise<string> => {
-  return 'Hello';
-}
+import activity_feed from "./activity_feed";
 
 const resolverMap = {
   Query: {
-    hello
+    activity_feed
   },
   Mutation: {
     notify

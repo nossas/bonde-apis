@@ -4,6 +4,21 @@ type StatusResponse {
   status: String!
 }
 
+type Message {
+  from_email: String
+  msg_id: String
+  subject: String
+  to_email: String
+  status: String
+  opens_count: Int
+  clicks_count: Int
+  last_event_time: String
+}
+
+type ActivittyFeedResponse {
+  messages: [Message]
+}
+
 input NotifyInput {
   email_from: String!
   email_to: String!
@@ -12,8 +27,12 @@ input NotifyInput {
   context: JSON
 }
 
+input ActivittyFeedFilter {
+  widget_id: Int!
+}
+
 type Query {
-  hello: String
+  activity_feed(filter: ActivittyFeedFilter): ActivittyFeedResponse
 }
 
 type Mutation {
