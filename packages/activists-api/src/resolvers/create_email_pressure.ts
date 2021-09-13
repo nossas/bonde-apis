@@ -83,30 +83,28 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
   }
 
   let group: GroupTarget | undefined = undefined;
-  const targets: string[] = [];
+  let targets: string[] = [];
   if (pressureType === "unique") {
     if (typeof settingsTargets === 'string') {
-      targets.concat(settingsTargets.split(';'))
+      targets = settingsTargets.split(';')
     } else {
-      targets.concat(settingsTargets);
+      targets = settingsTargets;
     }
+    console.log("targets", { targets });
   } else if (pressureTargets && pressureTargets.length > 0) {
     group = pressureTargets.filter((g: GroupTarget) => g.identify === targetsId)[0];
     if (!!group) {
-      targets.concat(group.targets);
+      targets = group.targets;
     }
   } else {
     if (typeof settingsTargets === 'string') {
-      targets.concat(settingsTargets.split(';'))
+      targets = settingsTargets.split(';');
     } else {
-      targets.concat(settingsTargets)
+      targets = settingsTargets;
     }
   }
 
-
-  if (targets.length === 0) {
-    logger.child({ widget }).info("Targets is empty");
-  }
+  if (targets.length === 0) throw new Error("invalid_parse_targets");
 
   const activistPressure = {
     activist_id: activist.id,
