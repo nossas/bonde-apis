@@ -90,7 +90,6 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     } else {
       targets = settingsTargets;
     }
-    console.log("targets", { targets });
   } else if (pressureTargets && pressureTargets.length > 0) {
     group = pressureTargets.filter((g: GroupTarget) => g.identify === targetsId)[0];
     if (!!group) {

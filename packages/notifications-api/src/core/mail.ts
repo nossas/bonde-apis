@@ -5,7 +5,7 @@ export interface MailSettings {
   subject: string
   email_to: string
   email_from: string
-  context: any
+  context?: any
 }
 
 class Mail {
@@ -31,13 +31,19 @@ class Mail {
       context,
       subject
     } = this.settings;
-    
-    return {
+
+    const message: any = {
       to: email_to,
       from: email_from,
       subject: this.engine.renderString(subject, context),
       html: this.engine.renderString(this.get_body(), context)
-    };
+    }
+
+    if (context?.pressure) {
+      message.categories = ["pressure", `w${context.pressure.widget_id}`]
+    }
+    
+    return message;
   }
 }
 

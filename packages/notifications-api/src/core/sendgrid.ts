@@ -10,24 +10,30 @@ if (!process.env.SENDGRID_API_KEY) {
 
 mail.setApiKey(process.env.SENDGRID_API_KEY || 'setup env');
 
-export const send = async (message: any): Promise<void> => {
-  const msg: any = { ...message };
-  
+type Message = {
+  to: string
+  from: string
+  subject: string
+  html: string
+  mail_settings?: any
+  categories?: []
+}
+
+export const send = async (message: Message): Promise<void> => {
   if (process.env.NODE_ENV === 'development') {
     // Sandbox MODE
-    msg.mail_settings = {
+    message.mail_settings = {
       sandbox_mode: {
         enable: true
       }
     };
-  };
+  }
 
   try {
-    await mail.send(msg);
+    await mail.send(message);
   } catch (error) {
     logger.error(error);
     if (error.response) {
-      // const { message, code, response } = error;
       const { headers, body } = error.response;
       console.log('headers', { headers });
       logger.error(body);
