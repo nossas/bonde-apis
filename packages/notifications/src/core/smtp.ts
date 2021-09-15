@@ -9,7 +9,14 @@ if (!process.env.SMTP_PORT) throw new Error('Please specify the `SMTP_PORT` envi
 if (!process.env.SMTP_USER) throw new Error('Please specify the `SMTP_USER` environment variable.');
 if (!process.env.SMTP_PASS) throw new Error('Please specify the `SMTP_PASS` environment variable.');
 
-export const send = async (message: any): Promise<void> => {
+type Message = {
+  to: string
+  from: string
+  subject: string
+  html: string
+}
+
+export const send = async (message: Message): Promise<void> => {
   const mailer = createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,

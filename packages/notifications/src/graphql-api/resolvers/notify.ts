@@ -1,14 +1,11 @@
-import Mail, { MailSettings } from '../core/mail';
-import config from '../config';
-import logger from '../logger';
+import { Mail, MailSettings } from '../../core';
+import config from '../../config';
+import logger from '../../logger';
 
-let path = '../core/smtp';
-
-if (config.sendgridApiKey) {
-  path = '../core/sendgrid';
-}
-
-logger.info(`Core snippet load on ${path}`);
+const path = config.sendgridApiKey
+  ? '../../core/sendgrid'
+  : '../../core/smtp'
+;
 
 type NotifyArgs = {
   input: MailSettings[]
