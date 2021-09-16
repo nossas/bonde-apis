@@ -1,6 +1,7 @@
-import logger from '../logger';
-import { createTransport, SendMailOptions } from 'nodemailer';
+import { createTransport, SendMailOptions, SentMessageInfo } from 'nodemailer';
 import dotenv from 'dotenv';
+import logger from '../logger';
+import { Message } from "./mail";
 
 dotenv.config();
 
@@ -9,14 +10,7 @@ if (!process.env.SMTP_PORT) throw new Error('Please specify the `SMTP_PORT` envi
 if (!process.env.SMTP_USER) throw new Error('Please specify the `SMTP_USER` environment variable.');
 if (!process.env.SMTP_PASS) throw new Error('Please specify the `SMTP_PASS` environment variable.');
 
-type Message = {
-  to: string
-  from: string
-  subject: string
-  html: string
-}
-
-export const send = async (message: Message): Promise<void> => {
+export const send = async (message: Message): Promise<SentMessageInfo> => {
   const mailer = createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
@@ -28,14 +22,9 @@ export const send = async (message: Message): Promise<void> => {
   } as SendMailOptions);
 
   try {
-    await mailer.sendMail(message);
+    return await mailer.sendMail(message);
   } catch (error) {
-    logger.error(error);
-    // if (error.response) {
-    //   // const { message, code, response } = error;
-    //   const { headers, body } = error.response;
-    //   console.log('headers', { headers });
-    //   console.error(body);
-    // }
+    logger.error(error as any);
+    throw new Error(error as any);
   }
 };

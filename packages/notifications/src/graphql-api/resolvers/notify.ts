@@ -11,15 +11,20 @@ type NotifyArgs = {
   input: MailSettings[]
 }
 
-export default async (_: void, args: NotifyArgs): Promise<{ status: string }> => {
+type Result = {
+  status: 'ok' | 'failed'
+  results: any[]
+}
+
+export default async (_: void, args: NotifyArgs): Promise<Result> => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { send } = require(path);
-
-  args.input.forEach(async (settings: MailSettings) => {
+  const results = await Promise.all(args.input.map(async (settings: MailSettings) => {
     const mail = new Mail(settings).json();
-    await send(mail);
-  });
-
-  logger.child({ args }).info('Email sent to');
-  return { status: 'ok' };
+    return await send(mail);
+  }));
+  
+  console.log("results", { results });
+  logger.child({ args, results }).info('Notify');
+  return { status: 'ok', results: results };
 };

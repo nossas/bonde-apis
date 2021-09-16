@@ -1,7 +1,13 @@
 scalar JSON
 
-type StatusResponse {
+type Result {
+  message_id: String!
+  payload: JSON
+}
+
+type NotifyResponse {
   status: String!
+  results: [Result]
 }
 
 type Message {
@@ -36,5 +42,5 @@ type Query {
 }
 
 type Mutation {
-  notify(input: [NotifyInput!]!): StatusResponse
+  notify(input: [NotifyInput!]!): NotifyResponse
 }

@@ -8,6 +8,15 @@ export interface MailSettings {
   context?: any
 }
 
+export interface Message {
+  to: string
+  from: string
+  subject: string
+  html: string
+  mail_settings?: any
+  categories?: []
+}
+
 class Mail {
   private engine = nunjucks;
   private settings: MailSettings
@@ -24,7 +33,7 @@ class Mail {
     return this.settings.body.replace(/\n/g, '<br/>');
   }
 
-  json (): any {
+  json (): Message {
     const {
       email_to,
       email_from,
