@@ -12,7 +12,8 @@ type Config = {
   smtpPass?: string
   smtpPort?: number | string
   smtpUser?: string
-  elasticsearchApiUrl: string
+  elasticsearchCloudId?: string
+  elasticsearchPassword?: string
   apmSecretToken?: string
   apmServerUrl?: string
   apmServiceName?: string
@@ -28,7 +29,8 @@ const config: Config = {
   smtpPass: process.env.SMTP_PASS,
   smtpPort: process.env.SMTP_PORT,
   smtpUser: process.env.SMTP_USER,
-  elasticsearchApiUrl: process.env.ELASTICSEARCH_API_URL || 'http://es01.bonde.devel:9200',
+  elasticsearchCloudId: process.env.ELASTICSEARCH_CLOUD_ID,
+  elasticsearchPassword: process.env.ELASTICSEARCH_PASSWORD,
   apmSecretToken: process.env.ELASTIC_APM_SECRET_TOKEN,
   apmServerUrl: process.env.ELASTIC_APM_SERVER_URL,
   apmServiceName: process.env.ELASTIC_APM_SERVICE_NAME

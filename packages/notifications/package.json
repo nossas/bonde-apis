@@ -5,7 +5,7 @@
     "build": "tsc -p . && ncp src/graphql-api/schema dist/graphql-api/schema",
     "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql",
     "clean": "rm -rf node_modules dist",
-    "dev": "LOG_LEVEL=debug NODE_ENV=development yarn run build:dev | pino-pretty",
+    "dev": "NODE_ENV=development yarn run build:dev",
     "start": "node 'dist/server.js'",
     "lint": "eslint . --ext ts,tsx --fix",
     "test": "jest",
