@@ -71,7 +71,7 @@ export const queries = {
         where: {
           widget: { id: { _eq: $widget_id } },
           status: {
-            _in: ["sent", "sent_optimized"]
+            _in: ["draft", "sent", "sent_optimized"]
           }
         }
       ) {
