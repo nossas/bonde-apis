@@ -46,7 +46,7 @@ export default async (req: Request<any, any, Event[]>, res: any): Promise<void> 
         const date = new Date(event.timestamp * 1000);
         const month = date.getMonth() > 9 ? date.getMonth() : "0" + date.getMonth();
         const { "smtp-id": smtp_id, ...body } = event;
-        const index = `sendgrid_${date.getFullYear()}_${month}`;
+        const index = `events-sendgrid-${date.getFullYear()}.${month}`;
         const eventIndexable = {
           index,
           body: {
