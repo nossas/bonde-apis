@@ -48,11 +48,21 @@ class Mail {
       html: this.engine.renderString(this.get_body(), context)
     }
 
-    if (context?.pressure) {
-      message.categories = ["pressure", `w${context.pressure.widget_id}`]
+    let categories: string[] = [];
+    if (context?.widget_id) {
+      categories = [...categories, `w${context?.widget_id}`]
+    }
+    if (context?.mobilization_id) {
+      categories = [...categories, `m${context?.mobilization_id}`]
+    }
+    if (context?.community_id) {
+      categories = [...categories, `c${context?.community_id}`]
     }
     
-    return message;
+    return {
+      ...message,
+      categories
+    };
   }
 }
 

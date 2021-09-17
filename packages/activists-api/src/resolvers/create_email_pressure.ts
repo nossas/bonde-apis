@@ -154,7 +154,13 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
         `;
 
         await send_pressure_mail({
-          context: { count, activists, pressure: activistPressure },
+          context: {
+            count,
+            activists,
+            widget_id: activistPressure.widget_id,
+            mobilization_id: activistPressure.mobilization_id,
+            community_id: activistPressure.cached_community_id
+          },
           activist,
           targets,
           emailBody: optimziedBody,
@@ -189,7 +195,11 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
 
   // Envio de e-mail para pressão não otimizada
   await send_pressure_mail({
-    context: { pressure: activistPressure },
+    context: {
+      widget_id: activistPressure.widget_id,
+      mobilization_id: activistPressure.mobilization_id,
+      community_id: activistPressure.cached_community_id
+    },
     activist,
     targets,
     emailBody: emailBody || group?.email_body || pressureBody,

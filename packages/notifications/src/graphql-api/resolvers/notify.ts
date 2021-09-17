@@ -24,7 +24,6 @@ export default async (_: void, args: NotifyArgs): Promise<Result> => {
     return await send(mail);
   }));
   
-  console.log("results", { results });
   logger.child({ args, results }).info('Notify');
   return { status: 'ok', results: results };
 };
