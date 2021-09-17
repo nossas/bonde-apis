@@ -7,7 +7,9 @@ import config from "../config";
 import logger from "../logger";
 import { client } from "./elasticsearchdb";
 
-if (!config.sendgridWebhookKey) throw new Error("SENDGRID_WEBHOOK_KEY should be environment");
+if (!config.sendgridWebhookKey) {
+  logger.error(new Error("SENDGRID_WEBHOOK_KEY should be environment"));
+}
 
 const verifyRequest = (
   publicKey: string,
@@ -51,14 +53,14 @@ export default async (req: Request<any, any, Event[]>, res: any): Promise<void> 
           }
         }
 
-        console.log("event", { eventIndexable });
         client.index(eventIndexable);
+        logger.child({ event: eventIndexable }).info(`event index ${index} on elasticsearch`);
       })
       return res.sendStatus(204);
     }
     return res.sendStatus(403);
   } catch (error) {
-    console.log(error);
+    logger.error(error as any);
     return res.status(500).send(error);
   }
 }
