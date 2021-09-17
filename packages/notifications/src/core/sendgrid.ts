@@ -1,15 +1,13 @@
-import logger from '../logger';
+import logger, { apmAgent } from '../logger';
+import config from '../config';
 import mail from '@sendgrid/mail';
-import dotenv from 'dotenv';
 import { Message } from "./mail";
 
-dotenv.config();
-
-if (!process.env.SENDGRID_API_KEY) {
+if (!config.sendgridApiKey) {
   throw new Error('Please specify the `SENDGRID_API_KEY` environment variable.');
 }
 
-mail.setApiKey(process.env.SENDGRID_API_KEY || 'setup env');
+mail.setApiKey(config.sendgridApiKey || 'setup env');
 
 type SengridMessage = {
   message_id: string
@@ -33,6 +31,7 @@ export const send = async (message: Message): Promise<SengridMessage> => {
       payload: message
     };
   } catch (error) {
+    apmAgent?.captureError(error);
     if ((error as any).response) {
       const { body } = (error as any).response;
       logger.child({ body }).error("sendgrid api failed");

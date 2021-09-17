@@ -4,7 +4,7 @@ import {
 } from "@sendgrid/eventwebhook";
 import { Request } from "express";
 import config from "../config";
-import logger from "../logger";
+import logger, { apmAgent } from "../logger";
 import { client } from "./elasticsearchdb";
 
 if (!config.sendgridWebhookKey) {
@@ -60,6 +60,7 @@ export default async (req: Request<any, any, Event[]>, res: any): Promise<void> 
     }
     return res.sendStatus(403);
   } catch (error) {
+    apmAgent?.captureError(error);
     logger.error(error as any);
     return res.status(500).send(error);
   }
