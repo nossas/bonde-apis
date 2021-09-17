@@ -1,5 +1,6 @@
 {
   "name": "notifications",
+  "version": "0.0.1",
   "scripts": {
     "build": "tsc -p . && ncp src/graphql-api/schema dist/graphql-api/schema",
     "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql",

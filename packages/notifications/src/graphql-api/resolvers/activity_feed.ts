@@ -1,13 +1,14 @@
 import client from "@sendgrid/client"
-import dotenv from 'dotenv';
+import logger, { apmAgent } from "../../logger";
+import config from "../../config";
 
-dotenv.config();
-
-if (!process.env.SENDGRID_API_KEY) {
-  throw new Error('Please specify the `SENDGRID_API_KEY` environment variable.');
+if (!config.sendgridApiKey) {
+  const error = new Error('Please specify the `SENDGRID_API_KEY` environment variable.');
+  apmAgent?.captureError(error);
+  logger.error(error);
 }
 
-client.setApiKey(process.env.SENDGRID_API_KEY || 'setup env');
+client.setApiKey(config.sendgridApiKey || 'setup env');
 
 type ActivityFeedFilter = {
   filter: {

@@ -8,7 +8,9 @@ import logger, { apmAgent } from "../logger";
 import { client } from "./elasticsearchdb";
 
 if (!config.sendgridWebhookKey) {
-  logger.error(new Error("SENDGRID_WEBHOOK_KEY should be environment"));
+  const error = new Error("SENDGRID_WEBHOOK_KEY should be environment");
+  apmAgent?.captureError(error);
+  logger.error(error);
 }
 
 const verifyRequest = (
