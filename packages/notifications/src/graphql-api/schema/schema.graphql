@@ -21,7 +21,7 @@ type ActivityFeed {
   events: [ActivityEvent]
 }
 
-type ActivittyFeedResponse {
+type ActivityFeedResponse {
   data: [ActivityFeed]
   after: String
 }
@@ -34,14 +34,14 @@ input NotifyInput {
   context: JSON
 }
 
-input ActivittyFeedFilter {
+input ActivityFeedFilter {
   widget_id: Int!
   offset: Int
   after: String
 }
 
 type Query {
-  activity_feed(filter: ActivittyFeedFilter): ActivittyFeedResponse
+  activity_feed(filter: ActivityFeedFilter): ActivityFeedResponse
 }
 
 type Mutation {
