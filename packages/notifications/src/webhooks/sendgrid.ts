@@ -5,7 +5,7 @@ import {
 import { Request } from "express";
 import config from "../config";
 import logger, { apmAgent } from "../logger";
-import { client } from "./elasticsearchdb";
+import { client } from "../core/elasticsearchdb";
 
 if (!config.sendgridWebhookKey) {
   const error = new Error("SENDGRID_WEBHOOK_KEY should be environment");

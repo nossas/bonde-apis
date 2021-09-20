@@ -1,14 +1,5 @@
-import client from "@sendgrid/client"
-import logger, { apmAgent } from "../../logger";
-import config from "../../config";
-
-if (!config.sendgridApiKey) {
-  const error = new Error('Please specify the `SENDGRID_API_KEY` environment variable.');
-  apmAgent?.captureError(error);
-  logger.error(error);
-}
-
-client.setApiKey(config.sendgridApiKey || 'setup env');
+// import logger, { apmAgent } from "../../logger";
+import { client } from "../../core/elasticsearchdb";
 
 type ActivityFeedFilter = {
   filter: {
@@ -16,35 +7,69 @@ type ActivityFeedFilter = {
   }
 }
 
-type Message = {
-  from_email: string
-  msg_id: string
-  subject: string
-  to_email: string
-  status: string // 'delivered'
-  opens_count: number
-  clicks_count: number
-  last_event_time: string
+type ActivityEvent = {
+  event_type: string
+  total: number
 }
 
-export default async (_: void, args: ActivityFeedFilter): Promise<{ messages: Message[] }> => {
-  const request: any = {
-    method: 'GET',
-    url: '/v3/messages',
-    qs: {
-      limit: 10,
-      query: `(Contains(categories,"pressure"))\AND\(Contains(categories,"w${args.filter.widget_id}"))`
+type ActivityFeed = {
+  email: string
+  total: number
+  events: ActivityEvent[]
+}
+
+interface Bucket {
+  key: string
+  doc_count: number
+}
+
+interface EmailBucket extends Bucket {
+  events: {
+    buckets: Bucket[]
+  }
+}
+
+export default async (_: void, args: ActivityFeedFilter): Promise<{ data: ActivityFeed[] }> => {
+  const { filter: { widget_id } } = args;
+
+  const { statusCode, body } = await client.search({
+    index: "events-sendgrid-*",
+    body: {
+      query: {
+        match: {
+          category: `w${widget_id}`
+        }
+      },
+      size: 0,
+      aggs: {
+        emails: {
+          terms: {
+            field: "email"
+          },
+          aggs: {
+            events: {
+              terms: {
+                field: "event"
+              }
+            }
+          }
+        }
+      }
     }
-  };
+  });
+
+  if (statusCode === 200) {
+    return {
+      data: body.aggregations.emails.buckets.map((email_bucket: EmailBucket) => ({
+        email: email_bucket.key,
+        total: email_bucket.doc_count,
+        events: email_bucket.events.buckets.map((event_bucket: Bucket) => ({
+          event_type: event_bucket.key,
+          total: event_bucket.doc_count
+        }))
+      }))
+    };
+  }
   
-  return client.request(request)
-    .then(([response, body]) => {
-      console.log(response.statusCode);
-      console.log(body);
-      
-      return body
-    })
-    .catch((err) => {
-      console.log("err", { body: err.response.body.errors });
-    })
+  throw new Error("Failed elasticsearch with status: " + statusCode);
 }

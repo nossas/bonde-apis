@@ -10,19 +10,19 @@ type NotifyResponse {
   results: [Result]
 }
 
-type Message {
-  from_email: String
-  msg_id: String
-  subject: String
-  to_email: String
-  status: String
-  opens_count: Int
-  clicks_count: Int
-  last_event_time: String
+type ActivityEvent {
+  event_type: String
+  total: Int
+}
+
+type ActivityFeed {
+  email: String
+  total: Int
+  events: [ActivityEvent]
 }
 
 type ActivittyFeedResponse {
-  messages: [Message]
+  data: [ActivityFeed]
 }
 
 input NotifyInput {
