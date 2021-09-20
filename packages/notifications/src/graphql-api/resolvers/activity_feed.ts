@@ -113,7 +113,7 @@ export default async (_: void, args: ActivityFeedFilter): Promise<ActivityFeedRe
           total: event_bucket.doc_count
         }))
       })),
-      after: body.aggregations.emails.after_key.email
+      after: body.aggregations.emails.after_key?.email || undefined
     };
   }
   
