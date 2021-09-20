@@ -23,6 +23,7 @@ type ActivityFeed {
 
 type ActivittyFeedResponse {
   data: [ActivityFeed]
+  after: String
 }
 
 input NotifyInput {
@@ -35,6 +36,8 @@ input NotifyInput {
 
 input ActivittyFeedFilter {
   widget_id: Int!
+  offset: Int
+  after: String
 }
 
 type Query {
