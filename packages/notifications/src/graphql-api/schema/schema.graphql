@@ -10,7 +10,7 @@ type NotifyResponse {
   results: [Result]
 }
 
-type ActivityEvent {
+type ActivityFeedEvent {
   event_type: String
   total: Int
 }
@@ -18,7 +18,7 @@ type ActivityEvent {
 type ActivityFeed {
   email: String
   total: Int
-  events: [ActivityEvent]
+  events: [ActivityFeedEvent]
 }
 
 type ActivityFeedResponse {
@@ -40,8 +40,14 @@ input ActivityFeedFilter {
   after: String
 }
 
+type ActivityFeedTotalResponse {
+  total: Int
+  events: [ActivityFeedEvent]
+}
+
 type Query {
   activity_feed(filter: ActivityFeedFilter): ActivityFeedResponse
+  activity_feed_total(widget_id: Int!): ActivityFeedTotalResponse
 }
 
 type Mutation {
