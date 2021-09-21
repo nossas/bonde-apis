@@ -2,6 +2,9 @@ FROM node:14-alpine
 
 WORKDIR /usr/src/app
 
+RUN apk add --update python3 make g++\
+   && rm -rf /var/cache/apk/*
+
 RUN yarn global add pnpm
 
 COPY package*.json ./
