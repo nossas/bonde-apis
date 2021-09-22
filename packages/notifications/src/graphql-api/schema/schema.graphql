@@ -42,6 +42,8 @@ input ActivityFeedFilter {
 
 type ActivityFeedTotalResponse {
   total: Int
+  min_timestamp: Int
+  max_timestamp: Int
   events: [ActivityFeedEvent]
 }
 

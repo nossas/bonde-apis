@@ -11,6 +11,8 @@ type ActivityFeedEvent = {
 
 type ActivityFeedTotalResult = {
   total: number
+  min_timestamp: number
+  max_timestamp: number
   events: ActivityFeedEvent[]
 }
 
@@ -28,6 +30,16 @@ export default async (_: void, args: ActivityFeedTotalArgs): Promise<ActivityFee
         "terms": {
           "field": "event"
         }
+      },
+      "min_timestamp": {
+        "min": {
+          "field": "timestamp"
+        }
+      },
+      "max_timestamp": {
+        "max": {
+          "field": "timestamp"
+        }
       }
     }
   };
@@ -40,6 +52,8 @@ export default async (_: void, args: ActivityFeedTotalArgs): Promise<ActivityFee
   if (statusCode === 200) {
     return {
       total: body.hits.total.value,
+      min_timestamp: body.aggregations.min_timestamp.value,
+      max_timestamp: body.aggregations.max_timestamp.value,
       events: body.aggregations.events_type.buckets.map((event_bucket: any) => ({
         event_type: event_bucket.key,
         total: event_bucket.doc_count
