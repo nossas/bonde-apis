@@ -60,6 +60,8 @@ export default async (req: Request<any, any, Event[]>, res: any): Promise<void> 
       })
       return res.sendStatus(204);
     }
+
+    logger.child({ events: req.body }).info("invalid verify request");
     return res.sendStatus(403);
   } catch (error) {
     apmAgent?.captureError(error);
