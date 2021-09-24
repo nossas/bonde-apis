@@ -34,6 +34,26 @@ type Event = {
   "smtp-id": string
 }
 
+const _document_sendgrid = (events: Event[], status: string) => {
+  events.forEach((event) => {
+    const date = new Date(event.timestamp * 1000);
+    const month = date.getMonth() > 9 ? date.getMonth() : "0" + date.getMonth();
+    const { "smtp-id": smtp_id, ...body } = event;
+    const index = `events-sendgrid-${date.getFullYear()}.${month}`;
+    const eventIndexable = {
+      index,
+      body: {
+        smtp_id,
+        status,
+        ...body
+      }
+    }
+
+    client.index(eventIndexable);
+    logger.child({ event: eventIndexable }).info(`event index ${index} on elasticsearch`);
+  });
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async (req: Request<any, any, Event[]>, res: any): Promise<void> => {
   try {
@@ -42,26 +62,11 @@ export default async (req: Request<any, any, Event[]>, res: any): Promise<void> 
     const timestamp = req.get(EventWebhookHeader.TIMESTAMP());
 
     if (verifyRequest(key, JSON.stringify(req.body) + '\r\n', signature, timestamp)) {
-      req.body.forEach((event) => {
-        const date = new Date(event.timestamp * 1000);
-        const month = date.getMonth() > 9 ? date.getMonth() : "0" + date.getMonth();
-        const { "smtp-id": smtp_id, ...body } = event;
-        const index = `events-sendgrid-${date.getFullYear()}.${month}`;
-        const eventIndexable = {
-          index,
-          body: {
-            smtp_id,
-            ...body
-          }
-        }
-
-        client.index(eventIndexable);
-        logger.child({ event: eventIndexable }).info(`event index ${index} on elasticsearch`);
-      })
+      _document_sendgrid(req.body, "verified");
       return res.sendStatus(204);
     }
-
-    logger.child({ events: req.body }).info("invalid verify request");
+    // Create index when not verifyRequest
+    _document_sendgrid(req.body, "invalid");
     return res.sendStatus(403);
   } catch (error) {
     apmAgent?.captureError(error);
