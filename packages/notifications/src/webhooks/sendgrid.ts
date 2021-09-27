@@ -42,6 +42,8 @@ const _document_sendgrid = (events: Event[], status: string) => {
     const index = `events-sendgrid-${date.getFullYear()}.${month}`;
     const eventIndexable = {
       index,
+      method: "PUT",
+      id: event.sg_event_id,
       body: {
         smtp_id,
         status,
@@ -67,7 +69,7 @@ export default async (req: Request<any, any, Event[]>, res: any): Promise<void> 
     }
     // Create index when not verifyRequest
     _document_sendgrid(req.body, "invalid");
-    return res.sendStatus(403);
+    return res.sendStatus(204);
   } catch (error) {
     apmAgent?.captureError(error);
     logger.error(error as any);
