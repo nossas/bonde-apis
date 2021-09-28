@@ -37,7 +37,8 @@ type Event = {
 const _document_sendgrid = (events: Event[], status: string) => {
   events.forEach((event) => {
     const date = new Date(event.timestamp * 1000);
-    const month = date.getMonth() > 9 ? date.getMonth() : "0" + date.getMonth();
+    const humanMonth = date.getMonth() + 1;
+    const month = humanMonth > 9 ? humanMonth : "0" + humanMonth;
     const { "smtp-id": smtp_id, ...body } = event;
     const index = `events-sendgrid-${date.getFullYear()}.${month}`;
     const eventIndexable = {
@@ -62,6 +63,8 @@ export default async (req: Request<any, any, Event[]>, res: any): Promise<void> 
     const key: string = config.sendgridWebhookKey || '';
     const signature = req.get(EventWebhookHeader.SIGNATURE());
     const timestamp = req.get(EventWebhookHeader.TIMESTAMP());
+
+    if (!signature && !timestamp) throw new Error("signature and timestamp is empty");
 
     if (verifyRequest(key, JSON.stringify(req.body) + '\r\n', signature, timestamp)) {
       _document_sendgrid(req.body, "verified");
