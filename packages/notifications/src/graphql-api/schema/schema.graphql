@@ -47,9 +47,15 @@ type ActivityFeedTotalResponse {
   events: [ActivityFeedEvent]
 }
 
+type ActivityFeedTimestampResponse {
+  min_timestamp: Int
+  max_timestamp: Int
+}
+
 type Query {
   activity_feed(filter: ActivityFeedFilter): ActivityFeedResponse
   activity_feed_total(widget_id: Int!): ActivityFeedTotalResponse
+  activity_feed_timestamp: ActivityFeedTimestampResponse
 }
 
 type Mutation {
