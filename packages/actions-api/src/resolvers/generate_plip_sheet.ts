@@ -1,6 +1,14 @@
 import jsPDF from "jspdf";
 import q from "q";
+import logger from "../logger";
 const generatePlipSheet = async (body: any) => {
+    
+    if(!body.input.unique_identifier){
+        const msg = 'Invalid unique_identifier'
+        logger.error(`Error: ${msg}`);
+        throw new Error(msg);
+    }
+    
     const doc = new jsPDF();
     const deferred  = q;
     
