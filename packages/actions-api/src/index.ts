@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
-app.post('/plip-generate-plip-sheet', async (req, res) => {
+app.post('/plip-generate-sheet', async (req, res) => {
  
   if (!req.body.input) {
     logger.error(`Invalid request ${req.body}`);
@@ -14,10 +14,10 @@ app.post('/plip-generate-plip-sheet', async (req, res) => {
   }     
   try{
     logger.info(`Generate file data for plip sheet ${JSON.stringify(req.body)}`);
-    const file = await generatePlipSheet(req.body);
+    const data = await generatePlipSheet(req.body);
     
     return res.json({
-      pdf_data: file
+      pdf_data: data
     })
   } catch(err){
     return res.status(500).json(`${err}`);

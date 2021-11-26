@@ -14,9 +14,8 @@ const generatePlipSheet = async (body: any) => {
     
     doc.setFontSize(22);
     doc.text( `Plip sheet: ${body.input.unique_identifier}` ,20, 20);
-    const file_data: string = await deferred.resolve(doc.output('datauristring'));
-    
-    return file_data
+    const data: string = await deferred.resolve(doc.output('datauristring'));
+    return data
 }
 
 export default generatePlipSheet;
