@@ -1,16 +1,11 @@
 import jsPDF from "jspdf";
 import q from "q";
 import logger from "../logger";
+import { Plip } from '../index'
 
-interface BodyInput {
-  input: {
-    unique_identifier: string
-  }
-}
+const generatePlipSheet = async (body: Plip): Promise<string> => {
 
-const generatePlipSheet = async (body: BodyInput): Promise<string> => {
-
-  if (!body.input.unique_identifier) {
+  if (!body.unique_identifier) {
     const msg = 'Invalid unique_identifier'
 
     logger.error(`Error: ${msg}`);
@@ -21,7 +16,7 @@ const generatePlipSheet = async (body: BodyInput): Promise<string> => {
   const deferred = q;
 
   doc.setFontSize(22);
-  doc.text(`Plip sheet: ${body.input.unique_identifier}`, 20, 20);
+  doc.text(`Plip sheet: ${body.unique_identifier}`, 20, 20);
 
   return await deferred.resolve(doc.output('datauristring'));
 }
