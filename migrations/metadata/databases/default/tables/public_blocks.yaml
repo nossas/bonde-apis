@@ -1,0 +1,119 @@
+table:
+  name: blocks
+  schema: public
+object_relationships:
+- name: mobilization
+  using:
+    manual_configuration:
+      column_mapping:
+        mobilization_id: id
+      insertion_order: null
+      remote_table:
+        name: mobilizations
+        schema: public
+array_relationships:
+- name: widgets
+  using:
+    manual_configuration:
+      column_mapping:
+        id: block_id
+      insertion_order: null
+      remote_table:
+        name: widgets
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      mobilization:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
+    columns:
+    - id
+    - mobilization_id
+    - created_at
+    - updated_at
+    - bg_class
+    - position
+    - hidden
+    - bg_image
+    - name
+    - menu_hidden
+    - deleted_at
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - id
+    - mobilization_id
+    - created_at
+    - updated_at
+    - bg_class
+    - position
+    - hidden
+    - bg_image
+    - name
+    - menu_hidden
+    - deleted_at
+    filter:
+      _and:
+      - mobilization:
+          status:
+            _eq: active
+      - deleted_at:
+          _is_null: true
+  role: anonymous
+- permission:
+    allow_aggregations: true
+    columns:
+    - hidden
+    - menu_hidden
+    - id
+    - mobilization_id
+    - position
+    - bg_image
+    - created_at
+    - deleted_at
+    - updated_at
+    - bg_class
+    - name
+    filter:
+      mobilization:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - hidden
+    - menu_hidden
+    - id
+    - mobilization_id
+    - position
+    - bg_image
+    - created_at
+    - deleted_at
+    - updated_at
+    - bg_class
+    - name
+    filter:
+      mobilization:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
+  role: user
+delete_permissions:
+- permission:
+    filter:
+      mobilization:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
+  role: user

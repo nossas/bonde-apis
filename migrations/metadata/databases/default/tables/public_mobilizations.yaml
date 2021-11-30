@@ -1,0 +1,151 @@
+table:
+  name: mobilizations
+  schema: public
+object_relationships:
+- name: community
+  using:
+    foreign_key_constraint_on: community_id
+array_relationships:
+- name: activist_actions
+  using:
+    manual_configuration:
+      column_mapping:
+        id: mobilization_id
+      insertion_order: null
+      remote_table:
+        name: activist_actions
+        schema: public
+- name: blocks
+  using:
+    manual_configuration:
+      column_mapping:
+        id: mobilization_id
+      insertion_order: null
+      remote_table:
+        name: blocks
+        schema: public
+insert_permissions:
+- permission:
+    check:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+    columns:
+    - body_font
+    - color_scheme
+    - community_id
+    - created_at
+    - custom_domain
+    - deleted_at
+    - facebook_share_description
+    - facebook_share_image
+    - facebook_share_title
+    - favicon
+    - goal
+    - google_analytics_code
+    - header_font
+    - id
+    - language
+    - name
+    - slug
+    - status
+    - traefik_backend_address
+    - traefik_host_rule
+    - twitter_share_text
+    - updated_at
+    set:
+      user_id: x-hasura-User-Id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - body_font
+    - color_scheme
+    - community_id
+    - created_at
+    - custom_domain
+    - deleted_at
+    - facebook_share_description
+    - facebook_share_image
+    - facebook_share_title
+    - favicon
+    - goal
+    - google_analytics_code
+    - header_font
+    - id
+    - language
+    - name
+    - slug
+    - status
+    - twitter_share_text
+    filter:
+      _and:
+      - deleted_at:
+          _is_null: true
+      - status:
+          _eq: active
+  role: anonymous
+- permission:
+    allow_aggregations: true
+    columns:
+    - body_font
+    - color_scheme
+    - community_id
+    - created_at
+    - custom_domain
+    - deleted_at
+    - facebook_share_description
+    - facebook_share_image
+    - facebook_share_title
+    - favicon
+    - goal
+    - google_analytics_code
+    - header_font
+    - id
+    - language
+    - name
+    - slug
+    - status
+    - traefik_backend_address
+    - traefik_host_rule
+    - twitter_share_text
+    - updated_at
+    - user_id
+    filter:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - body_font
+    - color_scheme
+    - created_at
+    - custom_domain
+    - deleted_at
+    - facebook_share_description
+    - facebook_share_image
+    - facebook_share_title
+    - favicon
+    - goal
+    - google_analytics_code
+    - header_font
+    - language
+    - name
+    - slug
+    - status
+    - traefik_backend_address
+    - traefik_host_rule
+    - twitter_share_text
+    - updated_at
+    filter:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+  role: user
