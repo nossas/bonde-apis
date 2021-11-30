@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import q from "q";
 import logger from "../logger";
-import { ActionPlipInput, IActionData, IBaseAction } from '../types';
+import { PlipInput, IActionData, IBaseAction } from '../types';
 import * as ActionsAPI from '../graphql-api/actions';
 import makeActionResolver from './action';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,7 +24,7 @@ const generatePlipSheet = async (unique_identifier: string): Promise<string> => 
   return await deferred.resolve(doc.output('datauristring'));
 }
 
-export const create_plip = async ({ action, activist, widget }: IBaseAction<ActionPlipInput>): Promise<IActionData> => {
+export const create_plip = async ({ action, activist, widget }: IBaseAction<PlipInput>): Promise<IActionData> => {
   
   const unique_identifier = uuidv4();
   const pdf_data = await generatePlipSheet(unique_identifier);

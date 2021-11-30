@@ -104,17 +104,14 @@ export type Previous = (args: IBaseActionArgs) => Promise<IPreviousData>;
 export type Action = <T>(args: IBaseAction<T>) => Promise<IActionData>;
 export type Next = <T>(args: IBaseAction<T>, done: DoneAction) => Promise<any>;
 
-export interface ActionPlipInput {
-  widget_id: number
-  community_id?: number
-  mobilization_id?: number
+export type PlipInput = {
   name: string
   email: string
   state: string
   whatsapp: string
 }
 
-export interface PlipInput {
+export type Plip = {
   widget_id: number
   community_id?: number
   mobilization_id?: number
