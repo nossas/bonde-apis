@@ -81,6 +81,13 @@ input ActivistInput {
   state: String
 }
 
+input PlipInput  {
+  name: String
+  email: String
+  state: String
+  whatsapp: String
+}
+
 type Response {
   data: JSON
 }
@@ -94,4 +101,5 @@ type Mutation {
   create_form_entry(widget_id: Int!, activist: ActivistInput!, input: FormEntryInput!): Response
   create_donation(widget_id: Int!, activist: ActivistInput!, input: DonationInput!): Response
   update_mailchimp_settings(api_key: String!, list_id: String!): Status
+  create_plip(widget_id: Int!, activist: ActivistInput!, input: PlipInput!): Response
 }

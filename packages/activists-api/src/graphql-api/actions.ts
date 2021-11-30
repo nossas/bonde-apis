@@ -1,4 +1,4 @@
-import { Activist, ActivistPressure } from '../types';
+import { Activist, ActivistPressure, Plip } from '../types';
 import fetch from './client';
 import logger from '../logger';
 
@@ -130,7 +130,17 @@ export const queries = {
         }
       }
     }
-  `
+  `,
+  plip: `mutation InsertPlip($plip: [plips_insert_input!]!) {
+    insert_plips (objects: $plip) {
+      returning {
+        id
+        unique_identifier
+      }
+    }
+  }
+  `,
+  
 };
 
 export const pressure = async (input: Pressure): Promise<ActivistPressure> => {
@@ -231,4 +241,13 @@ export const send_donation = async (donation: Donation): Promise<any> => {
   });
 
   return data.insert_donations.returning[0];
+};
+
+export const plip = async (plip: Plip): Promise<any> => {
+  const { data } = await fetch({
+    query: queries.plip,
+    variables: { input: plip }
+  });
+
+  return data.insert_plips.returning[0];
 };

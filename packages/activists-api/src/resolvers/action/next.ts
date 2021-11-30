@@ -6,7 +6,8 @@ import * as NotificationsAPI from '../../graphql-api/notifications';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction, data?: any): Promise<any> => {
   const { community } = widget.block.mobilization;
-  if (community.mailchimp_api_key && community.mailchimp_list_id && !!done) {
+ // as an experimentation to plip, we filter widget by kind and will not sync mailchimp in these scenario
+  if (community.mailchimp_api_key && community.mailchimp_list_id && widget.kind !== 'plip' && !!done) {
     // Update Contact on Mailchimp
     const { subscribe } = mailchimp({ activist, widget });
     subscribe().then(done).catch((err: any) => {
@@ -45,3 +46,7 @@ export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction
 
   logger.child({ activist, widget }).info('action is done');
 };
+
+// 0. trazer a função de processar pdf e inserir plip para remote schema
+// 1. definir no settings da widget   const { email_subject, sender_email, sender_name, email_text } = widget.settings;
+// 2. possibilitar que na pos acao seja possível passar um anexo
