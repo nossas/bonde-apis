@@ -4,6 +4,7 @@ import create_form_entry from './create_form_entry';
 import create_donation from './create_donation';
 import update_mailchimp_settings from './update_mailchimp_settings';
 import unsyncronized_actions from './unsyncronized_actions';
+import create_plip from './create_plip';
 
 const resolverMap = {
   Query: {
@@ -13,7 +14,8 @@ const resolverMap = {
     create_email_pressure,
     create_form_entry,
     create_donation,
-    update_mailchimp_settings
+    create_plip,
+    update_mailchimp_settings,
   },
   JSON: GraphQLJSON,
   JSONObject: GraphQLJSONObject

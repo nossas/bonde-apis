@@ -24,10 +24,10 @@ const generatePlipSheet = async (unique_identifier: string): Promise<string> => 
   return await deferred.resolve(doc.output('datauristring'));
 }
 
-export const create_plip = async ({ action, activist, widget }: IBaseAction<PlipInput>): Promise<IActionData> => {
+export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): Promise<IActionData> => {
   
   const unique_identifier = uuidv4();
-  const pdf_data = await generatePlipSheet(unique_identifier);
+  const pdf_datauristring = await generatePlipSheet(unique_identifier);
 
   const { id , errors } = await ActionsAPI.plip({
     widget_id: widget.id,
@@ -35,7 +35,7 @@ export const create_plip = async ({ action, activist, widget }: IBaseAction<Plip
     //community_id: widget.block.mobilization.community.id,
     //mobilization_id: widget.block.mobilization.id,
     unique_identifier: uuidv4(),
-    pdf_data: pdf_data,
+    pdf_data: pdf_datauristring,
     form_data: JSON.stringify({name: action?.name,
       email: action?.email,
       state: action?.state,
@@ -45,8 +45,12 @@ export const create_plip = async ({ action, activist, widget }: IBaseAction<Plip
   logger.child({ id, unique_identifier, errors } ).info('plip');
 
   return {
-    data: { plip_id: id, pdf_data: pdf_data, filename: `formulario_plip_${action?.name}.pdf` },
-    syncronize: async () =>{}
+    data: { 
+      plip_id: id, 
+      //transforma pdf data para base64 para anexar ao email
+      pdf_data: pdf_datauristring.replace("data:application/pdf;filename=generated.pdf;base64,", ""), 
+      filename: `formulario_plip_${action?.name}.pdf` 
+    },
   };
 };
 

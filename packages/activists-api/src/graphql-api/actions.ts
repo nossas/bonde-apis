@@ -131,8 +131,8 @@ export const queries = {
       }
     }
   `,
-  plip: `mutation InsertPlip($plip: [plips_insert_input!]!) {
-    insert_plips (objects: $plip) {
+  plip: `mutation InsertPlip($input: [plips_insert_input!]!) {
+    insert_plips (objects: $input) {
       returning {
         id
         unique_identifier
@@ -244,10 +244,11 @@ export const send_donation = async (donation: Donation): Promise<any> => {
 };
 
 export const plip = async (plip: Plip): Promise<any> => {
-  const { data } = await fetch({
+  const { data, errors } = await fetch({
     query: queries.plip,
     variables: { input: plip }
   });
-
+  logger.child({ data, errors }).info('plip');
+  
   return data.insert_plips.returning[0];
 };
