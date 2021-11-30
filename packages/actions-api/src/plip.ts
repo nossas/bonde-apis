@@ -3,8 +3,8 @@ import logger from "./logger";
 
 export interface ActionPlipSheetInput {
   widget_id: number
-  community_id: number
-  mobilization_id: number
+  community_id?: number
+  mobilization_id?: number
   name: string
   email: string
   state: string
