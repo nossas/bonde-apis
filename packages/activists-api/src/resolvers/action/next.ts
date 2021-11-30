@@ -3,10 +3,10 @@ import mailchimp from '../../mailchimp';
 import { DoneAction, IBaseAction } from '../../types';
 import * as NotificationsAPI from '../../graphql-api/notifications';
 
-
-export default async <T>({ activist, widget }: IBaseAction<T>, done: DoneAction): Promise<any> => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction, data?: any): Promise<any> => {
   const { community } = widget.block.mobilization;
-  if (community.mailchimp_api_key && community.mailchimp_list_id) {
+  if (community.mailchimp_api_key && community.mailchimp_list_id && !!done) {
     // Update Contact on Mailchimp
     const { subscribe } = mailchimp({ activist, widget });
     subscribe().then(done).catch((err: any) => {
@@ -24,6 +24,18 @@ export default async <T>({ activist, widget }: IBaseAction<T>, done: DoneAction)
     subject: email_subject,
     body: email_text
   };
+
+  // TODO: Thing a better place to move this code
+  if (widget.kind === "plip" && data?.pdf_data) {
+    notifyOpts.attachments = [
+      {
+        content: data?.pdf_data,
+        filename: data?.filename || "formulario-plip.pdf",
+        type: "application/pdf",
+        disposition: "attachment"
+      }
+    ]
+  }
 
   if (!!sender_name && !!sender_email) {
     notifyOpts.email_from = `${sender_name} <${sender_email}>`;

@@ -42,16 +42,17 @@ describe('tests to pipeline functions execute', () => {
   };
 
   it('called functions with correct params', () => {
+    const data = { id: 2 };
     const syncronize = jest.fn();
     const previous = jest.fn().mockResolvedValue(previousResult);
-    const action = jest.fn().mockResolvedValue({ data: { id: 2 }, syncronize });
+    const action = jest.fn().mockResolvedValue({ data, syncronize });
     const next = jest.fn().mockResolvedValue({});
     return pipeline(previous, action, next)(jest.fn()(), args)
       .then((result: IResolverData) => {
         expect(previous).toBeCalledWith(args);
         expect(action).toBeCalledWith({ action: args.input, ...previousResult });
-        expect(next).toBeCalledWith({ action: args.input, ...previousResult }, syncronize);
-        expect(result).toEqual({ data: { id: 2 } });
+        expect(next).toBeCalledWith({ action: args.input, ...previousResult }, syncronize, data);
+        expect(result).toEqual({ data });
       });
   })
 });

@@ -91,7 +91,7 @@ export interface IPreviousData {
 
 export interface IActionData {
   data: any
-  syncronize: DoneAction
+  syncronize?: DoneAction
 }
 
 export interface IResolverData {
@@ -102,4 +102,4 @@ export type DoneAction = () => Promise<any>;
 export type Resolver = (_: void, args: IBaseActionArgs) => Promise<IResolverData>;
 export type Previous = (args: IBaseActionArgs) => Promise<IPreviousData>;
 export type Action = <T>(args: IBaseAction<T>) => Promise<IActionData>;
-export type Next = <T>(args: IBaseAction<T>, done: DoneAction) => Promise<any>;
+export type Next = <T>(args: IBaseAction<T>, done?: DoneAction, data?: any) => Promise<any>;
