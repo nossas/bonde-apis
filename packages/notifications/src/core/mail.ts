@@ -5,7 +5,17 @@ export interface MailSettings {
   subject: string
   email_to: string
   email_from: string
+  attachments?: MessageAttachment[]
   context?: any
+}
+
+export interface MessageAttachment {
+  content: any
+  filename: string
+  // type: "application/pdf",
+  type: string
+  // disposition: "attachment"
+  disposition: string
 }
 
 export interface Message {
@@ -14,6 +24,7 @@ export interface Message {
   subject: string
   html: string
   mail_settings?: any
+  attachments?: MessageAttachment[]
   categories?: []
 }
 
@@ -38,12 +49,14 @@ class Mail {
       email_to,
       email_from,
       context,
-      subject
+      subject,
+      attachments
     } = this.settings;
 
     const message: any = {
       to: email_to,
       from: email_from,
+      attachments,
       subject: this.engine.renderString(subject, context),
       html: this.engine.renderString(this.get_body(), context)
     }

@@ -26,11 +26,19 @@ type ActivityFeedResponse {
   after: String
 }
 
+input Attachement {
+  content: String!
+  filename: String!
+  type: String!
+  disposition: String!
+}
+
 input NotifyInput {
   email_from: String!
   email_to: String!
   subject: String!
   body: String!
+  attachments: [Attachement]
   context: JSON
 }
 
