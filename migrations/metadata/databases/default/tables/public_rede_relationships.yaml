@@ -1,0 +1,106 @@
+table:
+  name: rede_relationships
+  schema: public
+object_relationships:
+- name: agent
+  using:
+    foreign_key_constraint_on: user_id
+- name: recipient
+  using:
+    foreign_key_constraint_on: recipient_id
+- name: volunteer
+  using:
+    foreign_key_constraint_on: volunteer_id
+insert_permissions:
+- permission:
+    check:
+      _or:
+      - recipient:
+          group:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      - volunteer:
+          group:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+    columns:
+    - created_at
+    - updated_at
+    - id
+    - is_archived
+    - comments
+    - status
+    - priority
+    - metadata
+    - volunteer_id
+    - recipient_id
+    - user_id
+    set:
+      user_id: x-hasura-User-Id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - created_at
+    - updated_at
+    - id
+    - is_archived
+    - comments
+    - status
+    - priority
+    - metadata
+    - volunteer_id
+    - recipient_id
+    - user_id
+    filter:
+      _or:
+      - recipient:
+          group:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      - volunteer:
+          group:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - is_archived
+    - id
+    - priority
+    - recipient_id
+    - user_id
+    - volunteer_id
+    - metadata
+    - comments
+    - status
+    - created_at
+    - updated_at
+    filter:
+      _or:
+      - recipient:
+          group:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      - volunteer:
+          group:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+    set:
+      user_id: x-hasura-User-Id
+  role: user

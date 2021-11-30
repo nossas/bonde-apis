@@ -1,0 +1,93 @@
+table:
+  name: invitations
+  schema: public
+object_relationships:
+- name: community
+  using:
+    foreign_key_constraint_on: community_id
+- name: user
+  using:
+    manual_configuration:
+      column_mapping:
+        user_id: id
+      insertion_order: null
+      remote_table:
+        name: users
+        schema: public
+insert_permissions:
+- permission:
+    check:
+      community:
+        community_users:
+          _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - role:
+              _eq: 1
+    columns:
+    - code
+    - community_id
+    - created_at
+    - email
+    - expired
+    - expires
+    - id
+    - role
+    - updated_at
+    set:
+      user_id: x-hasura-User-Id
+  role: user
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - code
+    - community_id
+    - created_at
+    - email
+    - expired
+    - expires
+    - id
+    - role
+    - updated_at
+    - user_id
+    filter:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - code
+    - community_id
+    - created_at
+    - email
+    - expired
+    - expires
+    - role
+    - updated_at
+    filter:
+      community:
+        community_users:
+          _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - role:
+              _eq: 1
+    set:
+      user_id: x-hasura-User-Id
+  role: user
+delete_permissions:
+- permission:
+    filter:
+      community:
+        community_users:
+          _and:
+          - user_id:
+              _eq: X-Hasura-User-Id
+          - role:
+              _eq: 1
+  role: user

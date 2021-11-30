@@ -1,0 +1,89 @@
+table:
+  name: pressure_targets
+  schema: public
+object_relationships:
+- name: widget
+  using:
+    foreign_key_constraint_on: widget_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      widget:
+        block:
+          mobilization:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+    columns:
+    - id
+    - widget_id
+    - targets
+    - identify
+    - label
+    - email_subject
+    - email_body
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - email_body
+    - email_subject
+    - id
+    - identify
+    - label
+    - targets
+    - widget_id
+    filter: {}
+  role: anonymous
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - widget_id
+    - targets
+    - email_body
+    - email_subject
+    - identify
+    - label
+    filter:
+      widget:
+        block:
+          mobilization:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - id
+    - widget_id
+    - targets
+    - email_body
+    - email_subject
+    - identify
+    - label
+    filter:
+      widget:
+        block:
+          mobilization:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+  role: user
+delete_permissions:
+- permission:
+    filter:
+      widget:
+        block:
+          mobilization:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+  role: user

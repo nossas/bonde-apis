@@ -1,0 +1,42 @@
+table:
+  name: dns_hosted_zones
+  schema: public
+object_relationships:
+- name: community
+  using:
+    foreign_key_constraint_on: community_id
+array_relationships:
+- name: certificates
+  using:
+    manual_configuration:
+      column_mapping:
+        id: dns_hosted_zone_id
+      insertion_order: null
+      remote_table:
+        name: certificates
+        schema: public
+- name: dns_records
+  using:
+    foreign_key_constraint_on:
+      column: dns_hosted_zone_id
+      table:
+        name: dns_records
+        schema: public
+select_permissions:
+- permission:
+    columns:
+    - id
+    - community_id
+    - domain_name
+    - comment
+    - created_at
+    - updated_at
+    - response
+    - ns_ok
+    - status
+    filter:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+  role: user

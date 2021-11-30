@@ -1,0 +1,41 @@
+table:
+  name: form_entries
+  schema: public
+object_relationships:
+- name: activist
+  using:
+    foreign_key_constraint_on: activist_id
+- name: community
+  using:
+    foreign_key_constraint_on: cached_community_id
+- name: mobilization
+  using:
+    manual_configuration:
+      column_mapping:
+        mobilization_id: id
+      insertion_order: null
+      remote_table:
+        name: mobilizations
+        schema: public
+- name: widget
+  using:
+    foreign_key_constraint_on: widget_id
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns: []
+    filter:
+      widget:
+        block:
+          mobilization:
+            status:
+              _eq: active
+  role: anonymous
+- permission:
+    allow_aggregations: true
+    columns:
+    - cached_community_id
+    - created_at
+    - widget_id
+    filter: {}
+  role: user

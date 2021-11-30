@@ -1,0 +1,41 @@
+table:
+  name: user_tags
+  schema: public
+object_relationships:
+- name: tag
+  using:
+    manual_configuration:
+      column_mapping:
+        tag_id: id
+      insertion_order: null
+      remote_table:
+        name: tags
+        schema: public
+insert_permissions:
+- permission:
+    check: {}
+    columns:
+    - created_at
+    - tag_id
+    - updated_at
+    set:
+      user_id: x-hasura-User-Id
+  role: common_user
+select_permissions:
+- permission:
+    columns:
+    - id
+    - user_id
+    - tag_id
+    - created_at
+    - updated_at
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: common_user
+delete_permissions:
+- permission:
+    filter:
+      user_id:
+        _eq: X-Hasura-User-Id
+  role: common_user
