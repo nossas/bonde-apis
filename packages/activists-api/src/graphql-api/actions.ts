@@ -131,8 +131,8 @@ export const queries = {
       }
     }
   `,
-  plip: `mutation InsertPlip($plip: [plips_insert_input!]) {
-    insert_plips_one(objects: $plip) {
+  plip: `mutation InsertPlip($plip: [plips_insert_input!]!) {
+    insert_plips (objects: $plip) {
       returning {
         id
         unique_identifier
