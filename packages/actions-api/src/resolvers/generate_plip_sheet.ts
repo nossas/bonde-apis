@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import q from "q";
 import logger from "../logger";
-import { Plip } from '../index'
+import { Plip } from '../plip'
 
 const generatePlipSheet = async (body: Plip): Promise<string> => {
 
