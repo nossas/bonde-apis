@@ -103,3 +103,22 @@ export type Resolver = (_: void, args: IBaseActionArgs) => Promise<IResolverData
 export type Previous = (args: IBaseActionArgs) => Promise<IPreviousData>;
 export type Action = <T>(args: IBaseAction<T>) => Promise<IActionData>;
 export type Next = <T>(args: IBaseAction<T>, done: DoneAction) => Promise<any>;
+
+export interface ActionPlipInput {
+  widget_id: number
+  community_id?: number
+  mobilization_id?: number
+  name: string
+  email: string
+  state: string
+  whatsapp: string
+}
+
+export interface PlipInput {
+  widget_id: number
+  community_id?: number
+  mobilization_id?: number
+  unique_identifier: string
+  pdf_data: string
+  form_data: string
+}
