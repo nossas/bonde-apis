@@ -1,36 +1,36 @@
 type Mutation {
-  resync_mailchimp_start (
+  resync_mailchimp_start(
     is_community: Boolean
     id: Int!
   ): MailchimpStart
 }
 
 type Query {
-  resync_mailchimp_status (
+  resync_mailchimp_status(
     is_community: Boolean
     id: Int!
   ): MailchimpStatus
 }
 
 input SampleInput {
-  username : String!
-  password : String!
+  username: String!
+  password: String!
 }
 
 type SampleOutput {
-  accessToken : String!
+  accessToken: String!
 }
 
 type MailchimpStart {
-  status : String
+  status: String
 }
 
 type MailchimpStatus {
-  completed : Int
-  waiting : Int
-  failed : Int
-  active : Int
-  last_sync : String
-  status : String
+  completed: Int
+  waiting: Int
+  failed: Int
+  active: Int
+  last_sync: String
+  status: String
 }
 
