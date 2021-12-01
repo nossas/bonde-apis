@@ -1,7 +1,15 @@
 type Mutation {
-  actionName (
-    arg1: SampleInput!
-  ): SampleOutput
+  resync_mailchimp_start (
+    is_community: Boolean
+    id: Int!
+  ): MailchimpStart
+}
+
+type Query {
+  resync_mailchimp_status (
+    is_community: Boolean
+    id: Int!
+  ): MailchimpStatus
 }
 
 input SampleInput {
@@ -11,5 +19,18 @@ input SampleInput {
 
 type SampleOutput {
   accessToken : String!
+}
+
+type MailchimpStart {
+  status : String
+}
+
+type MailchimpStatus {
+  completed : Int
+  waiting : Int
+  failed : Int
+  active : Int
+  last_sync : String
+  status : String
 }
 
