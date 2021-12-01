@@ -17,3 +17,4 @@ jobs:
         env:
           HASURA_ENDPOINT: ${{ secrets.HASURA_ENDPOINT }}
           HASURA_ADMIN_SECRET: ${{ secrets.HASURA_ADMIN_SECRET }}
+          HASURA_WORKDIR: migrations
