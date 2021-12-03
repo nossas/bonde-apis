@@ -1,33 +1,14 @@
-import jsPDF from "jspdf";
-import q from "q";
 import logger from "../logger";
 import { PlipInput, IActionData, IBaseAction } from '../types';
 import * as ActionsAPI from '../graphql-api/actions';
 import makeActionResolver from './action';
 import { v4 as uuidv4 } from 'uuid';
-
-const generatePlipSheet = async (unique_identifier: string): Promise<string> => {
-
-  if (!unique_identifier) {
-    const msg = 'Invalid unique_identifier'
-
-    logger.error(`Error: ${msg}`);
-    throw new Error(msg);
-  }
-
-  const doc = new jsPDF();
-  const deferred = q;
-
-  doc.setFontSize(22);
-  doc.text(`Plip sheet: ${unique_identifier}`, 20, 20);
-
-  return await deferred.resolve(doc.output('datauristring'));
-}
+import  generatePlipPdf  from './generate-plip-pdf';
 
 export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): Promise<IActionData> => {
   
   const unique_identifier = uuidv4();
-  const pdf_datauristring = await generatePlipSheet(unique_identifier);
+  const pdf_datauristring = await generatePlipPdf(unique_identifier, action?.state || '');
 
   const { id , errors } = await ActionsAPI.plip({
     widget_id: widget.id,
