@@ -1,16 +1,7 @@
 import jsPDF from "jspdf";
 import q from "q";
-import fs from "fs"; 
-import path from 'path';
 import QRCode from 'qrcode'; 
-
-const imageDataUri = (file: string) => {
-  
-  const bitmap = fs.readFileSync(path.resolve(__dirname, file));
-  // convert binary data to base64 encoded string
-  return Buffer.from(bitmap).toString('base64');
-    
-}
+import { logo } from "./logo";
 
 const generatePlipPdf = async (unique_identifier: string, state : string): Promise<string> => {
   if (!unique_identifier) {
@@ -29,14 +20,12 @@ const generatePlipPdf = async (unique_identifier: string, state : string): Promi
   const cellSignatureHeight = 100;
   const imgWidth = 56; 
   const imgHeight = 48;
-  //logo
-  const logoData = imageDataUri('./logo.jpg');
-  
+   
   //qrcode
   const uiQRCode = await QRCode.toDataURL(unique_identifier); 
  
   //header
-  doc.addImage(logoData, 'JPEG', 10, 5,imgWidth,imgHeight);
+  doc.addImage(logo, 'JPEG', 10, 5,imgWidth,imgHeight);
   doc.addImage(uiQRCode, 'JPEG', (docWidth - margin - imgWidth), 5,imgWidth,imgHeight);
   doc.setFontSize(8.5);
   doc.setFont( "helvetica" ,"bold");
