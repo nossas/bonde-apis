@@ -17,7 +17,8 @@ const generatePlipPdf = async (unique_identifier: string, state : string): Promi
   const margin = 10; 
   const cellHeight = 18;
   const formWidth = docWidth-(2*margin);
-  const cellSignatureHeight = 100;
+  const cellSignatureWidth = 100;
+  const cellSignatureHeight = 3*cellHeight; 
   const imgWidth = 56; 
   const imgHeight = 48;
    
@@ -38,27 +39,34 @@ const generatePlipPdf = async (unique_identifier: string, state : string): Promi
   
   //form
   doc.setFontSize(6);
-  doc.setFont( "helvetica", 'bold');
+  doc.setFont( "helvetica", 'normal');
   doc.cell(margin,60,(formWidth/2),12,`ESTADO: ${state}`,0,'left');
   doc.cell(formWidth,60,formWidth/2,12,`MUNICÍPIO:`,0,'left');
   doc.cell(margin,100,90,5,``,1,'left');
   
+  //background color
+  let top = 131;
+  for (var i = 0; i < 5; i++) {
+    doc.setFillColor(243,243,243)
+    doc.rect(10, top,formWidth , cellSignatureHeight, "F");
+    top = top + (2*cellSignatureHeight);
+  }
   for (let i = 0; i < 10; i++) {
-    doc.cell(margin,110,(formWidth-cellSignatureHeight),
+    doc.cell(margin,110,(formWidth-cellSignatureWidth),
       cellHeight,`NOME COMPLETO: (Por extenso e legível, sem abreviar)`,2,'left');
     
-    doc.cell((formWidth-cellSignatureHeight ),110,100,54,
-      `ASSINATURA OU IMPRESSÃO DIGITAL`,2,'right');
-    doc.cell(margin,134,(formWidth-cellSignatureHeight),cellHeight,``,2,'left'); 
+    doc.cell((formWidth-cellSignatureWidth ),110,100,cellSignatureHeight,
+    `ASSINATURA OU IMPRESSÃO DIGITAL`,2,'right');
+    doc.cell(margin,134,(formWidth-cellSignatureWidth),cellHeight,``,2,'left'); 
 
-    doc.cell(margin,134,(formWidth-cellSignatureHeight),
+    doc.cell(margin,134,(formWidth-cellSignatureWidth),
       cellHeight,`ENDEREÇO: (Completo, legível, sem abreviar, com CEP)`,3,'left');
 
-    doc.cell(margin,158,(formWidth-cellSignatureHeight)/4,
+    doc.cell(margin,158,(formWidth-cellSignatureWidth)/4,
       cellHeight,`DATA DE NASCIMENTO: `,4,'left');
 
-    doc.cell((formWidth-cellSignatureHeight)/4,158,
-      (formWidth-cellSignatureHeight)-((formWidth-cellSignatureHeight)/4),
+    doc.cell((formWidth-cellSignatureWidth)/4,158,
+      (formWidth-cellSignatureWidth)-((formWidth-cellSignatureWidth)/4),
       cellHeight,`NÚMERO DO TÍTULO DE ELEITOR: (Ou nome completo da mãe)`,4,'left');
   }
   
