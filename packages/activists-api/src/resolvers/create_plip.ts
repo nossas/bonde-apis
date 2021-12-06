@@ -15,7 +15,7 @@ export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): P
     //activist_id: activist.id,
     //community_id: widget.block.mobilization.community.id,
     //mobilization_id: widget.block.mobilization.id,
-    unique_identifier: uuidv4(),
+    unique_identifier: unique_identifier,
     pdf_data: pdf_datauristring,
     form_data: JSON.stringify({name: action?.name,
       email: action?.email,
