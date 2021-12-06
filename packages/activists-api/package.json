@@ -16,11 +16,13 @@
     "jspdf": "^2.4.0",
     "mailchimp-api-v3": "^1.14.0",
     "q": "^1.5.1",
+    "qrcode": "^1.5.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/jspdf": "^2.0.0",
     "@types/q": "^1.5.5",
+    "@types/qrcode": "^1.4.1",
     "@types/uuid": "^8.3.3"
   }
 }

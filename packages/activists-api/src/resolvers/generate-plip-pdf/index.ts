@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import q from "q";
 import fs from "fs"; 
 import path from 'path';
+import QRCode from 'qrcode'; 
 
 const imageDataUri = (file: string) => {
   
@@ -26,25 +27,31 @@ const generatePlipPdf = async (unique_identifier: string, state : string): Promi
   const cellHeight = 18;
   const formWidth = docWidth-(2*margin);
   const cellSignatureHeight = 100;
-
+  const imgWidth = 56; 
+  const imgHeight = 48;
+  //logo
   const logoData = imageDataUri('./logo.jpg');
   
+  //qrcode
+  const uiQRCode = await QRCode.toDataURL(unique_identifier); 
+ 
   //header
-  doc.addImage(logoData, 'JPEG', 10, 5,56,48);
-  doc.setFontSize(10);
+  doc.addImage(logoData, 'JPEG', 10, 5,imgWidth,imgHeight);
+  doc.addImage(uiQRCode, 'JPEG', (docWidth - margin - imgWidth), 5,imgWidth,imgHeight);
+  doc.setFontSize(8.5);
   doc.setFont( "helvetica" ,"bold");
-  doc.text( `Lista de Apoio ao Projeto de Lei de Iniciativa Popular nº13.567`,256,15, { align:'center' });
+  doc.text( `Lista de Apoio ao Projeto de Lei de Iniciativa Popular nº13.567`,226,15, { align:'center' });
   doc.setFont( "helvetica", 'normal');
-  doc.setFontSize(9.5);
+  doc.setFontSize(8);
   doc.text( `Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
     dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit
-    lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit.\nSaiba mais em www.sitedaplip.org`,256,25, { align:'center' });
+    lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit.\nSaiba mais em www.sitedaplip.org`,226,25, { align:'center' });
   
   //form
   doc.setFontSize(6);
   doc.setFont( "helvetica", 'bold');
   doc.cell(margin,60,(formWidth/2),12,`ESTADO: ${state}`,0,'left');
-  doc.cell(formWidth,60,formWidth/2,12,`MUNICIPIO:`,0,'left');
+  doc.cell(formWidth,60,formWidth/2,12,`MUNICÍPIO:`,0,'left');
   doc.cell(margin,100,90,5,``,1,'left');
   
   for (let i = 0; i < 10; i++) {
