@@ -117,5 +117,5 @@ export type Plip = {
   mobilization_id?: number
   unique_identifier: string
   pdf_data: string
-  form_data: string
+  form_data: any
 }

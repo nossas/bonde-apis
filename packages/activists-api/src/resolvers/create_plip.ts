@@ -17,11 +17,8 @@ export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): P
     //mobilization_id: widget.block.mobilization.id,
     unique_identifier: unique_identifier,
     pdf_data: pdf_datauristring,
-    form_data: JSON.stringify({name: action?.name,
-      email: action?.email,
-      state: action?.state,
-      whatsapp: action?.whatsapp})
-  });
+    form_data: action || {}
+    });
 
   logger.child({ id, unique_identifier, errors } ).info('plip');
 
