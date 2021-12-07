@@ -1,0 +1,3 @@
+table:
+  name: plips_by_state
+  schema: public

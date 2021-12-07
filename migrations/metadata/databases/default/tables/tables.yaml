@@ -22,6 +22,7 @@
 - "!include public_mobilizations.yaml"
 - "!include public_notification_templates.yaml"
 - "!include public_plips.yaml"
+- "!include public_plips_by_state.yaml"
 - "!include public_pressure_targets.yaml"
 - "!include public_recipients.yaml"
 - "!include public_rede_groups.yaml"
