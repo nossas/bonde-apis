@@ -19,7 +19,7 @@ const generatePlipPdf = async (unique_identifier: string, state : string): Promi
   const formWidth = docWidth-(2*margin);
   const cellSignatureWidth = 100;
   const cellSignatureHeight = 3*cellHeight; 
-  const imgWidth = 56; 
+  const imgWidth = 48; 
   const imgHeight = 48;
    
   //qrcode
@@ -30,12 +30,12 @@ const generatePlipPdf = async (unique_identifier: string, state : string): Promi
   doc.addImage(uiQRCode, 'JPEG', (docWidth - margin - imgWidth), 5,imgWidth,imgHeight);
   doc.setFontSize(8.5);
   doc.setFont( "helvetica" ,"bold");
-  doc.text( `Lista de Apoio ao Projeto de Lei de Iniciativa Popular nº13.567`,226,15, { align:'center' });
+  doc.text( `Lista de Apoio ao Projeto de Lei de Iniciativa Popular nº13.567`,220,15, { align:'center' });
   doc.setFont( "helvetica", 'normal');
   doc.setFontSize(8);
   doc.text( `Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
     dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit
-    lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit.\nSaiba mais em www.sitedaplip.org`,226,25, { align:'center' });
+    lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit.\nSaiba mais em www.sitedaplip.org`,220,25, { align:'center' });
   
   //form
   doc.setFontSize(6);
