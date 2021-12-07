@@ -7,14 +7,18 @@ object_relationships:
     foreign_key_constraint_on: widget_id
 select_permissions:
 - permission:
+    allow_aggregations: true
     columns:
-    - id
+    - confirmed_signatures
     - created_at
-    - updated_at
-    - unique_identifier
-    - widget_id
+    - expected_signatures
     - form_data
+    - id
     - pdf_data
+    - state
+    - unique_identifier
+    - updated_at
+    - widget_id
     filter:
       widget:
         block:
@@ -25,14 +29,18 @@ select_permissions:
                   _eq: X-Hasura-User-Id
   role: common_user
 - permission:
+    allow_aggregations: true
     columns:
-    - id
+    - confirmed_signatures
     - created_at
-    - updated_at
-    - unique_identifier
-    - widget_id
+    - expected_signatures
     - form_data
+    - id
     - pdf_data
+    - state
+    - unique_identifier
+    - updated_at
+    - widget_id
     filter:
       widget:
         block:
