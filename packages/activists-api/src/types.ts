@@ -109,6 +109,7 @@ export type PlipInput = {
   email: string
   state: string
   whatsapp: string
+  expected_signatures?: number
 }
 
 export type Plip = {
@@ -117,5 +118,7 @@ export type Plip = {
   mobilization_id?: number
   unique_identifier: string
   pdf_data: string
+  state: string
+  expected_signatures: number
   form_data: any
 }

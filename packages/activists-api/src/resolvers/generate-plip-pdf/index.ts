@@ -3,7 +3,7 @@ import q from "q";
 import QRCode from 'qrcode'; 
 import { logo } from "./logo";
 
-const generatePlipPdf = async (unique_identifier: string, state : string): Promise<string> => {
+const generatePlipPdf = async (unique_identifier: string, state : string, expected_signatures: number): Promise<string> => {
   if (!unique_identifier) {
     const msg = 'Invalid unique_identifier'
   
@@ -24,60 +24,67 @@ const generatePlipPdf = async (unique_identifier: string, state : string): Promi
    
   //qrcode
   const uiQRCode = await QRCode.toDataURL(unique_identifier); 
- 
-  //header
-  doc.addImage(logo, 'JPEG', 10, 5,imgWidth,imgHeight);
-  doc.addImage(uiQRCode, 'JPEG', (docWidth - margin - imgWidth), 5,imgWidth,imgHeight);
-  doc.setFontSize(8.5);
-  doc.setFont( "helvetica" ,"bold");
-  doc.text( `Lista de Apoio ao Projeto de Lei de Iniciativa Popular nº13.567`,220,15, { align:'center' });
-  doc.setFont( "helvetica", 'normal');
-  doc.setFontSize(8);
-  doc.text( `Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
+  
+  const numberOfPages = expected_signatures/10;  
+  for (let j = 0; j < numberOfPages; j++) {
+  
+    if(j > 0) {
+      doc.cellAddPage();
+    }
+
+    //header
+    doc.addImage(logo, 'JPEG', 10, 5,imgWidth,imgHeight);
+    doc.addImage(uiQRCode, 'JPEG', (docWidth - margin - imgWidth), 5,imgWidth,imgHeight);
+    doc.setFontSize(8.5);
+    doc.setFont( "helvetica" ,"bold");
+    doc.text( `Lista de Apoio ao Projeto de Lei de Iniciativa Popular nº13.567`,220,15, { align:'center' });
+    doc.setFont( "helvetica", 'normal');
+    doc.setFontSize(8);
+    doc.text( `Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
     dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit
     lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit.\nSaiba mais em www.sitedaplip.org`,220,25, { align:'center' });
   
-  //form
-  doc.setFontSize(6);
-  doc.setFont( "helvetica", 'normal');
-  doc.cell(margin,60,(formWidth/2),12,`ESTADO: ${state}`,0,'left');
-  doc.cell(formWidth,60,formWidth/2,12,`MUNICÍPIO:`,0,'left');
-  doc.cell(margin,100,90,5,``,1,'left');
+    //form
+    doc.setFontSize(6);
+    doc.setFont( "helvetica", 'normal');
+    doc.cell(margin,60,(formWidth/2),12,`ESTADO: ${state}`,0,'left');
+    doc.cell(formWidth,60,formWidth/2,12,`MUNICÍPIO:`,0,'left');
+    doc.cell(margin,100,90,5,``,1,'left');
   
-  //background color
-  let top = 131;
-  for (var i = 0; i < 5; i++) {
-    doc.setFillColor(243,243,243)
-    doc.rect(10, top,formWidth , cellSignatureHeight, "F");
-    top = top + (2*cellSignatureHeight);
-  }
-  for (let i = 0; i < 10; i++) {
-    doc.cell(margin,110,(formWidth-cellSignatureWidth),
-      cellHeight,`NOME COMPLETO: (Por extenso e legível, sem abreviar)`,2,'left');
+    //background color
+    let top = 131;
+    for (let i = 0; i < 5; i++) {
+      doc.setFillColor(243,243,243)
+      doc.rect(10, top,formWidth , cellSignatureHeight, "F");
+      top = top + (2*cellSignatureHeight);
+    }
+    for (let i = 0; i < 10; i++) {
+      doc.cell(margin,110,(formWidth-cellSignatureWidth),
+        cellHeight,`NOME COMPLETO: (Por extenso e legível, sem abreviar)`,2,'left');
     
-    doc.cell((formWidth-cellSignatureWidth ),110,100,cellSignatureHeight,
-    `ASSINATURA OU IMPRESSÃO DIGITAL`,2,'right');
-    doc.cell(margin,134,(formWidth-cellSignatureWidth),cellHeight,``,2,'left'); 
+      doc.cell((formWidth-cellSignatureWidth ),110,100,cellSignatureHeight,
+        `ASSINATURA OU IMPRESSÃO DIGITAL`,2,'right');
+      doc.cell(margin,134,(formWidth-cellSignatureWidth),cellHeight,``,2,'left'); 
 
-    doc.cell(margin,134,(formWidth-cellSignatureWidth),
-      cellHeight,`ENDEREÇO: (Completo, legível, sem abreviar, com CEP)`,3,'left');
+      doc.cell(margin,134,(formWidth-cellSignatureWidth),
+        cellHeight,`ENDEREÇO: (Completo, legível, sem abreviar, com CEP)`,3,'left');
 
-    doc.cell(margin,158,(formWidth-cellSignatureWidth)/4,
-      cellHeight,`DATA DE NASCIMENTO: `,4,'left');
+      doc.cell(margin,158,(formWidth-cellSignatureWidth)/4,
+        cellHeight,`DATA DE NASCIMENTO: `,4,'left');
 
-    doc.cell((formWidth-cellSignatureWidth)/4,158,
-      (formWidth-cellSignatureWidth)-((formWidth-cellSignatureWidth)/4),
-      cellHeight,`NÚMERO DO TÍTULO DE ELEITOR: (Ou nome completo da mãe)`,4,'left');
+      doc.cell((formWidth-cellSignatureWidth)/4,158,
+        (formWidth-cellSignatureWidth)-((formWidth-cellSignatureWidth)/4),
+        cellHeight,`NÚMERO DO TÍTULO DE ELEITOR: (Ou nome completo da mãe)`,4,'left');
+    }
+  
+    //footer
+    doc.setFontSize(7);
+    doc.setFont( "helvetica" ,"normal");
+    doc.text( `${unique_identifier}`,10 , docHeight - 5);
+    doc.text( `Enviar para: Nome do Destinatário, Av. N2 - Bloco 16, CEP 70165-900, DF`,docWidth -183 , docHeight - 5);
+
   }
-  
   const deferred = q;
-  
-  //footer
-  doc.setFontSize(7);
-  doc.setFont( "helvetica" ,"normal");
-  doc.text( `${unique_identifier}`,10 , docHeight - 5);
-  doc.text( `Enviar para: Nome do Destinatário, Av. N2 - Bloco 16, CEP 70165-900, DF`,docWidth -183 , docHeight - 5);
- 
   return await deferred.resolve(doc.output('datauristring'));
 }
 export default generatePlipPdf;

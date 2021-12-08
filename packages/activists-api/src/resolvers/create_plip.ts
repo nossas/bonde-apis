@@ -8,7 +8,9 @@ import  generatePlipPdf  from './generate-plip-pdf';
 export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): Promise<IActionData> => {
   
   const unique_identifier = uuidv4();
-  const pdf_datauristring = await generatePlipPdf(unique_identifier, action?.state || '');
+  const state =  action?.state || '';
+  const expected_signatures = action?.expected_signatures || 10;
+  const pdf_datauristring = await generatePlipPdf(unique_identifier, state, expected_signatures);
 
   const { id , errors } = await ActionsAPI.plip({
     widget_id: widget.id,
@@ -17,8 +19,10 @@ export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): P
     //mobilization_id: widget.block.mobilization.id,
     unique_identifier: unique_identifier,
     pdf_data: pdf_datauristring,
+    expected_signatures: expected_signatures,
+    state: state ,
     form_data: action || {}
-    });
+  });
 
   logger.child({ id, unique_identifier, errors } ).info('plip');
 

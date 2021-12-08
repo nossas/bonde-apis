@@ -86,6 +86,7 @@ input PlipInput  {
   email: String
   state: String
   whatsapp: String
+  expected_signatures: Int
 }
 
 type Response {
