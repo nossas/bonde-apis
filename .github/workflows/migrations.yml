@@ -1,6 +1,10 @@
 name: Hasura migration
 on:
   push:
+    branches:
+      - "release/*"
+      - "feature/*"
+      - "hotfix/*"
     paths:
       - "migrations/**"
 jobs:
