@@ -1,13 +1,15 @@
-name: Hasura migration
+name: Hasura migration for production
 on:
   push:
+    branches:
+      - "main"
     paths:
       - "migrations/**"
 jobs:
   hasura_migration:
     name: Hasura migration
     runs-on: ubuntu-latest
-    environment: staging
+    environment: production
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
