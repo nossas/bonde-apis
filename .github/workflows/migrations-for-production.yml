@@ -23,6 +23,7 @@ jobs:
           HASURA_WORKDIR: migrations
 
   hasura-metadata:
+    needs: hasura-migration
     name: Hasura metadata
     runs-on: ubuntu-latest
     environment: production
