@@ -23,3 +23,19 @@ jobs:
           HASURA_ENDPOINT: ${{ secrets.HASURA_ENDPOINT }}
           HASURA_ADMIN_SECRET: ${{ secrets.HASURA_ADMIN_SECRET }}
           HASURA_WORKDIR: migrations
+
+  hasura-metadata:
+    name: Hasura metadata
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Apply hasura metadata
+        uses: tibotiber/hasura-action@master
+        with:
+          args: metadata apply
+        env:
+          HASURA_ENDPOINT: ${{ secrets.HASURA_ENDPOINT }}
+          HASURA_ADMIN_SECRET: ${{ secrets.HASURA_ADMIN_SECRET }}
+          HASURA_WORKDIR: migrations

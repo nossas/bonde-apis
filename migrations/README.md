@@ -1,5 +1,7 @@
 # Hasura Migrations
 
+Migrations and metadata
+
 TODO:
 
 - [ ] Write docs to run migrations
