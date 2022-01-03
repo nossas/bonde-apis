@@ -13,6 +13,7 @@
     url_from_env: SCHEMA_API_ACTIVISTS_URL
     timeout_seconds: 60
     forward_client_headers: true
+  comment: ""
 - name: Domains
   definition:
     url_from_env: SCHEMA_API_DOMAINS_URL
