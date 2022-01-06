@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server-express';
 import fetch from './client';
 import logger from '../logger';
 import { ActivistInput, Activist } from '../types';
@@ -108,12 +109,15 @@ export const queries = {
 };
 
 export const get_or_create = async (activist: ActivistInput): Promise<Activist> => {   
-  const { data }: any = await fetch({
+  const { data, errors }: any = await fetch({
     query: queries.get_or_create,
     variables: { activist }
   });
 
-  return data.insert_activists.returning[0];
+  if (!!data) {
+    return data.insert_activists.returning[0];
+  }
+  throw new ApolloError(errors[0].message, 'actvists_get_or_create_error');
 };
 
 type Widget = {
