@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:16-alpine
 
 WORKDIR /usr/src/app
 
@@ -17,6 +17,7 @@ COPY packages packages
 
 COPY utils utils
 
-RUN pnpm m i
+RUN pnpm m i --filter accounts-api --filter permissions-utils
 
-RUN pnpm m run build
+RUN pnpm m run build --filter permissions-utils
+RUN pnpm m run build --filter accounts-api
