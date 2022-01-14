@@ -14,8 +14,8 @@ export const generateJWT = (user: User): string => {
     user_id: user.id,
     is_admin: user.is_admin ? 1 : 0,
     "https://hasura.io/jwt/claims": {
-      "x-hasura-allowed-roles": user.admin ? ['admin', 'common_user'] : ['common_user'],
-      "x-hasura-default-role": user.admin ? 'admin' : 'common_user',
+      "x-hasura-allowed-roles": user.is_admin ? ['admin', 'user'] : ['user'],
+      "x-hasura-default-role": user.is_admin ? 'admin' : 'user',
       "x-hasura-user-id": String(user.id)
     }
   };
@@ -24,9 +24,11 @@ export const generateJWT = (user: User): string => {
   return jwt.sign(payload, config.jwtSecret, options);
 };
 
+type Role = 'admin' | 'user'
+
 interface HasuraJWT {
-  "x-hasura-allowed-roles": string[]
-  "x-hasura-default-role": string
+  "x-hasura-allowed-roles": Role[]
+  "x-hasura-default-role": Role
   "x-hasura-user-id": string
   // "x-hasura-org-id": "123",
   // "x-hasura-custom": "custom-value"
