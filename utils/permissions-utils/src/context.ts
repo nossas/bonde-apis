@@ -15,10 +15,11 @@ type Request = {
 
 type ExpressOpts = {
   req: Request
+  res: any
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const handle_context = ({ jwtSecret, logger }: Options) => ({ req }: ExpressOpts) => {
+export const handle_context = ({ jwtSecret, logger }: Options) => ({ req, res }: ExpressOpts) => {
   const { headers: { authorization } } = req;
 
   if (!!authorization) {
@@ -33,8 +34,8 @@ export const handle_context = ({ jwtSecret, logger }: Options) => ({ req }: Expr
       }
     });
 
-    return { session };
+    return { session, req, res };
   }
-  return {};
+  return { req, res };
 }
 
