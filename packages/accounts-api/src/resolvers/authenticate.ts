@@ -26,15 +26,16 @@ export default async (_: void, args: AuthenticateArgs, { res }: any): Promise<JW
   if (await bcrypt.compare(password, user.encrypted_password)) {
     const token = generateJWT(user);
     // set cookie
-    const sevenDaysToSeconds = 7 * 24 * 60 * 60;
+    const date = new Date();
+    date.setDate(date.getDate() + 7);
+
     res.cookie('session', token,
       {
-        maxAge: sevenDaysToSeconds,
-        httpOnly: false,
+        expires: date,
+        httpOnly: true,
         domain: process.env.NODE_ENV === 'production' ? '.bonde.org' : '.staging.bonde.org',
         secure: process.env.NODE_ENV === 'production' ? true : false,
       });
-    console.log("set-cookie", res);
 
     return { valid: true, token, first_name: user.first_name };
   }
