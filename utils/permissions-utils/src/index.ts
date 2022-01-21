@@ -22,6 +22,7 @@ export const handle_check_user = ({ fetch, logger }: Options) => (next: any, rol
   const get_permission = handle_get_permission({ fetch, logger });
   const { session }: Context = context;
 
+  console.log("session", { session });
   if (session) {
     const { input: { community_id } } = args;
     // Get permission on API-GraphQL (Hasura)

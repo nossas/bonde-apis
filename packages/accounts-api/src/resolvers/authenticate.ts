@@ -10,7 +10,6 @@ type AuthenticateArgs = {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async (_: void, args: AuthenticateArgs, { res }: any): Promise<JWT> => {
-  console.log("authenticate", { args, res });
   const { email, password } = args;
   const errorCode = 'email_password_dismatch';
   let user;
