@@ -20,4 +20,4 @@ COPY utils utils
 RUN pnpm m i --filter accounts-api --filter permissions-utils
 
 RUN pnpm m run build --filter permissions-utils
-RUN pnpm m run build --filter accounts-api
+RUN pnpm m run build --filter {packages}
