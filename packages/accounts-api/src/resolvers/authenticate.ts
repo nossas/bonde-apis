@@ -31,7 +31,7 @@ export default async (_: void, args: AuthenticateArgs, { res }: any): Promise<JW
     res.cookie('session', token,
       {
         expires: date,
-        httpOnly: true,
+        httpOnly: false,
         domain: process.env.NODE_ENV === 'production' ? '.bonde.org' : '.staging.bonde.org',
         secure: process.env.NODE_ENV === 'production' ? true : false,
       });
