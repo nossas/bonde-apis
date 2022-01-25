@@ -32,7 +32,7 @@ export default async (_: void, args: AuthenticateArgs, { res }: any): Promise<JW
       {
         expires: date,
         httpOnly: false,
-        domain: process.env.NODE_ENV === 'production' ? '.bonde.org' : '.staging.bonde.org',
+        domain: process.env.NODE_ENV === 'production' ? '.bonde.org' : '.bonde.devel',
         secure: process.env.NODE_ENV === 'production' ? true : false,
       });
 
