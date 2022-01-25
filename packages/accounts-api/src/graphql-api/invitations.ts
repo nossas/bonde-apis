@@ -127,3 +127,34 @@ export const done = async (id: number): Promise<Invite> => {
 
   return resp.data.update_invitations.returning[0];
 };
+
+interface InviteUpdateFields {
+  code?: string
+  expired?: boolean
+}
+
+export const update = async (id: number, fields: InviteUpdateFields): Promise<Invite> => {
+  const UpdateInvitationQuery = `
+    mutation UpdateInvitation ($id: Int!, $fields: invitations_set_input!) {
+      update_invitations(where: { id: { _eq: $id }}, _set: $fields) {
+        returning {
+					id
+			    expired
+			    expires
+			    role
+          code
+          email
+			    community {
+			    	id
+			    	name
+			    	image
+			    }
+        }
+      }
+    }
+  `
+  const variables = { id, fields }
+  const resp = await fetch({ query: UpdateInvitationQuery, variables });
+
+  return resp.data.update_invitations.returning[0]
+}
