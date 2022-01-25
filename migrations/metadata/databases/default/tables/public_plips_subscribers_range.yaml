@@ -1,5 +1,5 @@
 table:
-  name: plips_by_state
+  name: plips_subscribers_range
   schema: public
 object_relationships:
 - name: widget
@@ -14,11 +14,9 @@ object_relationships:
 select_permissions:
 - permission:
     columns:
+    - total
     - widget_id
-    - subscribers
-    - state
-    - confirmed_signatures
-    - expected_signatures
+    - created_at
     filter:
       widget:
         block:
@@ -30,11 +28,9 @@ select_permissions:
   role: common_user
 - permission:
     columns:
-    - confirmed_signatures
-    - expected_signatures
-    - subscribers
     - widget_id
-    - state
+    - created_at
+    - total
     filter:
       widget:
         block:
