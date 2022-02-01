@@ -1,0 +1,3 @@
+table:
+  name: twilio_configurations
+  schema: postgraphql
