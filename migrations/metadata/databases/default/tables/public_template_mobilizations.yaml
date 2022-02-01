@@ -1,0 +1,42 @@
+table:
+  name: template_mobilizations
+  schema: public
+object_relationships:
+- name: community
+  using:
+    manual_configuration:
+      column_mapping:
+        community_id: id
+      insertion_order: null
+      remote_table:
+        name: communities
+        schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - id
+    - name
+    - user_id
+    - color_scheme
+    - facebook_share_title
+    - facebook_share_description
+    - header_font
+    - body_font
+    - facebook_share_image
+    - slug
+    - custom_domain
+    - twitter_share_text
+    - community_id
+    - uses_number
+    - global
+    - created_at
+    - updated_at
+    - goal
+    - favicon
+    filter:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+  role: user

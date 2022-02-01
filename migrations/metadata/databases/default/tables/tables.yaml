@@ -33,6 +33,7 @@
 - "!include public_solidarity_tickets.yaml"
 - "!include public_solidarity_users.yaml"
 - "!include public_tags.yaml"
+- "!include public_template_mobilizations.yaml"
 - "!include public_user_tags.yaml"
 - "!include public_users.yaml"
 - "!include public_webhooks_registry.yaml"
