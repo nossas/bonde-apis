@@ -39,4 +39,5 @@
 - "!include public_user_tags.yaml"
 - "!include public_users.yaml"
 - "!include public_webhooks_registry.yaml"
+- "!include public_widget_donation_stats.yaml"
 - "!include public_widgets.yaml"

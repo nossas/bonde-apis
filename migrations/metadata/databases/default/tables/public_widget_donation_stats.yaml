@@ -1,0 +1,3 @@
+table:
+  name: widget_donation_stats
+  schema: public

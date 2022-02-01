@@ -1,1 +1,2 @@
 - "!include public_get_current_user.yaml"
+- "!include public_get_widget_donation_stats.yaml"
