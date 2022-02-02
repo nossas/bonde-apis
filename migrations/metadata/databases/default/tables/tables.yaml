@@ -16,6 +16,7 @@
 - "!include public_configurations.yaml"
 - "!include public_dns_hosted_zones.yaml"
 - "!include public_dns_records.yaml"
+- "!include public_donation_transactions.yaml"
 - "!include public_donations.yaml"
 - "!include public_facebook_bot_campaign_activists.yaml"
 - "!include public_facebook_bot_campaigns.yaml"
