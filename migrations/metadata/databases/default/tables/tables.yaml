@@ -23,6 +23,7 @@
 - "!include public_invitations.yaml"
 - "!include public_mobilizations.yaml"
 - "!include public_notification_templates.yaml"
+- "!include public_participations.yaml"
 - "!include public_plips.yaml"
 - "!include public_plips_by_state.yaml"
 - "!include public_plips_subscribers_range.yaml"
