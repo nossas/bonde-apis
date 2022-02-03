@@ -1,3 +1,16 @@
 table:
   name: widget_donation_stats
   schema: public
+select_permissions:
+- permission:
+    columns:
+    - widget_id
+    - stats
+    filter: {}
+  role: anonymous
+- permission:
+    columns:
+    - widget_id
+    - stats
+    filter: {}
+  role: user
