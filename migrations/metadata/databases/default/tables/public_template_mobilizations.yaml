@@ -11,6 +11,35 @@ object_relationships:
       remote_table:
         name: communities
         schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+    columns:
+    - global
+    - body_font
+    - color_scheme
+    - custom_domain
+    - facebook_share_image
+    - facebook_share_title
+    - favicon
+    - header_font
+    - name
+    - slug
+    - twitter_share_text
+    - community_id
+    - id
+    - user_id
+    - uses_number
+    - facebook_share_description
+    - goal
+    - created_at
+    - updated_at
+  role: user
 select_permissions:
 - permission:
     allow_aggregations: true
@@ -34,9 +63,34 @@ select_permissions:
     - updated_at
     - goal
     - favicon
-    filter:
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check:
       community:
         community_users:
           user_id:
             _eq: X-Hasura-User-Id
+    columns:
+    - global
+    - body_font
+    - color_scheme
+    - custom_domain
+    - facebook_share_image
+    - facebook_share_title
+    - favicon
+    - header_font
+    - name
+    - slug
+    - twitter_share_text
+    - community_id
+    - id
+    - user_id
+    - uses_number
+    - facebook_share_description
+    - goal
+    - created_at
+    - updated_at
+    filter: {}
   role: user
