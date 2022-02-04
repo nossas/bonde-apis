@@ -8,16 +8,35 @@ type AuthenticateArgs = {
   password: string
 }
 
-export default async (_: void, args: AuthenticateArgs): Promise<JWT> => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default async (_: void, args: AuthenticateArgs, { res }: any): Promise<JWT> => {
   const { email, password } = args;
   const errorCode = 'email_password_dismatch';
+  let user;
 
-  const user = (await UsersAPI.find({ email }))[0];
+  try {
+    user = (await UsersAPI.find({ email }))[0];
+  } catch (err) {
+    console.log('authenticate error', err);
+  }
 
   if (!user) throw new Error(errorCode);
 
   if (await bcrypt.compare(password, user.encrypted_password)) {
-    return { valid: true, token: generateJWT(user), first_name: user.first_name };
+    const token = generateJWT(user);
+    // set cookie
+    const date = new Date();
+    date.setDate(date.getDate() + 7);
+
+    res.cookie('session', token,
+      {
+        expires: date,
+        httpOnly: false,
+        domain: process.env.NODE_ENV === 'development' ? '.bonde.devel' : '.bonde.org',
+        secure: process.env.NODE_ENV === 'development' ? false : true,
+      });
+
+    return { valid: true, token, first_name: user.first_name };
   }
 
   throw new Error(errorCode);

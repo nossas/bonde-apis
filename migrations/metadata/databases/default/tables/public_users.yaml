@@ -21,6 +21,7 @@ select_permissions:
     - email
     - first_name
     - id
+    - is_admin
     - last_name
     - locale
     - updated_at

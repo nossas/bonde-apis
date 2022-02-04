@@ -26,24 +26,30 @@ jest.mock('bcrypt', () => ({
   }
 }));
 
+const context = {
+  res: {
+    cookie: jest.fn()
+  }
+}
+
 describe('authenticate resolvers function', () => {
 
   it('should throw email_password_dismatch when not found email user', () => {
-    return authenticate(undefined, { email: 'fail@test.org', password: 'sdasdas' })
+    return authenticate(undefined, { email: 'fail@test.org', password: 'sdasdas' }, context)
       .catch((err) => {
         expect(err).toEqual(new Error('email_password_dismatch'));
       });
   });
 
   it('should throw email_password_dismatch when not pass dismatch', () => {
-    return authenticate(undefined, { email: 'success@test.org', password: 'sdasdas' })
+    return authenticate(undefined, { email: 'success@test.org', password: 'sdasdas' }, context)
       .catch((err) => {
         expect(err).toEqual(new Error('email_password_dismatch'));
       });
   });
 
   it('should return JWT when success login', () => {
-    return authenticate(undefined, { email: users[0].email, password: users[0].encrypted_password })
+    return authenticate(undefined, { email: users[0].email, password: users[0].encrypted_password }, context)
       .then((data: JWT) => {
         expect(data).toEqual({
           valid: true,

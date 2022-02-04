@@ -5,22 +5,28 @@ type Options = {
   logger?: any
 }
 
-type Headers = {
-  authorization?: string
-}
-
 type Request = {
-  headers: Headers
+  headers: any
 }
 
 type ExpressOpts = {
   req: Request
+  res: any
+}
+
+const getCookie = (keyName: string, req: any): string | undefined => {
+  try {
+    const pattern = `${keyName}=`;
+    const cookie = req.headers.cookie?.split('; ').filter((value: string) => value.startsWith(pattern))[0];
+    return cookie?.replace(pattern, '').trim();
+  } catch (err) {
+    console.log('getCookie error: ', err);
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const handle_context = ({ jwtSecret, logger }: Options) => ({ req }: ExpressOpts) => {
-  const { headers: { authorization } } = req;
-
+export const handle_context = ({ jwtSecret, logger }: Options) => ({ req, res }: ExpressOpts) => {
+  const authorization = getCookie('session', req);
   if (!!authorization) {
     let session: any;
 
@@ -33,8 +39,8 @@ export const handle_context = ({ jwtSecret, logger }: Options) => ({ req }: Expr
       }
     });
 
-    return { session };
+    return { session, req, res };
   }
-  return {};
+  return { req, res };
 }
 
