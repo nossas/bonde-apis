@@ -7,6 +7,7 @@ export interface MailSettings {
   email_from: string
   attachments?: MessageAttachment[]
   context?: any
+  trackingSettings?: any
 }
 
 export interface MessageAttachment {
@@ -24,6 +25,7 @@ export interface Message {
   subject: string
   html: string
   mail_settings?: any
+  trackingSettings?: any
   attachments?: MessageAttachment[]
   categories?: []
 }
@@ -37,20 +39,21 @@ class Mail {
     this.engine.configure({ autoescape: true });
   }
 
-  get_body (): string {
+  get_body(): string {
     if (new RegExp(/\<!DOCTYPE/).test(this.settings.body)) {
       return this.settings.body;
     }
     return this.settings.body.replace(/\n/g, '<br/>');
   }
 
-  json (): Message {
+  json(): Message {
     const {
       email_to,
       email_from,
       context,
       subject,
-      attachments
+      attachments,
+      trackingSettings
     } = this.settings;
 
     const message: any = {
@@ -58,7 +61,8 @@ class Mail {
       from: email_from,
       attachments,
       subject: this.engine.renderString(subject, context),
-      html: this.engine.renderString(this.get_body(), context)
+      html: this.engine.renderString(this.get_body(), context),
+      trackingSettings
     }
 
     let categories: string[] = [];
@@ -71,7 +75,7 @@ class Mail {
     if (context?.community_id) {
       categories = [...categories, `c${context?.community_id}`]
     }
-    
+
     return {
       ...message,
       categories

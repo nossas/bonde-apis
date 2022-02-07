@@ -37,7 +37,12 @@ const send_pressure_mail = async ({
     body: emailBody,
     subject: emailSubject, // email_subject || group?.email_subject || pressure_subject,
     email_from: `${activist.name} <${activist.email}>`,
-    email_to: target
+    email_to: target,
+    trackingSettings: {
+      subscriptionTracking: {
+        enable: false
+      }
+    }
   }));
 
   // Envia e-mail de pressão
@@ -127,7 +132,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     // sent_optimized: enviado como gatilho do processo de otimização
     // awaiting_optimized: não enviado e aguardando envio do lote
     // batch_optimized: enviado como parte do processo de otimização
-  
+
     if (pressureInfo.mail_count >= mail_limit) {
       // Esta dentro do limite único, inicia o processo de otimização
       if ((pressureInfo.batch_count + 1) >= batch_limit) {
@@ -139,7 +144,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
         let activists = batch_activists.map((a) => a.email);
         activists.push(activist.email);
         activists = activists.filter((item, index) => activists.indexOf(item) === index);
- 
+
         // Limite de lote atingido, enviar e-mail e atualizar pressões
         // Enviar e-mail de pressão customizado
         const contentBody = group?.email_body || pressureBody;
@@ -158,13 +163,13 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
             count,
             activists,
             widget_id: activistPressure.widget_id,
-            mobilization_id: activistPressure.mobilization_id,
+            mobilization_id: activistPressure.mobilization_id
             community_id: activistPressure.cached_community_id
           },
           activist,
           targets,
           emailBody: optimziedBody,
-          emailSubject: group?.email_subject || pressureSubject
+          emailSubject: group?.email_subject || pressureSubject,
         });
 
         logger.child({ id, created_at }).info('ActionsAPI');
