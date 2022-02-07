@@ -16,6 +16,7 @@ interface NotifyInput {
   email_from: string
   email_to: string
   subject: string
+  trackingSettings?: any
 }
 
 export interface Result {

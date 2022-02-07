@@ -163,8 +163,8 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
             count,
             activists,
             widget_id: activistPressure.widget_id,
-            mobilization_id: activistPressure.mobilization_id
-            community_id: activistPressure.cached_community_id
+            mobilization_id: activistPressure.mobilization_id,
+            community_id: activistPressure.cached_community_id,
           },
           activist,
           targets,
