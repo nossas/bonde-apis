@@ -56,13 +56,19 @@ class Mail {
       trackingSettings
     } = this.settings;
 
-    const message: any = {
+    let message: any = {
       to: email_to,
       from: email_from,
       attachments,
       subject: this.engine.renderString(subject, context),
-      html: this.engine.renderString(this.get_body(), context),
-      trackingSettings
+      html: this.engine.renderString(this.get_body(), context)
+    }
+
+    if (trackingSettings) {
+      message = {
+        ...message,
+        trackingSettings
+      }
     }
 
     let categories: string[] = [];
