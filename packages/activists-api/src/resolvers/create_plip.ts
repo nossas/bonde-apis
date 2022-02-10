@@ -30,7 +30,7 @@ export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): P
     data: {
       plip_id: id,
       //transforma pdf data para base64 para anexar ao email
-      pdf_data: pdf_datauristring.replace("data:application/octet-stream;filename=generated.pdf;base64,", ""),
+      pdf_data: pdf_datauristring,
       filename: `${action?.name}.pdf`,
     },
   };
