@@ -30,7 +30,7 @@ export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction
   if (widget.kind === "plip" && data?.pdf_data) {
     notifyOpts.attachments = [
       {
-        content: data?.pdf_data,
+        content: data?.pdf_data.replace("data:application/pdf;filename=generated.pdf;base64,", ""),
         filename: data?.filename || "formulario-plip.pdf",
         type: "application/pdf",
         disposition: "attachment"
