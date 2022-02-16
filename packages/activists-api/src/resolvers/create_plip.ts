@@ -2,12 +2,12 @@ import logger from "../logger";
 import { PlipInput, IActionData, IBaseAction } from '../types';
 import * as ActionsAPI from '../graphql-api/actions';
 import makeActionResolver from './action';
-import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 import generatePlipPdf from './generate-plip-pdf';
 
 export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): Promise<IActionData> => {
 
-  const unique_identifier = uuidv4();
+  const unique_identifier = crypto.createHash("sha1").update(action?.email || '').digest("hex");
   const state = action?.state || '';
   const expected_signatures = action?.expected_signatures || 10;
   const pdf_datauristring = await generatePlipPdf(unique_identifier, state, expected_signatures);
