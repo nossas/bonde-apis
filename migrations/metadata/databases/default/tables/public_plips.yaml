@@ -5,11 +5,17 @@ object_relationships:
 - name: widget
   using:
     foreign_key_constraint_on: widget_id
+computed_fields:
+- comment: Atributo computado a partir da relação entre widget_id e unique_identifier da tabela plip_signatures
+  definition:
+    function:
+      name: plips_confirmed_signatures
+      schema: public
+  name: confirmed_signatures
 select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - confirmed_signatures
     - created_at
     - expected_signatures
     - form_data
@@ -19,6 +25,8 @@ select_permissions:
     - unique_identifier
     - updated_at
     - widget_id
+    computed_fields:
+    - confirmed_signatures
     filter:
       widget:
         block:
@@ -31,7 +39,6 @@ select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - confirmed_signatures
     - created_at
     - expected_signatures
     - form_data
@@ -41,6 +48,8 @@ select_permissions:
     - unique_identifier
     - updated_at
     - widget_id
+    computed_fields:
+    - confirmed_signatures
     filter:
       widget:
         block:
