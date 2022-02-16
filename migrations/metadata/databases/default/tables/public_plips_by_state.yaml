@@ -13,28 +13,13 @@ object_relationships:
         schema: public
 select_permissions:
 - permission:
+    allow_aggregations: true
     columns:
     - widget_id
-    - subscribers
-    - state
-    - confirmed_signatures
     - expected_signatures
-    filter:
-      widget:
-        block:
-          mobilization:
-            community:
-              community_users:
-                user_id:
-                  _eq: X-Hasura-User-Id
-  role: common_user
-- permission:
-    columns:
     - confirmed_signatures
-    - expected_signatures
-    - subscribers
-    - widget_id
     - state
+    - subscribers
     filter:
       widget:
         block:
