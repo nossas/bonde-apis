@@ -12,6 +12,12 @@ computed_fields:
       name: plips_confirmed_signatures
       schema: public
   name: confirmed_signatures
+- comment: "Atributo computado para retornar status a partir do período. Resultados: CONCLUIDO, PENDENTE ou INSCRITO"
+  definition:
+    function:
+      name: plips_status
+      schema: public
+  name: status
 select_permissions:
 - permission:
     allow_aggregations: true
