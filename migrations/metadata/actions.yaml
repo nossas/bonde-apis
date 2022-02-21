@@ -2,14 +2,14 @@ actions:
 - name: resync_mailchimp_start
   definition:
     kind: synchronous
-    handler: "{{ACTION_BASE_URL}}/start-resync-mailchimp"
+    handler: '{{ACTION_BASE_URL}}/start-resync-mailchimp'
     forward_client_headers: true
   permissions:
   - role: user
 - name: resync_mailchimp_status
   definition:
     kind: ""
-    handler: "{{ACTION_BASE_URL}}/status-resync-mailchimp"
+    handler: '{{ACTION_BASE_URL}}/status-resync-mailchimp'
   permissions:
   - role: user
 custom_types:

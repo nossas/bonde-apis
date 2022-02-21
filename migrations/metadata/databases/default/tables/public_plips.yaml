@@ -1,17 +1,6 @@
 table:
   name: plips
   schema: public
-event_triggers:
-- definition:
-    enable_manual: false
-    insert:
-      columns: "*"
-  name: webhooks-plip-mautic
-  retry_conf:
-    interval_sec: 10
-    num_retries: 0
-    timeout_sec: 60
-  webhook_from_env: WEBHOOK_PLIP_MAUTIC_URL
 object_relationships:
 - name: widget
   using:
@@ -54,6 +43,7 @@ select_permissions:
     - widget_id
     computed_fields:
     - confirmed_signatures
+    - status
     filter:
       widget:
         block:
@@ -77,6 +67,7 @@ select_permissions:
     - widget_id
     computed_fields:
     - confirmed_signatures
+    - status
     filter:
       widget:
         block:
@@ -86,3 +77,14 @@ select_permissions:
                 user_id:
                   _eq: X-Hasura-User-Id
   role: user
+event_triggers:
+- definition:
+    enable_manual: false
+    insert:
+      columns: "*"
+  name: webhooks-plip-mautic
+  retry_conf:
+    interval_sec: 10
+    num_retries: 0
+    timeout_sec: 60
+  webhook_from_env: WEBHOOK_PLIP_MAUTIC_URL
