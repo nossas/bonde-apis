@@ -5,6 +5,16 @@ object_relationships:
 - name: widget
   using:
     foreign_key_constraint_on: widget_id
+array_relationships:
+- name: plip_signatures
+  using:
+    manual_configuration:
+      column_mapping:
+        unique_identifier: unique_identifier
+      insertion_order: null
+      remote_table:
+        name: plip_signatures
+        schema: public
 computed_fields:
 - comment: Atributo computado a partir da relação entre widget_id e unique_identifier da tabela plip_signatures
   definition:

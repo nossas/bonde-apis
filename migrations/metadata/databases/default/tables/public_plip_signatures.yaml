@@ -5,6 +5,16 @@ object_relationships:
 - name: widget
   using:
     foreign_key_constraint_on: widget_id
+array_relationships:
+- name: plips
+  using:
+    manual_configuration:
+      column_mapping:
+        unique_identifier: unique_identifier
+      insertion_order: null
+      remote_table:
+        name: plips
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false
