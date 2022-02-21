@@ -110,6 +110,8 @@ export type PlipInput = {
   state: string
   whatsapp: string
   expected_signatures?: number
+  color?: string
+  gender?: string
 }
 
 export type Plip = {
