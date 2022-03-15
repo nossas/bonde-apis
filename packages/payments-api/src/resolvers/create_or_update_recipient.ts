@@ -48,7 +48,7 @@ const create_or_update = async (_: void, args: Args): Promise<RecipientEntity | 
     const recipientBankAccountLegalName = recipient.bank_account.legal_name;
     recipient.bank_account.legal_name = recipientBankAccountLegalName.substring(0, 29);
 
-    if (!!id) {
+    if (id) {
       // The next line ensures only 1 recipient by Community on Pagarme
       if (!recipient.id) throw new Error('recipient.id is required');
 

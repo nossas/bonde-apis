@@ -26,7 +26,10 @@ jobs:
       
       - name: Install dependencies
         run: pnpm i
-      
+
+      - name: Check code style
+        run: pnpm lint
+
       - name: Build packages
         run: pnpm m run build
 

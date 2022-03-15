@@ -27,7 +27,7 @@ const getCookie = (keyName: string, req: any): string | undefined => {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const handle_context = ({ jwtSecret, logger }: Options) => ({ req, res }: ExpressOpts) => {
   const authorization = getCookie('session', req);
-  if (!!authorization) {
+  if (authorization) {
     let session: any;
 
     jwt.verify(authorization.replace('Bearer ', ''), jwtSecret || '', (err: any, decoded: any) => {
