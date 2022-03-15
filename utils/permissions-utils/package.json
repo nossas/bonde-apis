@@ -7,7 +7,7 @@
     "postinstall": "pnpm --filter permissions-utils run build",
     "clean": "rm -rf node_modules dist",
     "lint": "eslint . --ext ts,tsx --fix",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "coverage": "jest --coverage"
   }
 }

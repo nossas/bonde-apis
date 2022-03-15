@@ -5,3 +5,7 @@ dist/
 coverage/
 tsconfig.tsbuildinfo
 .pnpm*
+
+template
+build
+my-ts-function/*
