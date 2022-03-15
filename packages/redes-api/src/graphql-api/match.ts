@@ -38,11 +38,11 @@ export const create = async (match: MatchTicket): Promise<MatchTicket> => {
       query: queries.create_match,
       variables: { match }
     });
-  
+
     logger.child({ props }).info('create_match');
-  
+
     return data.insert_solidarity_matches_one;
-  } catch (e) {
+  } catch (e: any) {
     logger.child({ e }).error('create_match');
     return e
   }

@@ -71,9 +71,9 @@ export const update = async (ticket: any, ids: number[]): Promise<any> => {
       query: queries.update_ticket,
       variables: { ids, ticket }
     });
-  
+
     logger.child({ props }).info('update_ticket');
-  
+
     return data.update_solidarity_tickets.returning;
   } catch (e) {
     logger.child({ e }).error('update_ticket')
@@ -87,11 +87,11 @@ export const create = async (tickets: any): Promise<Array<any>> => {
       query: queries.create_ticket,
       variables: { tickets }
     });
-  
+
     logger.child({ props }).info('create_ticket');
-  
+
     return data.insert_solidarity_tickets.returning;
-  } catch (e) {
+  } catch (e: any) {
     logger.child({ e }).error('create_ticket')
     return e
   }

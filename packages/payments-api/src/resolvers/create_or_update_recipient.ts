@@ -46,7 +46,7 @@ const create_or_update = async (_: void, args: Args): Promise<RecipientEntity | 
     const client: any = await pagarme.client.connect({ api_key: config.pagarmeApiKey });
 
     const recipientBankAccountLegalName = recipient.bank_account.legal_name;
-    recipient.bank_account.legal_name = recipientBankAccountLegalName.substring(0,29);
+    recipient.bank_account.legal_name = recipientBankAccountLegalName.substring(0, 29);
 
     if (!!id) {
       // The next line ensures only 1 recipient by Community on Pagarme
@@ -78,7 +78,7 @@ const create_or_update = async (_: void, args: Args): Promise<RecipientEntity | 
     });
 
     return { id: bondeCreated.id, recipient: pagarmeCreated, community_id };
-  } catch (err) {
+  } catch (err: any) {
     logger.child({ err }).info("update_recipient_failed");
     if (err.response) throw new Error(JSON.stringify({
       pagarme: err.response.errors
