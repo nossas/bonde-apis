@@ -19,7 +19,7 @@ export default async (_: void, args: UpdateMailchimpSettingsArgs): Promise<any> 
   try {
     await merge();
     return { status: 'Ok!' };
-  } catch (err) {
+  } catch (err: any) {
     console.log('err', err);
     throw new Error(err);
   }

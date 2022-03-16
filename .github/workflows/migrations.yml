@@ -8,7 +8,7 @@ on:
     paths:
       - "migrations/**"
 jobs:
-  hasura_migration:
+  hasura-migration:
     name: Hasura migration
     runs-on: ubuntu-latest
     environment: staging

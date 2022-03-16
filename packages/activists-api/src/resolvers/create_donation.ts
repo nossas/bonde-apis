@@ -36,7 +36,8 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
 
   return {
     data: { id, created_at },
-    syncronize: async () => {}
+    // eslint-disable-next-line 
+    syncronize: async () => { }
   }
 }
 

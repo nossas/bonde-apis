@@ -3,7 +3,7 @@ type HelloArgs = {
 };
 
 const hello = (_: void, args: HelloArgs): string => {
-  if (!!args.name) return `Hello, ${args.name}!`;
+  if (args.name) return `Hello, ${args.name}!`;
   
   return `Hello anonymous`;
 };

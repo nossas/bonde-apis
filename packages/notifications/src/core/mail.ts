@@ -40,6 +40,7 @@ class Mail {
   }
 
   get_body(): string {
+    // eslint-disable-next-line 
     if (new RegExp(/\<!DOCTYPE/).test(this.settings.body)) {
       return this.settings.body;
     }

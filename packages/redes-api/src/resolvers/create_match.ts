@@ -1,7 +1,7 @@
 import logger from '../logger';
 import * as match from '../graphql-api/match';
 import create_volunteer_ticket from "./create_volunteer_ticket"
-import update_recipient_ticket  from "./update_recipient_ticket"
+import update_recipient_ticket from "./update_recipient_ticket"
 import { CreateMatch, MatchTicket } from "../types"
 import { check_user, Roles, Context } from '../permissions';
 import config from '../config';
@@ -74,7 +74,7 @@ const create_match = async (
     }
 
     return await match.create(matchTicket);
-  } catch (e) {
+  } catch (e: any) {
     logger.error(e)
     return undefined
   }

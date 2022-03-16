@@ -1,0 +1,21 @@
+name: Publish API images
+on:
+  push:
+    branches:
+      - "release/*"
+      - "feature/*"
+      - "hotfix/*"
+
+jobs:
+  tests:
+    name: Tests for all apis and libs
+    uses: ./.github/workflows/tests.yml
+
+  build:
+    name: Build apis endpoints
+    uses: ./.github/workflows/build.yml
+    # with:
+    #   environment: staging
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

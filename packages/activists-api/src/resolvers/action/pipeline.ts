@@ -7,7 +7,7 @@ import {
   IResolverData
 } from '../../types';
 
-export default <T extends any>(previous: Previous, action: Action, next: Next): Resolver =>
+export default <T>(previous: Previous, action: Action, next: Next): Resolver =>
   async (_: void, args: IBaseActionArgs): Promise<IResolverData> => {
     /** Resolver function base */
     // Previous function process activist and widget

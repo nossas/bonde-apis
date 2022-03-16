@@ -30,7 +30,7 @@ export const findTemplate = async (filter: FilterTemplate): Promise<Template> =>
     const template = resp.data.notification_templates.filter(
       (t: any) => t.locale.toLowerCase() === filter.locale.toLocaleLowerCase()
     )[0];
-    if (!!template) return template
+    if (template) return template
     else return resp.data.notification_templates[0];
   }
 
@@ -54,7 +54,7 @@ export interface NotifyResponse {
 
 export const send = async (input: Notify, template?: FilterTemplate): Promise<NotifyResponse> => {
   logger.child({ template }).info('start notification...');
-  if (!!template) {
+  if (template) {
     const { subject_template, body_template } = await findTemplate(template);
     input.subject = subject_template;
     input.body = body_template;

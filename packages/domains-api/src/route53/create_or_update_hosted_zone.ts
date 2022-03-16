@@ -31,7 +31,7 @@ export default (route53: any) => async ({ domain, comment }: Args): Promise<Resu
   const result = await route53.listHostedZones().promise();
   const hostedZone = await get_hosted_zone({ route53, result, domain });
 
-  if (!!hostedZone) {
+  if (hostedZone) {
     const data: Result = await route53.getHostedZone({ Id: hostedZone.Id }).promise();
     return data;
   }
