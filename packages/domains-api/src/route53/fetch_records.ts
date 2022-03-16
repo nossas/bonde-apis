@@ -1,4 +1,4 @@
-import logger from '../logger';
+import logger from '../config/logger';
 import { DNSRecord } from './types';
 
 type ResourceRecord = {
@@ -19,9 +19,9 @@ type Result = {
 export default (route53: any) => async ({ hostedZoneId }: any): Promise<DNSRecord[]> => {
   const params = { HostedZoneId: hostedZoneId };
   try {
-    const result: Result = await route53.listResourceRecordSets(params).promise();    
+    const result: Result = await route53.listResourceRecordSets(params).promise();
     logger.child({ result }).info('fetch_records');
-  
+
     const records = result.ResourceRecordSets.map((r: ResourceRecordSet) => ({
       name: r.Name.slice(0, -1),
       record_type: r.Type,

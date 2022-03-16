@@ -1,5 +1,4 @@
-import config from '../config';
-import logger from '../logger';
+import logger from '../config/logger';
 
 type ResourceRecord = {
   Value: string
@@ -49,8 +48,8 @@ export default (route53: any) => async ({ dnsRecords, hostedZoneId }: Args) => {
           Name: r.name,
           ResourceRecords: r.record_type === 'MX'
             ? r.value.split(/\. /).map((v: string) => ({
-                Value: v
-              }))
+              Value: v
+            }))
             : [
               { Value: r.value }
             ],
