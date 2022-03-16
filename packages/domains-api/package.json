@@ -1,18 +1,61 @@
 {
   "name": "domains-api",
   "scripts": {
-    "build": "tsc -p . && ncp src/schema dist/schema",
-    "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql",
-    "clean": "rm -rf node_modules dist",
-    "dev": "LOG_LEVEL=debug NODE_ENV=development yarn run build:dev | pino-pretty",
-    "start": "node 'dist/server.js'",
-    "lint": "eslint . --ext ts,tsx --fix",
+    "dev": "nodemon src/server/server.ts",
+    "start": "node dist/server/server.js",
+    "check-coverage": "c8 report --check-coverage --lines 100",
+    "lint": "eslint --ignore-path .gitignore .",
+    "fix": "eslint --ignore-path .gitignore . --fix",
     "test": "jest",
-    "coverage": "jest --coverage"
+    "build": "tsc -p .",
+    "build:dev": "nodemon 'src/server/server.ts' --exec 'ts-node' src/server/server.ts -e ts,graphql",
+    "clean": "rm -rf node_modules dist"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm run test && npm run check-coverage"
+    }
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
+    "exclude": [
+      "test"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ]
   },
   "dependencies": {
-    "apollo-fetch": "^0.7.0",
-    "aws-sdk": "^2.774.0",
-    "permissions-utils": "workspace:*"
+    "@apollo/client": "^3.5.10",
+    "@graphql-tools/graphql-file-loader": "^7.3.4",
+    "@graphql-tools/load": "^7.5.2",
+    "@graphql-tools/schema": "^8.3.2",
+    "apollo-server-core": "^3.6.4",
+    "apollo-server-express": "^3.6.4",
+    "aws-sdk": "^2.1094.0",
+    "body-parser": "^1",
+    "cross-fetch": "^3.1.5",
+    "express": "^4.17.3",
+    "graphql": "^15.8.0",
+    "graphql-request": "^4.1.0",
+    "helmet": "^5.0.2",
+    "ibm-cloud-env": "^0.3.2",
+    "node-fetch": "^3.2.3",
+    "permissions-utils": "workspace:*",
+    "swagger-ui-express": "^4.3.0"
+  },
+  "devDependencies": {
+    "c8": "^7.11.0",
+    "eslint": "^8.11.0",
+    "eslint-config-strongloop": "^2.1.0",
+    "husky": "^7.0.4",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.2"
   }
 }
