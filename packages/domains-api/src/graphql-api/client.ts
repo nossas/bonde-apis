@@ -1,24 +1,20 @@
-import { createApolloFetch } from 'apollo-fetch';
-import config from '../config';
+import { GraphQLClient } from 'graphql-request';
+import config from '../config/config';
 
 const uri: string = config.graphqlHttpUrl || 'http://localhost:3000/graphql';
 
-const apolloFetch = createApolloFetch({ uri });
+const headers = []
 
-const authMiddleware = ({ options }: any, next: any) => {
-  if (!options.headers) {
-    options.headers = {};
-  }
+if (config.jwtToken) {
+  headers['authorization'] = `Bearer ${config.jwtToken}`;
+} else if (config.hasuraSecret) {
+  headers['x-hasura-admin-secret'] = config.hasuraSecret;
+}
 
-  if (config.jwtToken) {
-    options.headers['authorization'] = `Bearer ${config.jwtToken}`;
-  } else if (config.hasuraSecret) {
-    options.headers['x-hasura-admin-secret'] = config.hasuraSecret;
-  }
+export const client = new GraphQLClient(uri, {
+  headers,
+});
 
-  next();
-};
+export default client;
 
-apolloFetch.use(authMiddleware);
-
-export default apolloFetch;
+export { gql } from 'graphql-request'
