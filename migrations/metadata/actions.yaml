@@ -1,4 +1,20 @@
 actions:
+- name: create_domain
+  definition:
+    kind: synchronous
+    handler: http://localhost:3000
+- name: create_record
+  definition:
+    kind: synchronous
+    handler: http://localhost:3000
+- name: delete_domain
+  definition:
+    kind: synchronous
+    handler: http://localhost:3000
+- name: delete_records
+  definition:
+    kind: synchronous
+    handler: http://localhost:3000
 - name: resync_mailchimp_start
   definition:
     kind: synchronous
@@ -16,8 +32,14 @@ custom_types:
   enums: []
   input_objects:
   - name: SampleInput
+  - name: DomainInput
+  - name: DeleteDomainInput
+  - name: RecordInput
+  - name: DeleteRecordsInput
   objects:
   - name: SampleOutput
   - name: MailchimpStart
   - name: MailchimpStatus
-  scalars: []
+  - name: DomainResult
+  scalars:
+  - name: String
