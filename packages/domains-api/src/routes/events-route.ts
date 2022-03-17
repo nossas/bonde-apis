@@ -1,12 +1,12 @@
 // import dependencies and initialize the express router
 import express from 'express';
-import HealthController from '../controllers/health-controller';
+import CertificatesController from '../controllers/certificates-controller';
 
 const router = express.Router();
 
-const healthController = new HealthController();
+const certificatesController = new CertificatesController();
 
 // define routes
-router.get('health', healthController.getHealth);
+router.post('/create_certificate', certificatesController.createCertificate);
 
 export default router;

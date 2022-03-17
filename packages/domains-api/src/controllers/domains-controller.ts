@@ -85,5 +85,4 @@ class DomainsController {
   };
 }
 
-
 export default DomainsController;
