@@ -1,39 +1,33 @@
 type Mutation {
-  create_domain(
-    input: DomainInput
-  ): DomainResult
+  check_certificate(input: DomainInput): DomainResult
 }
 
 type Mutation {
-  create_record(
-    input: RecordInput
-  ): String
+  check_page(input: DomainInput): DomainResult
 }
 
 type Mutation {
-  delete_domain(
-    input: DeleteDomainInput
-  ): String
+  create_domain(input: DomainInput): DomainResult
 }
 
 type Mutation {
-  delete_records(
-    input: DeleteRecordsInput
-  ): String
+  create_record(input: RecordInput): String
 }
 
 type Mutation {
-  resync_mailchimp_start(
-    is_community: Boolean
-    id: Int!
-  ): MailchimpStart
+  delete_domain(input: DeleteDomainInput): String
+}
+
+type Mutation {
+  delete_records(input: DeleteRecordsInput): String
+}
+
+type Mutation {
+  resync_mailchimp_start(is_community: Boolean, id: Int!): MailchimpStart
 }
 
 type Query {
-  resync_mailchimp_status(
-    is_community: Boolean
-    id: Int!
-  ): MailchimpStatus
+  resync_mailchimp_status(is_community: Boolean, id: Int!): MailchimpStatus
 }
 
 input SampleInput {
@@ -97,4 +91,3 @@ type DomainResult {
 }
 
 scalar String
-

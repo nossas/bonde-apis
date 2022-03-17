@@ -2,19 +2,27 @@ actions:
 - name: create_domain
   definition:
     kind: synchronous
-    handler: http://localhost:3000
+    handler: '{{API_DOMAINS_URL}}/actions/create_domain'
 - name: create_record
   definition:
     kind: synchronous
-    handler: http://localhost:3000
+    handler: '{{API_DOMAINS_URL}}/actions/create_record'
 - name: delete_domain
   definition:
     kind: synchronous
-    handler: http://localhost:3000
+    handler: '{{API_DOMAINS_URL}}/actions/delete_domain'
 - name: delete_records
   definition:
     kind: synchronous
-    handler: http://localhost:3000
+    handler: '{{API_DOMAINS_URL}}/actions/delete_record'
+- name: check_certificate
+  definition:
+    kind: synchronous
+    handler: '{{API_DOMAINS_URL}}/actions/check_certificate'
+- name: check_page
+  definition:
+    kind: synchronous
+    handler: '{{API_DOMAINS_URL}}/actions/check_page'
 - name: resync_mailchimp_start
   definition:
     kind: synchronous
