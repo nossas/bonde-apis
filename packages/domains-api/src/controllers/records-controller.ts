@@ -1,5 +1,3 @@
-// import * as recipients from '../graphql-api/recipients';
-import express from 'express';
 import logger from '../config/logger';
 import route53 from '../route53';
 import { DNSRecord } from '../route53/types';
@@ -14,7 +12,7 @@ class RecordsController {
     this.DNSHostedZonesAPI = DNSHostedZonesAPI;
   }
 
-  createRecords = async (req: express.Request, res: express.Response) => {
+  createRecords = async (req, res) => {
     logger.info('In controller - createRecords');
     const { input: { value, name, ttl, record_type, hosted_zone_id, dns_hosted_zone_id } } = req.body;
 
