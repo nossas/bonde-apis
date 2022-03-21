@@ -1,6 +1,25 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
 import { validationResult } from 'express-validator';
+import sslChecker from "ssl-checker";
+
+interface Request<T> {
+  body: {
+    payload: {
+      event: {
+        data: {
+          new: T
+        }
+      }
+    }
+  }
+}
+
+interface Certificate {
+  id: number;
+  domain: string;
+}
 
 const insert_certificate = gql`
 mutation ($input: certificates_insert_input!) {
@@ -15,16 +34,27 @@ mutation ($input: certificates_insert_input!) {
 }
 `;
 
+const update_certificate = gql`
+mutation ($id: Int!) {
+  update_certificates_by_pk(pk_columns: { id: $id }, _set: { is_active: true }) {
+    id
+    dns_hosted_zone_id
+    is_active
+    community_id
+  }
+}
+`;
+
 class CertificatesController {
-  redisClient: any
-  graphqlClient: any
+  private redisClient: any
+  private graphqlClient: any
 
   constructor(redisClient, graphqlClient) {
     this.redisClient = redisClient;
     this.graphqlClient = graphqlClient;
   }
 
-  createCertificate = async (req, res) => {
+  create = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -35,7 +65,7 @@ class CertificatesController {
     res.json(await this.insertCertificateGraphql(req.body.payload.event.data.new));
   }
 
-  insertCertificateRedis = async (input: any) => {
+  private insertCertificateRedis = async (input: any) => {
     const { domain_name, id } = input;
     const tRouterName = `${id}-${domain_name.replace('.', '-')}`
     logger.info(`In controller - createCertificate ${tRouterName}`);
@@ -51,7 +81,7 @@ class CertificatesController {
     await this.redisClient.quit();
   }
 
-  insertCertificateGraphql = async (input: any) => {
+  private insertCertificateGraphql = async (input: any) => {
     const { data, errors }: any = await this.graphqlClient.request({
       document: insert_certificate,
       variables: { input }
@@ -62,13 +92,40 @@ class CertificatesController {
     return data.insert_certificates_one;
   }
 
-  checkCertificate = async (req, res) => {
-    logger.info('In controller - checkCertificate');
-    res.json({ ok: true })
+  private updateCertificateGraphql = async (id: number) => {
+    const { data, errors }: any = await this.graphqlClient.request({
+      document: update_certificate,
+      variables: { id }
+    });
+
+    logger.child({ errors, data }).info('update_certificates');
+
+    return data.update_certificates_by_pk;
   }
-  checkPage = async (req, res) => {
-    logger.info('In controller - checkPage');
-    res.json({ ok: true })
+
+  check = async (req: Request<Certificate>, res) => {
+    /**
+     * Esse evento deve ser chamado sempre que criar um novo certificado
+     * Hasura irá fazer uma nova chamada em caso de erro no intervalo de 6 minutos
+     * durante 20 tentativas
+     */
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const certificate = req.body.payload.event.data.new;
+    logger.info(certificate);
+
+    const checker = await sslChecker(certificate.domain);
+    logger.info(checker);
+
+    if (checker.valid) {
+      await this.updateCertificateGraphql(certificate.id);
+      res.json({ ok: true })
+    } else {
+      res.status(400).json({ errors: ['invalid_ssl_checker'] });
+    }
   }
 }
 

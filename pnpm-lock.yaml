@@ -138,6 +138,7 @@ importers:
       nodemon: ^2.0.15
       permissions-utils: workspace:*
       redis: ^4.0.4
+      ssl-checker: ^2.0.7
       supertest: ^6.2.2
       swagger-ui-express: ^4.3.0
     dependencies:
@@ -159,6 +160,7 @@ importers:
       node-fetch: 3.2.3
       permissions-utils: link:../../utils/permissions-utils
       redis: 4.0.4
+      ssl-checker: 2.0.7
       swagger-ui-express: 4.3.0_express@4.17.3
     devDependencies:
       c8: 7.11.0
@@ -6883,6 +6885,10 @@ packages:
       jsbn: 0.1.1
       safer-buffer: 2.1.2
       tweetnacl: 0.14.5
+    dev: false
+
+  /ssl-checker/2.0.7:
+    resolution: {integrity: sha512-/fc379/SD4Ov5zWM2heUAZIHTijW45tD33BPCXU+FLhP4TGD8LHm5HbMYqvy/Hwzxv3RmXXqxC8ahlv0rKv0MA==}
     dev: false
 
   /stack-utils/2.0.5:

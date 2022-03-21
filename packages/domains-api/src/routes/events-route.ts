@@ -9,6 +9,7 @@ const router = express.Router();
 const certificatesController = new CertificatesController(redisClient, client);
 
 // define routes
-router.post('/create_certificate', certificatesController.createCertificate);
+router.post('/create-certificate', certificatesController.create);
+router.post('/check-certificate', certificatesController.check);
 
 export default router;
