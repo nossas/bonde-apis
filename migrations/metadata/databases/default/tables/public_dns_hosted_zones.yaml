@@ -45,9 +45,11 @@ event_triggers:
     enable_manual: true
     insert:
       columns: "*"
+    update:
+      columns: "*"
   name: create_certificate
   retry_conf:
     interval_sec: 10
     num_retries: 0
     timeout_sec: 60
-  webhook: '{{API_DOMAINS_URL}}/events/create_certificate'
+  webhook: "{{API_DOMAINS_URL}}/events/create_certificate"

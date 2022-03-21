@@ -1,33 +1,45 @@
 type Mutation {
-  check_certificate(input: DomainInput): DomainResult
+  check_page(
+    input: PageInput
+  ): PageResult
 }
 
 type Mutation {
-  check_page(input: DomainInput): DomainResult
+  create_domain(
+    input: DomainInput
+  ): DomainResult
 }
 
 type Mutation {
-  create_domain(input: DomainInput): DomainResult
+  create_record(
+    input: RecordInput
+  ): String
 }
 
 type Mutation {
-  create_record(input: RecordInput): String
+  delete_domain(
+    input: DeleteDomainInput
+  ): String
 }
 
 type Mutation {
-  delete_domain(input: DeleteDomainInput): String
+  delete_records(
+    input: DeleteRecordsInput
+  ): String
 }
 
 type Mutation {
-  delete_records(input: DeleteRecordsInput): String
-}
-
-type Mutation {
-  resync_mailchimp_start(is_community: Boolean, id: Int!): MailchimpStart
+  resync_mailchimp_start(
+    is_community: Boolean
+    id: Int!
+  ): MailchimpStart
 }
 
 type Query {
-  resync_mailchimp_status(is_community: Boolean, id: Int!): MailchimpStatus
+  resync_mailchimp_status(
+    is_community: Boolean
+    id: Int!
+  ): MailchimpStatus
 }
 
 input SampleInput {
@@ -62,6 +74,14 @@ input DeleteRecordsInput {
   community_id: Int!
 }
 
+input CertificateInput {
+  hosted_zone_id: Int!
+}
+
+input PageInput {
+  hosted_zone_id: Int!
+}
+
 type SampleOutput {
   accessToken: String!
 }
@@ -90,4 +110,17 @@ type DomainResult {
   community_id: Int!
 }
 
+type CertificateResult {
+  hosted_zone_id: Int!
+  status: String
+}
+
+type PageResult {
+  hosted_zone_id: Int!
+  domain_name: String!
+  certificate_ok: Boolean
+  created_at: String
+}
+
 scalar String
+
