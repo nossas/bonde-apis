@@ -6,11 +6,9 @@ import sslChecker from "ssl-checker";
 
 interface Request<T> {
   body: {
-    payload: {
-      event: {
-        data: {
-          new: T
-        }
+    event: {
+      data: {
+        new: T
       }
     }
   }
@@ -61,8 +59,8 @@ class CertificatesController {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    await this.insertCertificateRedis(req.body.payload.event.data.new);
-    res.json(await this.insertCertificateGraphql(req.body.payload.event.data.new));
+    await this.insertCertificateRedis(req.body.event.data.new);
+    res.json(await this.insertCertificateGraphql(req.body.event.data.new));
   }
 
   private insertCertificateRedis = async (input: any) => {
@@ -114,7 +112,7 @@ class CertificatesController {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const certificate = req.body.payload.event.data.new;
+    const certificate = req.body.event.data.new;
     logger.info(certificate);
 
     const checker = await sslChecker(certificate.domain);
