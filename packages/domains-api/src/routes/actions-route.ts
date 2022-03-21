@@ -5,12 +5,13 @@ import DomainsController from '../controllers/domains-controller';
 import CertificatesController from '../controllers/certificates-controller';
 import * as DNSHostedZonesAPI from '../graphql-api/dns_hosted_zones';
 import { client } from '../graphql-api/client';
+import redisClient from '../redis-db/client'
 
 const router = express.Router();
 
 const recordsController = new RecordsController(DNSHostedZonesAPI, client);
 const domainsController = new DomainsController(DNSHostedZonesAPI, client);
-const certificatesController = new CertificatesController();
+const certificatesController = new CertificatesController(redisClient);
 
 // define routes
 router.post('/create_domain', domainsController.createDomains);
