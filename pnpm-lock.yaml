@@ -128,6 +128,7 @@ importers:
       eslint: ^8.11.0
       eslint-config-strongloop: ^2.1.0
       express: ^4.17.3
+      express-validator: ^6.14.0
       graphql: ^15.8.0
       graphql-request: ^4.1.0
       helmet: ^5.0.2
@@ -150,6 +151,7 @@ importers:
       body-parser: 1.19.2
       cross-fetch: 3.1.5
       express: 4.17.3
+      express-validator: 6.14.0
       graphql: 15.8.0
       graphql-request: 4.1.0_graphql@15.8.0
       helmet: 5.0.2
@@ -3593,6 +3595,14 @@ packages:
     resolution: {integrity: sha512-pwbZ2E712evTuJfU/+svG/xdXMiS5Awjbnbg382ikQfgb/5bLwF1Auzv8QXVv/x+GixUlzfPbYTgVLhacvocKw==}
     dependencies:
       pino-http: 5.8.0
+    dev: false
+
+  /express-validator/6.14.0:
+    resolution: {integrity: sha512-ZWHJfnRgePp3FKRSKMtnZVnD1s8ZchWD+jSl7UMseGIqhweCo1Z9916/xXBbJAa6PrA3pUZfkOvIsHZG4ZtIMw==}
+    engines: {node: '>= 8.0.0'}
+    dependencies:
+      lodash: 4.17.21
+      validator: 13.7.0
     dev: false
 
   /express/4.17.3:
@@ -7596,6 +7606,11 @@ packages:
     dependencies:
       spdx-correct: 3.1.1
       spdx-expression-parse: 3.0.1
+    dev: false
+
+  /validator/13.7.0:
+    resolution: {integrity: sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==}
+    engines: {node: '>= 0.10'}
     dev: false
 
   /value-or-promise/1.0.11:

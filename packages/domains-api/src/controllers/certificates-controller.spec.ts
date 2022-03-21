@@ -31,7 +31,7 @@ test.skip('should create certificate', () => {
   // };
   const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn(), body: mockReq.body };
 
-  const certificatesController = new CertificatesController(jest.fn());
+  const certificatesController = new CertificatesController(jest.fn(), jest.fn());
   certificatesController.createCertificate(mockReq, mRes);
 
   expect(mRes.json).toBeCalled();
