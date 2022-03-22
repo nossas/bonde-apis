@@ -19,6 +19,12 @@ interface Certificate {
   domain: string;
 }
 
+interface DNSHostedZone {
+  id: number;
+  community_id: number;
+  domain_name: string;
+}
+
 const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
   insert_certificates_one(object:$input) {
     id
@@ -50,25 +56,25 @@ class CertificatesController {
     this.graphqlClient = graphqlClient;
   }
 
-  create = async (req, res) => {
-    await check('payload').isObject().run(req);
+  create = async (req: Request<DNSHostedZone>, res) => {
+    await check('event').isObject().run(req);
     // await check('password').isLength({ min: 6 }).run(req);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-      await this.insertCertificateRedis(req.body.payload.event.data.new);
-      res.json(await this.insertCertificateGraphql(req.body.payload.event.data.new));
+      await this.insertCertificateRedis(req.body.event.data.new);
+      res.json(await this.insertCertificateGraphql(req.body.event.data.new));
     } catch (e: any) {
       logger.info(e)
-      res.status(500).json({ ok: false });
+      res.status(500).json({ ok: false, ...e });
     }
   }
 
   private insertCertificateRedis = async (input: any) => {
-    const { domain_name, id } = input;
-    const tRouterName = `${id}-${domain_name.replace('.', '-')}`
+    const { domain_name, id: dns_hosted_zone_id } = input;
+    const tRouterName = `${dns_hosted_zone_id}-${domain_name.replace('.', '-')}`
     logger.info(`In controller - createCertificate ${tRouterName}`);
 
     await this.redisClient.connect();
@@ -83,10 +89,10 @@ class CertificatesController {
   }
 
   private insertCertificateGraphql = async (input: any) => {
-    const { domain, community_id, dns_hosted_zone_id, id, is_active } = input;
+    const { domain_name: domain, community_id, id: dns_hosted_zone_id } = input;
     const data: any = await this.graphqlClient.request({
       document: insert_certificate,
-      variables: { input: { domain, community_id, dns_hosted_zone_id, id, is_active: false } }
+      variables: { input: { domain, community_id, dns_hosted_zone_id, is_active: false } }
     });
 
     logger.child({ data }).info('insert_certificate.upsert');
@@ -106,8 +112,7 @@ class CertificatesController {
   }
 
   check = async (req: Request<Certificate>, res) => {
-    await check('email').isEmail().run(req);
-    await check('password').isLength({ min: 6 }).run(req);
+    await check('event').isObject().run(req);
     /**
      * Esse evento deve ser chamado sempre que criar um novo certificado
      * Hasura irá fazer uma nova chamada em caso de erro no intervalo de 6 minutos
