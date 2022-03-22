@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
-import { validationResult } from 'express-validator';
+import { validationResult, check } from 'express-validator';
 import sslChecker from "ssl-checker";
 
 interface Request<T> {
@@ -19,15 +19,13 @@ interface Certificate {
   domain: string;
 }
 
-const insert_certificate = gql`
-mutation ($input: certificates_insert_input!) {
-  insert_certificates_one(object:$input,
-
-    ) {
+const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
+  insert_certificates_one(object:$input) {
     id
     dns_hosted_zone_id
     is_active
     community_id
+    domain
   }
 }
 `;
@@ -53,14 +51,19 @@ class CertificatesController {
   }
 
   create = async (req, res) => {
-
+    await check('payload').isObject().run(req);
+    // await check('password').isLength({ min: 6 }).run(req);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
-    await this.insertCertificateRedis(req.body.event.data.new);
-    res.json(await this.insertCertificateGraphql(req.body.event.data.new));
+    try {
+      await this.insertCertificateRedis(req.body.payload.event.data.new);
+      res.json(await this.insertCertificateGraphql(req.body.payload.event.data.new));
+    } catch (e: any) {
+      logger.info(e)
+      res.status(500).json({ ok: false });
+    }
   }
 
   private insertCertificateRedis = async (input: any) => {
@@ -80,12 +83,13 @@ class CertificatesController {
   }
 
   private insertCertificateGraphql = async (input: any) => {
-    const { data, errors }: any = await this.graphqlClient.request({
+    const { domain, community_id, dns_hosted_zone_id, id, is_active } = input;
+    const data: any = await this.graphqlClient.request({
       document: insert_certificate,
-      variables: { input }
+      variables: { input: { domain, community_id, dns_hosted_zone_id, id, is_active: false } }
     });
 
-    logger.child({ errors, data }).info('insert_certificate.upsert');
+    logger.child({ data }).info('insert_certificate.upsert');
 
     return data.insert_certificates_one;
   }
@@ -102,6 +106,8 @@ class CertificatesController {
   }
 
   check = async (req: Request<Certificate>, res) => {
+    await check('email').isEmail().run(req);
+    await check('password').isLength({ min: 6 }).run(req);
     /**
      * Esse evento deve ser chamado sempre que criar um novo certificado
      * Hasura irá fazer uma nova chamada em caso de erro no intervalo de 6 minutos
