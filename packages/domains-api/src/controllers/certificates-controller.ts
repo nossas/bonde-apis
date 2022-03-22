@@ -4,7 +4,7 @@ import { gql } from '../graphql-api/client';
 import { validationResult, check } from 'express-validator';
 import sslChecker from "ssl-checker";
 
-interface Request<T> {
+export interface Request<T> {
   body: {
     event: {
       data: {
@@ -14,12 +14,12 @@ interface Request<T> {
   }
 }
 
-interface Certificate {
+export interface Certificate {
   id: number;
   domain: string;
 }
 
-interface DNSHostedZone {
+export interface DNSHostedZone {
   id: number;
   community_id: number;
   domain_name: string;
@@ -67,7 +67,7 @@ class CertificatesController {
     }
     try {
       await this.insertCertificateRedis(req.body.event.data.new);
-      res.json(await this.insertCertificateGraphql(req.body.event.data.new));
+      res.status(200).json(await this.insertCertificateGraphql(req.body.event.data.new));
     } catch (e: any) {
       logger.info(e)
       res.status(500).json({ ok: false, ...e });

@@ -7,7 +7,7 @@ class DomainsController {
   client: any;
   DNSHostedZonesAPI: any;
 
-  constructor(client, DNSHostedZonesAPI) {
+  constructor(DNSHostedZonesAPI, client) {
     this.client = client;
     this.DNSHostedZonesAPI = DNSHostedZonesAPI;
   }
@@ -17,15 +17,15 @@ class DomainsController {
 
     // Resolver create domain
     // const create_domain = async (_: void, args: Args): Promise<DNSHostedZonesAPI.DNSHostedZoneResult> => {
-    const domain = req.body.domain;
-    const comment = req.body.comment;
-    const community_id = req.body.community_id;
+    const domain = req.body.input.domain;
+    const comment = req.body.input.comment;
+    const community_id = req.body.input.community_id;
 
     // Fetch DNSHostedZone
     const dnsHostedZones = await this.DNSHostedZonesAPI.find({ domain_name: { _eq: domain } }, this.client);
     logger.child({ dnsHostedZones }).info('fetch hosted zone');
     if (dnsHostedZones && dnsHostedZones.length > 0 && dnsHostedZones[0].community_id !== community_id) {
-      throw new Error('domain_name_exists');
+      res.status(400).json('domain_name_exists');
     }
 
     // Create Hosted Zone on AWS
@@ -60,7 +60,7 @@ class DomainsController {
   deleteDomains = async (req, res) => {
     logger.info('In controller - deleteDomains');
 
-    const dns_hosted_zone_id = req.body.dns_hosted_zone_id;
+    const dns_hosted_zone_id = req.body.input.dns_hosted_zone_id;
 
     try {
       const dnsHostedZone = await this.DNSHostedZonesAPI.get(dns_hosted_zone_id, this.client);

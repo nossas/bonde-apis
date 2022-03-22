@@ -33,7 +33,7 @@ test('should create record domain', () => {
     json: jest.fn()
   };
 
-  const recordsController = new RecordsController(mockFn, DNSHostedZonesAPI);
+  const recordsController = new RecordsController(DNSHostedZonesAPI, mockFn);
   recordsController.deleteRecords(mockReq, mockRes);
 
   expect(mockFn.request).toHaveBeenCalled();

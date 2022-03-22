@@ -7,7 +7,7 @@ class RecordsController {
   client: any;
   DNSHostedZonesAPI: any;
 
-  constructor(client, DNSHostedZonesAPI) {
+  constructor(DNSHostedZonesAPI, client) {
     this.client = client;
     this.DNSHostedZonesAPI = DNSHostedZonesAPI;
   }

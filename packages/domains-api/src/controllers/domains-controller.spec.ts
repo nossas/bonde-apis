@@ -4,9 +4,11 @@ import * as DNSHostedZonesAPI from '../graphql-api/dns_hosted_zones';
 test('should create domain', () => {
   const mockReq = {
     body: {
-      domain: "foo.com",
-      comment: "criado por robo",
-      community_id: 1,
+      input: {
+        domain: "foo.com",
+        comment: "criado por robo",
+        community_id: 1,
+      }
     }
   };
   const mockData = {
@@ -23,7 +25,7 @@ test('should create domain', () => {
   };
   const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
-  const domainsController = new DomainsController(mockFn, DNSHostedZonesAPI);
+  const domainsController = new DomainsController(DNSHostedZonesAPI, mockFn);
   domainsController.createDomains(mockReq, mRes);
 
   expect(mockFn.request).toHaveBeenCalled();

@@ -8,11 +8,9 @@ test('should query api graphql and aws route53', async () => {
     }
   };
   const mockFn = {
-    request: jest.fn().mockReturnValue({
-      data: mockData,
-      errors: {}
-    })
+    request: jest.fn().mockReturnValue(mockData)
   };
+
   // const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
   expect.assertions(2);
   const data = await DNSHostedZonesAPI.get(1, mockFn);
