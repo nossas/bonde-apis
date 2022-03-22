@@ -157,12 +157,12 @@ export type DNSHostedZoneResult = {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const upsert = async (input: DNSHostedZoneInput, client: any): Promise<DNSHostedZoneResult> => {
-  const { data, errors }: any = await client.request({
+  const data: any = await client.request({
     document: create_dns_hosted_zone,
     variables: { input }
   });
 
-  logger.child({ errors, data }).info('dns_hosted_zones.upsert');
+  logger.child({ data }).info('dns_hosted_zones.upsert');
 
   return data.insert_dns_hosted_zones_one;
 };
@@ -195,41 +195,41 @@ export const records_upsert = async (objects: DNSRecordInput[], client: any): Pr
   }));
 
   logger.child({ input }).info('dns_hosted_zones.records_upsert');
-  const { data, errors }: any = await client.request({
+  const data: any = await client.request({
     document: insert_dns_records,
     variables: { objects: input }
   });
 
-  logger.child({ errors, data }).info('dns_hosted_zones.records_upsert');
+  logger.child({ data }).info('dns_hosted_zones.records_upsert');
 
   return data.insert_dns_records.returning;
 }
 
 export const remove = async (id: number, client: any): Promise<void> => {
-  const { data, errors }: any = await client.request({
+  const data: any = await client.request({
     document: delete_dns_hosted_zone,
     variables: { id }
   });
 
-  logger.child({ errors, data }).info('dns_hosted_zones.delete');
+  logger.child({ data }).info('dns_hosted_zones.delete');
 }
 
 export const remove_records = async (ids: number[], client: any): Promise<void> => {
-  const { data, errors }: any = await client.request({
+  const data: any = await client.request({
     document: delete_dns_records,
     variables: { ids }
   });
 
-  logger.child({ errors, data }).info('dns_hosted_zones.remove_records');
+  logger.child({ data }).info('dns_hosted_zones.remove_records');
 }
 
 export const get = async (id: number, client: any): Promise<DNSHostedZoneResult> => {
-  const { data, errors }: any = await client.request({
+  const data: any = await client.request({
     document: get_dns_hosted_zone,
     variables: { id }
   });
 
-  logger.child({ errors, data }).info('dns_hosted_zones.get');
+  logger.child({ data }).info('dns_hosted_zones.get');
 
   const dnsHostedZone = data.dns_hosted_zones_by_pk;
   return {
@@ -240,12 +240,12 @@ export const get = async (id: number, client: any): Promise<DNSHostedZoneResult>
 }
 
 export const find = async (params: any, client: any): Promise<DNSHostedZoneResult[]> => {
-  const { data, errors }: any = await client.request({
+  const data: any = await client.request({
     document: find_dns_hosted_zone,
     variables: { params }
   });
 
-  logger.child({ errors, data }).info('dns_hosted_zones.find');
+  logger.child({ data }).info('dns_hosted_zones.find');
 
   return data.dns_hosted_zones.map((dnsHostedZone: any) => ({
     ...dnsHostedZone,

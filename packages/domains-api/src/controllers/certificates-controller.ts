@@ -37,12 +37,14 @@ const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
 `;
 
 const update_certificate = gql`
-mutation ($id: Int!) {
-  update_certificates_by_pk(pk_columns: { id: $id }, _set: { is_active: true }) {
+mutation ($id: Int!, $ssl_checker_response: jsonb) {
+  update_certificates_by_pk(pk_columns: { id: $id }, _set: { is_active: true, ssl_checker_response: $ssl_checker_response }) {
     id
     dns_hosted_zone_id
     is_active
     community_id
+    domain
+    ssl_checker_response
   }
 }
 `;
@@ -100,40 +102,44 @@ class CertificatesController {
     return data.insert_certificates_one;
   }
 
-  private updateCertificateGraphql = async (id: number) => {
-    const { data, errors }: any = await this.graphqlClient.request({
+  private updateCertificateGraphql = async (id: number, ssl_checker_response: any) => {
+    const data = await this.graphqlClient.request({
       document: update_certificate,
-      variables: { id }
+      variables: { id, ssl_checker_response }
     });
 
-    logger.child({ errors, data }).info('update_certificates');
+    logger.child({ data }).info('update_certificates');
 
     return data.update_certificates_by_pk;
   }
 
   check = async (req: Request<Certificate>, res) => {
-    await check('event').isObject().run(req);
     /**
      * Esse evento deve ser chamado sempre que criar um novo certificado
      * Hasura irá fazer uma nova chamada em caso de erro no intervalo de 6 minutos
      * durante 20 tentativas
      */
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    try {
+      await check('event').isObject().run(req);
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
 
-    const certificate = req.body.event.data.new;
-    logger.info(certificate);
+      const certificate = req.body.event.data.new;
+      logger.info(certificate);
 
-    const checker = await sslChecker(certificate.domain);
-    logger.info(checker);
+      const checker = await sslChecker(certificate.domain);
+      logger.info(checker);
 
-    if (checker.valid) {
-      await this.updateCertificateGraphql(certificate.id);
-      res.json({ ok: true })
-    } else {
-      res.status(400).json({ errors: ['invalid_ssl_checker'] });
+      if (checker.valid) {
+        res.json(await this.updateCertificateGraphql(certificate.id, checker));
+      } else {
+        res.status(400).json({ errors: ['invalid_ssl_checker'] });
+      }
+    } catch (e: any) {
+      logger.info(e)
+      res.status(500).json({ ok: false, ...e });
     }
   }
 }
