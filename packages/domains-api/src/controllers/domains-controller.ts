@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import logger from '../config/logger';
-// import { check_user, Roles } from '../permissions';
+import { verify_permission } from '../config/validators';
 import route53 from '../route53';
 import { DNSRecord } from '../route53/types';
 import * as DNSHostedZonesGraphQLAPI from '../graphql-api/dns_hosted_zones';
@@ -8,7 +8,7 @@ import * as DNSHostedZonesGraphQLAPI from '../graphql-api/dns_hosted_zones';
 interface Request<T> {
   body: {
     request_query: string;
-    session_variables?: any;
+    session_variables: any;
     action?: { name: string }
     input: T
   }
@@ -92,27 +92,35 @@ class DomainsController {
      * - verificar permissão com comunidade e usuário
      * 
      */
-    logger.info('In controller - deleteDomains');
+    logger.child({ payload: req.body }).info('In controller - deleteDomains');
 
-    console.log("req", req.body);
     const dns_hosted_zone_id = req.body.input.domain.dns_hosted_zone_id;
 
     try {
       const dnsHostedZone = await this.DNSHostedZonesAPI.get(dns_hosted_zone_id, this.client);
+
+      verify_permission(req.body.session_variables, dnsHostedZone.community, 'admin');
+
       const hostedZoneId = dnsHostedZone.hosted_zone.Id || dnsHostedZone.hosted_zone.id;
 
       logger.child({ dnsHostedZone }).info('delete_hosted_zone');
+
       await route53.delete_records({
         hostedZoneId,
         dnsRecords: dnsHostedZone.dns_records?.filter((r: any) => r.record_type !== 'NS' && r.record_type !== 'SOA')
       });
+
       await route53.delete_hosted_zone({ hostedZoneId });
+
       await this.DNSHostedZonesAPI.remove(dns_hosted_zone_id, this.client);
 
       res.json({ status: 'ok', id: dns_hosted_zone_id });
-    } catch (err) {
+    } catch (err: any) {
       logger.child({ err }).info('delete_hosted_zone');
-      res.status(500).json(err);
+      res.status(400).json({
+        message: err.message,
+        extensions: err
+      });
     }
 
     // export default check_user(delete_domain, Roles.ADMIN);

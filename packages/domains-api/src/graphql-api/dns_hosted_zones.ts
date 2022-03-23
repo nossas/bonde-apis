@@ -1,6 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
+import { DNSHostedZone } from '../types';
 
 // export const queries = {
 const create_dns_hosted_zone = gql`  
@@ -13,15 +14,28 @@ const create_dns_hosted_zone = gql`
       }
     ) {
       id
+      comment
       domain_name
       ns_ok
-      comment
-      created_at
-      updated_at
+      community_id
+      community {
+        community_users {
+          user_id
+          role
+        }
+      }
 
       hosted_zone: response(path: "HostedZone")
       name_servers: response(path: "DelegationSet.NameServers")
-      community_id
+
+      dns_records {
+        id
+        name
+        value
+        record_type
+        comment
+        ttl
+      }
     }
   }
 `;
@@ -101,6 +115,12 @@ const get_dns_hosted_zone = gql`
       domain_name
       ns_ok
       community_id
+      community {
+        community_users {
+          user_id
+          role
+        }
+      }
 
       hosted_zone_rest: response(path: "hosted_zone")
       hosted_zone: response(path: "HostedZone")
@@ -114,7 +134,7 @@ const get_dns_hosted_zone = gql`
         record_type
         comment
         ttl
-      }   
+      }
     }
   }
 `;
@@ -126,22 +146,9 @@ type DNSHostedZoneInput = {
   response: any
 }
 
-export type DNSHostedZoneResult = {
-  id: number
-  domain_name: string
-  comment: string
-  name_servers: string[]
-  ns_ok: boolean
-  created_at: string
-  updated_at: string
-  community_id: number
-  dns_records?: DNSRecordResult[]
-  hosted_zone: any
-}
-
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const upsert = async (input: DNSHostedZoneInput, client: any): Promise<DNSHostedZoneResult> => {
-  const data: any = await client.request({
+export const upsert = async (input: DNSHostedZoneInput, client: GraphQLClient): Promise<DNSHostedZone> => {
+  const data = await client.request<{ insert_dns_hosted_zones_one: DNSHostedZone }>({
     document: create_dns_hosted_zone,
     variables: { input }
   });
@@ -207,8 +214,8 @@ export const remove_records = async (ids: number[], client: any): Promise<void> 
   logger.child({ data }).info('dns_hosted_zones.remove_records');
 }
 
-export const get = async (id: number, client: any): Promise<DNSHostedZoneResult> => {
-  const data: any = await client.request({
+export const get = async (id: number, client: GraphQLClient): Promise<DNSHostedZone> => {
+  const data = await client.request<{ dns_hosted_zones_by_pk: DNSHostedZone }>({
     document: get_dns_hosted_zone,
     variables: { id }
   });
@@ -218,6 +225,7 @@ export const get = async (id: number, client: any): Promise<DNSHostedZoneResult>
   const dnsHostedZone = data.dns_hosted_zones_by_pk;
   return {
     ...dnsHostedZone,
+    // Update fields with API order requested
     hosted_zone: dnsHostedZone.hosted_zone || dnsHostedZone.hosted_zone_rest,
     name_servers: dnsHostedZone.name_servers || dnsHostedZone.name_servers_rest
   };
@@ -233,6 +241,12 @@ const find_dns_hosted_zone = gql`
       domain_name
       ns_ok
       community_id
+      community {
+        community_users {
+          user_id
+          role
+        }
+      }
 
       hosted_zone_rest: response(path: "hosted_zone")
       hosted_zone: response(path: "HostedZone")
@@ -246,7 +260,7 @@ const find_dns_hosted_zone = gql`
         record_type
         comment
         ttl
-      }
+      }   
     }
   }
 `;
@@ -257,8 +271,8 @@ interface DNSHostedZoneFindParams {
 
 export const find = async ({
   domain
-}: DNSHostedZoneFindParams, client: GraphQLClient): Promise<DNSHostedZoneResult[]> => {
-  const data = await client.request<{ dns_hosted_zones: any[] }, DNSHostedZoneFindParams>({
+}: DNSHostedZoneFindParams, client: GraphQLClient): Promise<DNSHostedZone[]> => {
+  const data = await client.request<{ dns_hosted_zones: DNSHostedZone[] }, DNSHostedZoneFindParams>({
     document: find_dns_hosted_zone,
     variables: { domain }
   });
