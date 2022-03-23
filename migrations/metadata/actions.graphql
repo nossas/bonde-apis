@@ -1,10 +1,4 @@
 type Mutation {
-  check_page(
-    input: PageInput
-  ): PageResult
-}
-
-type Mutation {
   create_domain(
     input: DomainInput
   ): DomainResult
@@ -120,6 +114,10 @@ type PageResult {
   domain_name: String!
   certificate_ok: Boolean
   created_at: String
+}
+
+type DeleteDomainResult {
+  domain: String
 }
 
 scalar String

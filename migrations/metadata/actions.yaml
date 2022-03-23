@@ -1,24 +1,20 @@
 actions:
-- name: check_page
-  definition:
-    kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/check_page'
 - name: create_domain
   definition:
     kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/create_domain'
+    handler: '{{API_DOMAINS_URL}}/actions/create-domain'
 - name: create_record
   definition:
     kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/create_record'
+    handler: '{{API_DOMAINS_URL}}/actions/create-record'
 - name: delete_domain
   definition:
     kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/delete_domain'
+    handler: '{{API_DOMAINS_URL}}/actions/delete-domain'
 - name: delete_records
   definition:
     kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/delete_record'
+    handler: '{{API_DOMAINS_URL}}/actions/delete-record'
 - name: resync_mailchimp_start
   definition:
     kind: synchronous
@@ -29,7 +25,7 @@ actions:
 - name: resync_mailchimp_status
   definition:
     kind: ""
-    handler: '{{ACTION_BASE_URL}}/status-resync-mailchimp'
+    handler: https://action-mailchimp-resync.staging.bonde.org/status-resync-mailchimp
   permissions:
   - role: user
 custom_types:
@@ -49,5 +45,6 @@ custom_types:
   - name: DomainResult
   - name: CertificateResult
   - name: PageResult
+  - name: DeleteDomainResult
   scalars:
   - name: String

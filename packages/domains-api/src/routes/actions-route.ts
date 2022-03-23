@@ -11,9 +11,9 @@ const recordsController = new RecordsController(DNSHostedZonesAPI, client);
 const domainsController = new DomainsController(DNSHostedZonesAPI, client);
 
 // define routes
-router.post('/create_domain', domainsController.createDomains);
-router.post('/delete_domain', domainsController.deleteDomains);
-router.post('/create_record', recordsController.createRecords);
-router.post('/delete_record', recordsController.deleteRecords);
+router.post('/create-domain', domainsController.createDomains);
+router.post('/delete-domain', domainsController.deleteDomains);
+router.post('/create-record', recordsController.createRecords);
+router.post('/delete-record', recordsController.deleteRecords);
 
 export default router;

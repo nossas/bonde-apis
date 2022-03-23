@@ -41,7 +41,7 @@ select_permissions:
   role: user
 event_triggers:
 - definition:
-    enable_manual: true
+    enable_manual: false
     insert:
       columns: "*"
   name: webhooks-plip-form-mautic

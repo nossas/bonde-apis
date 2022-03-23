@@ -14,15 +14,16 @@ object_relationships:
 select_permissions:
 - permission:
     columns:
-    - id
     - community_id
-    - mobilization_id
+    - created_at
     - dns_hosted_zone_id
     - domain
-    - file_content
     - expire_on
+    - file_content
+    - id
     - is_active
-    - created_at
+    - mobilization_id
+    - ssl_checker_response
     - updated_at
     filter:
       community:
@@ -30,3 +31,14 @@ select_permissions:
           user_id:
             _eq: X-Hasura-User-Id
   role: user
+event_triggers:
+- definition:
+    enable_manual: false
+    insert:
+      columns: "*"
+  name: check_certificate
+  retry_conf:
+    interval_sec: 360
+    num_retries: 20
+    timeout_sec: 60
+  webhook: "{{API_DOMAINS_URL}}/events/check-certificate"
