@@ -52,6 +52,16 @@ const insert_dns_records = gql`
 
 const delete_dns_hosted_zone = gql`
   mutation ($id: Int!) {
+
+    delete_certificates(where: {
+      dns_hosted_zone_id: { _eq: $id }
+    }) {
+      returning {
+        id
+        ssl_checker_response
+      }
+    }
+
     delete_dns_records(where: {
       dns_hosted_zone_id: { _eq: $id }
     }) {

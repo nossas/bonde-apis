@@ -22,6 +22,13 @@ interface InputDomain {
   }
 }
 
+interface InputDeleteDomain {
+  domain: {
+    dns_hosted_zone_id: number;
+    community_id: number;
+  }
+}
+
 class DomainsController {
   client: GraphQLClient;
   DNSHostedZonesAPI: typeof DNSHostedZonesGraphQLAPI;
@@ -78,10 +85,17 @@ class DomainsController {
     res.json(dnsHostedZone);
   };
 
-  deleteDomains = async (req, res) => {
+  deleteDomains = async (req: Request<InputDeleteDomain>, res) => {
+    /**
+     * TODO
+     * - remover certificado do REDIS
+     * - verificar permissão com comunidade e usuário
+     * 
+     */
     logger.info('In controller - deleteDomains');
 
-    const dns_hosted_zone_id = req.body.input.dns_hosted_zone_id;
+    console.log("req", req.body);
+    const dns_hosted_zone_id = req.body.input.domain.dns_hosted_zone_id;
 
     try {
       const dnsHostedZone = await this.DNSHostedZonesAPI.get(dns_hosted_zone_id, this.client);
@@ -93,9 +107,9 @@ class DomainsController {
         dnsRecords: dnsHostedZone.dns_records?.filter((r: any) => r.record_type !== 'NS' && r.record_type !== 'SOA')
       });
       await route53.delete_hosted_zone({ hostedZoneId });
-      await this.DNSHostedZonesAPI.remove(dns_hosted_zone_id, this.client)
+      await this.DNSHostedZonesAPI.remove(dns_hosted_zone_id, this.client);
 
-      res.json({ status: 'ok' });
+      res.json({ status: 'ok', id: dns_hosted_zone_id });
     } catch (err) {
       logger.child({ err }).info('delete_hosted_zone');
       res.status(500).json(err);
