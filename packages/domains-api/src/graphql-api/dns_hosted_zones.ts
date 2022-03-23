@@ -1,3 +1,4 @@
+import { GraphQLClient } from 'graphql-request';
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
 
@@ -108,33 +109,6 @@ const get_dns_hosted_zone = gql`
   }
 `;
 
-const find_dns_hosted_zone = gql`
-  query ($params: dns_hosted_zones_bool_exp) {
-    dns_hosted_zones(where: $params) {
-      id
-      comment
-      domain_name
-      ns_ok
-      community_id
-
-      hosted_zone_rest: response(path: "hosted_zone")
-      hosted_zone: response(path: "HostedZone")
-      name_servers_rest: response(path: "delegation_set.name_servers")
-      name_servers: response(path: "DelegationSet.NameServers")
-
-      dns_records {
-        id
-        name
-        value
-        record_type
-        comment
-        ttl
-      }
-    }
-  }
-`;
-// };
-
 type DNSHostedZoneInput = {
   domain_name: string
   comment?: string
@@ -239,15 +213,49 @@ export const get = async (id: number, client: any): Promise<DNSHostedZoneResult>
   };
 }
 
-export const find = async (params: any, client: any): Promise<DNSHostedZoneResult[]> => {
-  const data: any = await client.request({
+// Find
+
+const find_dns_hosted_zone = gql`
+  query ($domain: String!) {
+    dns_hosted_zones(where: { domain_name: { _eq: $domain } }) {
+      id
+      comment
+      domain_name
+      ns_ok
+      community_id
+
+      hosted_zone_rest: response(path: "hosted_zone")
+      hosted_zone: response(path: "HostedZone")
+      name_servers_rest: response(path: "delegation_set.name_servers")
+      name_servers: response(path: "DelegationSet.NameServers")
+
+      dns_records {
+        id
+        name
+        value
+        record_type
+        comment
+        ttl
+      }
+    }
+  }
+`;
+
+interface DNSHostedZoneFindParams {
+  domain: string;
+}
+
+export const find = async ({
+  domain
+}: DNSHostedZoneFindParams, client: GraphQLClient): Promise<DNSHostedZoneResult[]> => {
+  const data = await client.request<{ dns_hosted_zones: any[] }, DNSHostedZoneFindParams>({
     document: find_dns_hosted_zone,
-    variables: { params }
+    variables: { domain }
   });
 
-  logger.child({ data }).info('dns_hosted_zones.find');
+  logger.child({ domain }).info('dns_hosted_zones.find');
 
-  return data.dns_hosted_zones.map((dnsHostedZone: any) => ({
+  return data.dns_hosted_zones.map((dnsHostedZone) => ({
     ...dnsHostedZone,
     hosted_zone: dnsHostedZone.hosted_zone || dnsHostedZone.hosted_zone_rest,
     name_servers: dnsHostedZone.name_servers || dnsHostedZone.name_servers_rest

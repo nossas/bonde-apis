@@ -1,29 +1,49 @@
+import { GraphQLClient } from 'graphql-request';
 import logger from '../config/logger';
 // import { check_user, Roles } from '../permissions';
 import route53 from '../route53';
 import { DNSRecord } from '../route53/types';
+import * as DNSHostedZonesGraphQLAPI from '../graphql-api/dns_hosted_zones';
+
+interface Request<T> {
+  body: {
+    request_query: string;
+    session_variables?: any;
+    action?: { name: string }
+    input: T
+  }
+}
+
+interface InputDomain {
+  domain: {
+    domain_name: string;
+    community_id: number;
+    comment?: string;
+  }
+}
 
 class DomainsController {
-  client: any;
-  DNSHostedZonesAPI: any;
+  client: GraphQLClient;
+  DNSHostedZonesAPI: typeof DNSHostedZonesGraphQLAPI;
 
   constructor(DNSHostedZonesAPI, client) {
     this.client = client;
     this.DNSHostedZonesAPI = DNSHostedZonesAPI;
   }
 
-  createDomains = async (req, res) => {
+  createDomains = async (req: Request<InputDomain>, res) => {
     logger.info('In controller - createDomains');
 
-    // Resolver create domain
-    // const create_domain = async (_: void, args: Args): Promise<DNSHostedZonesAPI.DNSHostedZoneResult> => {
-    const domain = req.body.input.domain;
-    const comment = req.body.input.comment;
-    const community_id = req.body.input.community_id;
+    const domain = req.body.input.domain.domain_name;
+    const comment = req.body.input.domain.comment;
+    const community_id = req.body.input.domain.community_id;
+    
+    logger.child(req.body).info('fetch hosted zone');
 
     // Fetch DNSHostedZone
-    const dnsHostedZones = await this.DNSHostedZonesAPI.find({ domain_name: { _eq: domain } }, this.client);
-    logger.child({ dnsHostedZones }).info('fetch hosted zone');
+    const dnsHostedZones = await this.DNSHostedZonesAPI.find({ domain }, this.client);
+
+    
     if (dnsHostedZones && dnsHostedZones.length > 0 && dnsHostedZones[0].community_id !== community_id) {
       res.status(400).json('domain_name_exists');
     }
@@ -38,6 +58,7 @@ class DomainsController {
       community_id: community_id,
       response: data
     }, this.client)
+
     logger.child({ dnsHostedZone }).info('DNSHostedZonesAPI.upsert');
 
     // Create Records default if not exists
