@@ -11,6 +11,8 @@ actions:
   definition:
     kind: synchronous
     handler: '{{API_DOMAINS_URL}}/actions/delete-domain'
+  permissions:
+  - role: user
 - name: delete_records
   definition:
     kind: synchronous
@@ -31,7 +33,6 @@ actions:
 custom_types:
   enums: []
   input_objects:
-  - name: SampleInput
   - name: DomainInput
   - name: DeleteDomainInput
   - name: RecordInput
@@ -39,7 +40,6 @@ custom_types:
   - name: CertificateInput
   - name: PageInput
   objects:
-  - name: SampleOutput
   - name: MailchimpStart
   - name: MailchimpStatus
   - name: DomainResult

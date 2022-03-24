@@ -1,6 +1,6 @@
 type Mutation {
   create_domain(
-    input: DomainInput
+    domain: DomainInput
   ): DomainResult
 }
 
@@ -12,8 +12,8 @@ type Mutation {
 
 type Mutation {
   delete_domain(
-    input: DeleteDomainInput
-  ): String
+    domain: DeleteDomainInput
+  ): DeleteDomainResult
 }
 
 type Mutation {
@@ -36,15 +36,10 @@ type Query {
   ): MailchimpStatus
 }
 
-input SampleInput {
-  username: String!
-  password: String!
-}
-
 input DomainInput {
-  domain: String!
-  comment: String
+  domain_name: String!
   community_id: Int!
+  comment: String
 }
 
 input DeleteDomainInput {
@@ -76,10 +71,6 @@ input PageInput {
   hosted_zone_id: Int!
 }
 
-type SampleOutput {
-  accessToken: String!
-}
-
 type MailchimpStart {
   status: String
 }
@@ -99,6 +90,7 @@ type DomainResult {
   comment: String
   name_servers: [String]!
   ns_ok: Boolean
+  status: String
   created_at: String
   updated_at: String
   community_id: Int!
@@ -117,7 +109,8 @@ type PageResult {
 }
 
 type DeleteDomainResult {
-  domain: String
+  id: Int
+  status: String
 }
 
 scalar String

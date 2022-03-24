@@ -14,16 +14,16 @@ object_relationships:
 select_permissions:
 - permission:
     columns:
-    - community_id
-    - created_at
-    - dns_hosted_zone_id
-    - domain
-    - expire_on
-    - file_content
-    - id
     - is_active
+    - domain
+    - community_id
+    - dns_hosted_zone_id
+    - id
     - mobilization_id
     - ssl_checker_response
+    - file_content
+    - created_at
+    - expire_on
     - updated_at
     filter:
       community:
@@ -41,4 +41,4 @@ event_triggers:
     interval_sec: 360
     num_retries: 20
     timeout_sec: 60
-  webhook: "{{API_DOMAINS_URL}}/events/check-certificate"
+  webhook: https://api-domains.staging.bonde.org/events/check-certificate
