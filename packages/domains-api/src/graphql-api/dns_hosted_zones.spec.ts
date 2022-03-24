@@ -7,7 +7,7 @@ test('should query api graphql and aws route53', async () => {
       name_servers: 'aaaaa.com'
     }
   };
-  const mockFn = {
+  const mockFn: any = {
     request: jest.fn().mockReturnValue(mockData)
   };
 
