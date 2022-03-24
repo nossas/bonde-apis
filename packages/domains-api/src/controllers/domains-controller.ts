@@ -4,15 +4,7 @@ import { verify_permission } from '../config/validators';
 import route53 from '../route53';
 import { DNSRecord } from '../route53/types';
 import * as DNSHostedZonesGraphQLAPI from '../graphql-api/dns_hosted_zones';
-
-interface Request<T> {
-  body: {
-    request_query: string;
-    session_variables: any;
-    action?: { name: string }
-    input: T
-  }
-}
+import { HasuraActionRequest } from '../types';
 
 interface InputDomain {
   domain: {
@@ -38,7 +30,7 @@ class DomainsController {
     this.DNSHostedZonesAPI = DNSHostedZonesAPI;
   }
 
-  createDomains = async (req: Request<InputDomain>, res) => {
+  createDomains = async (req: HasuraActionRequest<InputDomain>, res) => {
     logger.info('In controller - createDomains');
 
     const domain = req.body.input.domain.domain_name;
@@ -85,7 +77,7 @@ class DomainsController {
     res.json(dnsHostedZone);
   };
 
-  deleteDomains = async (req: Request<InputDeleteDomain>, res) => {
+  deleteDomains = async (req: HasuraActionRequest<InputDeleteDomain>, res) => {
     /**
      * TODO
      * - remover certificado do REDIS

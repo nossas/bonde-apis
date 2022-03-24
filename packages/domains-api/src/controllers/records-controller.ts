@@ -1,7 +1,28 @@
 import logger from '../config/logger';
 import route53 from '../route53';
-import { DNSRecord } from '../route53/types';
 import { DNSRecordResult } from '../graphql-api/dns_hosted_zones';
+import { HasuraActionRequest } from '../types';
+
+interface InputDeleteRecords {
+  records: {
+    dns_hosted_zone_id: number;
+    records: number[];
+    community_id: number;
+  }
+}
+
+interface InputRecord {
+  record: {
+    name: string;
+    value: string[] | string;
+    ttl: number
+    record_type: string;
+    hosted_zone_id: number;
+    dns_hosted_zone_id: number;
+    community_id: number;
+  }
+}
+
 
 class RecordsController {
   client: any;
@@ -12,30 +33,42 @@ class RecordsController {
     this.DNSHostedZonesAPI = DNSHostedZonesAPI;
   }
 
-  createRecords = async (req, res) => {
+  createRecords = async (req: HasuraActionRequest<InputRecord>, res) => {
     logger.info('In controller - createRecords');
-    const { input: { value, name, ttl, record_type, hosted_zone_id, dns_hosted_zone_id } } = req.body;
+    const { record: { value, name, ttl, record_type, hosted_zone_id, dns_hosted_zone_id } } = req.body.input;
 
     try {
-      const records = await route53.create_record({ value, name, ttl, record_type, hosted_zone_id });
-      const objects = [{ value, name, ttl, record_type }].map((r: DNSRecord) => ({
-        ...r,
-        name: r.name.replace('\\052', '*'),
+      await route53.create_record({ value, name, ttl, record_type, hosted_zone_id });
+      const record = {
+        value,
+        ttl,
+        record_type,
+        name: name.replace('\\052', '*'),
         dns_hosted_zone_id: dns_hosted_zone_id
-      }))
-      await this.DNSHostedZonesAPI.records_upsert(objects, this.client);
+      }
+      await this.DNSHostedZonesAPI.records_upsert([record], this.client);
 
-      logger.child({ objects, records }).info('create_record');
-      res.json({ objects, records });
-    } catch (err) {
+      logger.child({ record }).info('create_record');
+      res.json(record);
+    } catch (err: any) {
       logger.child({ err }).info('create_record');
-      res.status(500).json(err);
+      res.status(400).json({
+        message: err.message,
+        extensions: err
+      });
     }
   };
 
-  deleteRecords = async (req, res) => {
+  deleteRecords = async (
+    req: HasuraActionRequest<InputDeleteRecords>,
+    res
+  ) => {
     logger.info('In controller - deleteRecords');
-    const { input: { dns_hosted_zone_id, records } } = req.body;
+    const {
+      input: {
+        records: { dns_hosted_zone_id, records }
+      }
+    } = req.body;
 
     try {
       const dnsHostedZone = await this.DNSHostedZonesAPI.get(dns_hosted_zone_id, this.client);
@@ -62,10 +95,13 @@ class RecordsController {
       });
 
       await this.DNSHostedZonesAPI.remove_records(records, this.client);
-      res.json({ status: 'ok' });
-    } catch (err) {
+      res.json({ dns_hosted_zone_id, records });
+    } catch (err: any) {
       logger.child({ err }).info('delete_hosted_zone');
-      res.status(500).json(err);
+      res.status(400).json({
+        message: err.message,
+        extensions: err
+      });
     }
   };
 }

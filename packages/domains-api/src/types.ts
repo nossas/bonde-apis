@@ -37,3 +37,12 @@ export interface SessionVariables {
   'x-hasura-role': 'admin' | 'user';
   'x-hasura-user-id'?: string
 }
+
+export interface HasuraActionRequest<T> {
+  body: {
+    request_query: string;
+    session_variables: any;
+    action?: { name: string }
+    input: T
+  }
+}
