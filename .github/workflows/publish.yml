@@ -5,7 +5,8 @@ on:
       - "release/*"
       - "feature/*"
       - "hotfix/*"
-
+    tags:
+      - v*
 jobs:
   tests:
     name: Tests for all apis and libs
