@@ -1,8 +1,8 @@
 name: Hasura migration for production
 on:
   push:
-    branches:
-      - "main"
+    tags:
+      - v*
     paths:
       - "migrations/**"
 jobs:
