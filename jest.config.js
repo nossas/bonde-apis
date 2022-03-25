@@ -16,7 +16,6 @@ module.exports = {
   transform: {
     "^.+\\.(js|jsx|ts|tsx)$": "ts-jest",
   },
-  testEnvironment: "jsdom",
   moduleNameMapper: {
     // Handle CSS imports (with CSS modules)
     // https://jestjs.io/docs/webpack#mocking-css-modules

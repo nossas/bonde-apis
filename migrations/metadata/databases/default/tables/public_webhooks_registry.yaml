@@ -1,21 +1,3 @@
 table:
   name: webhooks_registry
   schema: public
-event_triggers:
-- definition:
-    enable_manual: false
-    insert:
-      columns: "*"
-    update:
-      columns:
-      - id
-      - data
-      - created_at
-      - updated_at
-      - service_name
-  name: webhooks-registry
-  retry_conf:
-    interval_sec: 10
-    num_retries: 0
-    timeout_sec: 60
-  webhook: https://webhooks-zendesk.bonde.org

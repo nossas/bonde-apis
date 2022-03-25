@@ -1,4 +1,28 @@
 actions:
+- name: create_domain
+  definition:
+    kind: synchronous
+    handler: '{{API_DOMAINS_URL}}/actions/create-domain'
+  permissions:
+  - role: user
+- name: create_record
+  definition:
+    kind: synchronous
+    handler: '{{API_DOMAINS_URL}}/actions/create-record'
+  permissions:
+  - role: user
+- name: delete_domain
+  definition:
+    kind: synchronous
+    handler: '{{API_DOMAINS_URL}}/actions/delete-domain'
+  permissions:
+  - role: user
+- name: delete_records
+  definition:
+    kind: synchronous
+    handler: '{{API_DOMAINS_URL}}/actions/delete-record'
+  permissions:
+  - role: user
 - name: resync_mailchimp_start
   definition:
     kind: synchronous
@@ -15,9 +39,20 @@ actions:
 custom_types:
   enums: []
   input_objects:
-  - name: SampleInput
+  - name: DomainInput
+  - name: DeleteDomainInput
+  - name: RecordInput
+  - name: DeleteRecordsInput
+  - name: CertificateInput
+  - name: PageInput
   objects:
-  - name: SampleOutput
   - name: MailchimpStart
   - name: MailchimpStatus
-  scalars: []
+  - name: DomainResult
+  - name: CertificateResult
+  - name: PageResult
+  - name: DeleteDomainResult
+  - name: DeleteRecordsResult
+  - name: RecordResult
+  scalars:
+  - name: String

@@ -1,32 +1,27 @@
 - name: Accounts
   definition:
-    url_from_env: SCHEMA_API_AUTH_URL
+    url: '{{API_ACCOUNTS_URL}}/graphql'
     timeout_seconds: 60
     forward_client_headers: true
   comment: ""
 - name: Activists
   definition:
-    url_from_env: SCHEMA_API_ACTIVISTS_URL
+    url: '{{API_ACTIVISTS_URL}}/graphql'
     timeout_seconds: 60
     forward_client_headers: true
   comment: ""
-- name: Domains
-  definition:
-    url_from_env: SCHEMA_API_DOMAINS_URL
-    timeout_seconds: 60
-    forward_client_headers: true
 - name: Notifications
   definition:
-    url_from_env: SCHEMA_API_NOTIFICATIONS_URL
+    url: '{{API_NOTIFICATIONS_URL}}/graphql'
     timeout_seconds: 60
     forward_client_headers: true
 - name: Payments
   definition:
-    url_from_env: SCHEMA_API_PAYMENTS_URL
+    url: '{{API_PAYMENTS_URL}}/graphql'
     timeout_seconds: 60
     forward_client_headers: true
 - name: Redes
   definition:
-    url_from_env: SCHEMA_API_REDES_URL
+    url: '{{API_REDES_URL}}/graphql'
     timeout_seconds: 60
     forward_client_headers: true

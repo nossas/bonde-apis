@@ -3,8 +3,8 @@
 TODO:
 
 - [ ] Definição resumida
-- [X] Definição tecnica de uma API GraphQL (bibliotecas)
-- [ ] Definição de arquitetura e fluxo de acesso
+- [x] Definição tecnica de uma API GraphQL (bibliotecas)
+- [x] Definição de arquitetura e fluxo de acesso
 
 ### Understand the SETUP
 
@@ -62,6 +62,7 @@ cookiecutter example-api/ -o packages/
 ```
 
 Run tests on your new GraphQL API, change `example` by the `domain` configuration made in the previous step:
+
 ```
 pnpm m run tests --filter example-api
 ```
@@ -72,7 +73,7 @@ pnpm m run tests --filter example-api
 - `community_id` must be passed from the resolver args input
   - That's where the **permissions-util** get the `community_id`
 - The session context is passed in every Graphql request (you can see it in the `server.js`), and it's data are contained inside the `Bearer ${token}`
-  - More info about _context_ and authentication in this [Apollo docs article](https://www.apollographql.com/docs/apollo-server/security/authentication/) 
+  - More info about _context_ and authentication in this [Apollo docs article](https://www.apollographql.com/docs/apollo-server/security/authentication/)
   - If you wish to import a resolver inside another, **you** must pass the context via parameters (see an example of this in the `create_match` resolver inside the _redes_ package)
 
 ### How to test if my API is working?
@@ -81,3 +82,12 @@ pnpm m run tests --filter example-api
 2. Declare the SCHEMA url in the `api-graphql` service via enviroment variables
 3. Create a Remote Schema in Hasura using the SCHEMA variable you just declared in the service
 4. Start your API and happy coding!
+
+#### References boilerplate expressjs
+
+- https://github.com/metachris/typescript-boilerplate
+- https://github.com/IBM/nodejs-express-app/tree/master/server/routes
+- https://github.com/jsynowiec/node-typescript-boilerplate
+- https://github.com/hagopj13/node-express-boilerplate
+- https://github.com/danielfsousa/express-rest-boilerplate
+- https://github.com/gothinkster/node-express-realworld-example-app

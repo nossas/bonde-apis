@@ -1,6 +1,6 @@
-import config from '../config';
-import logger from '../logger';
-import * as DNSHostedZones from '../graphql-api/dns_hosted_zones';
+// import config from '../config/config';
+import logger from '../config/logger'
+// import * as DNSHostedZones from '../graphql-api/dns_hosted_zones';
 
 type ResourceRecord = {
   Value: string
@@ -46,7 +46,7 @@ export default (route53: any) => async ({ name, value, ttl, record_type, hosted_
           ResourceRecordSet: {
             Name: name,
             ResourceRecords: typeof value === 'string'
-              ? [ { Value: value } ]
+              ? [{ Value: value }]
               : value.map((v: string) => ({ Value: v })),
             TTL: ttl,
             Type: record_type

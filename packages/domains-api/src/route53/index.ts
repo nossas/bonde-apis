@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import config from '../config';
+import config from '../config/config';
 import create_record from './create_record';
 import create_or_update_hosted_zone from './create_or_update_hosted_zone';
 import create_default_records from './create_default_records';

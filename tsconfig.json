@@ -27,8 +27,8 @@
     ]
   },
   "include": [
-    "utils/*",
-    "packages/*"
+    "./utils/**/*",
+    "./packages/**/*"
   ],
   "exclude": ["*/**/dist/**", "./out/**/*", "./node_modules/**/*", "**/*stories*", "**/*spec*", "**/*__tests__*", "**/setupTests.ts"],
 }

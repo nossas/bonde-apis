@@ -1,5 +1,5 @@
-import config from '../config';
-import logger from '../logger';
+import config from '../config/config';
+import logger from '../config/logger'
 
 type ResourceRecord = {
   Value: string

@@ -40,3 +40,33 @@ select_permissions:
           user_id:
             _eq: X-Hasura-User-Id
   role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - comment
+    - created_at
+    - domain_name
+    - id
+    - ns_ok
+    - response
+    - status
+    - updated_at
+    filter:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
+  role: user
+event_triggers:
+- definition:
+    enable_manual: true
+    update:
+      columns:
+      - ns_ok
+  name: create_certificate
+  retry_conf:
+    interval_sec: 10
+    num_retries: 0
+    timeout_sec: 60
+  webhook: "{{API_DOMAINS_URL}}/events/create-certificate"

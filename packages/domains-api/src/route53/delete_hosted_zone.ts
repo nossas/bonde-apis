@@ -1,4 +1,4 @@
-import logger from '../logger';
+import logger from '../config/logger';
 
 export default (route53: any) => async ({ hostedZoneId }: any): Promise<void> => {
   const result = await route53.deleteHostedZone({ Id: hostedZoneId });

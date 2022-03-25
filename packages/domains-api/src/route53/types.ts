@@ -20,7 +20,7 @@ export type DelegationSet = {
 export type DNSRecord = {
   name: string
   record_type: string
-  value: string
+  value: string[] | string
   ttl: number
   comment?: string
 }
