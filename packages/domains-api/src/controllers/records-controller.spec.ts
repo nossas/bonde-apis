@@ -10,24 +10,23 @@ test('should create record domain', () => {
   };
 
   const mockFn = {
-    request: jest.fn().mockReturnValue({
-      data: mockData,
-      errors: {}
-    })
+    request: jest.fn().mockResolvedValue(mockData)
   };
 
-  const mockReq = ({
+  const mockReq: any = {
     body: {
       input: {
-        value: "",
-        name: "",
-        ttl: "",
-        record_type: "",
-        hosted_zone_id: "",
-        dns_hosted_zone_id: ""
+        records: {
+          value: "",
+          name: "",
+          ttl: "",
+          record_type: "",
+          hosted_zone_id: "",
+          dns_hosted_zone_id: ""
+        }
       }
     }
-  });
+  };
   const mockRes = {
     status: jest.fn().mockReturnThis(),
     json: jest.fn()
