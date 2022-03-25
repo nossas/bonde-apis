@@ -69,4 +69,4 @@ event_triggers:
     interval_sec: 10
     num_retries: 0
     timeout_sec: 60
-  webhook: https://api-domains.staging.bonde.org/events/create-certificate
+  webhook: "{{API_DOMAINS_URL}}/events/create-certificate"

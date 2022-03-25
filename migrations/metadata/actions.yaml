@@ -33,7 +33,7 @@ actions:
 - name: resync_mailchimp_status
   definition:
     kind: ""
-    handler: https://action-mailchimp-resync.staging.bonde.org/status-resync-mailchimp
+    handler: '{{ACTION_BASE_URL}}/status-resync-mailchimp'
   permissions:
   - role: user
 custom_types:

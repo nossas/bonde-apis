@@ -41,4 +41,4 @@ event_triggers:
     interval_sec: 360
     num_retries: 20
     timeout_sec: 60
-  webhook: https://api-domains.staging.bonde.org/events/check-certificate
+  webhook: "{{API_DOMAINS_URL}}/events/check-certificate"
