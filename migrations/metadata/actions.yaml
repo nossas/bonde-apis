@@ -3,10 +3,14 @@ actions:
   definition:
     kind: synchronous
     handler: '{{API_DOMAINS_URL}}/actions/create-domain'
+  permissions:
+  - role: user
 - name: create_record
   definition:
     kind: synchronous
     handler: '{{API_DOMAINS_URL}}/actions/create-record'
+  permissions:
+  - role: user
 - name: delete_domain
   definition:
     kind: synchronous
@@ -17,6 +21,8 @@ actions:
   definition:
     kind: synchronous
     handler: '{{API_DOMAINS_URL}}/actions/delete-record'
+  permissions:
+  - role: user
 - name: resync_mailchimp_start
   definition:
     kind: synchronous
@@ -46,5 +52,7 @@ custom_types:
   - name: CertificateResult
   - name: PageResult
   - name: DeleteDomainResult
+  - name: DeleteRecordsResult
+  - name: RecordResult
   scalars:
   - name: String

@@ -6,8 +6,8 @@ type Mutation {
 
 type Mutation {
   create_record(
-    input: RecordInput
-  ): String
+    record: RecordInput
+  ): RecordResult
 }
 
 type Mutation {
@@ -18,8 +18,8 @@ type Mutation {
 
 type Mutation {
   delete_records(
-    input: DeleteRecordsInput
-  ): String
+    records: DeleteRecordsInput
+  ): DeleteRecordsResult
 }
 
 type Mutation {
@@ -49,7 +49,7 @@ input DeleteDomainInput {
 
 input RecordInput {
   name: String!
-  value: [String]!
+  value: [String!]!
   ttl: Int!
   record_type: String!
   hosted_zone_id: String!
@@ -111,6 +111,20 @@ type PageResult {
 type DeleteDomainResult {
   id: Int
   status: String
+}
+
+type DeleteRecordsResult {
+  dns_hosted_zone_id: Int!
+  records: [Int]!
+}
+
+type RecordResult {
+  name: String!
+  dns_hosted_zone_id: Int!
+  record_type: String!
+  value: [String!]!
+  ttl: Int!
+  comment: String
 }
 
 scalar String
