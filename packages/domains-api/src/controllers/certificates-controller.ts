@@ -14,9 +14,13 @@ export interface Request<T> {
   }
 }
 
-export interface Certificate {
+export interface CertificateTLS {
   id: number;
+  dns_hosted_zone_id: number;
+  is_active: boolean;
+  community_id: number;
   domain: string;
+  ssl_checker_response?: any;
 }
 
 export interface DNSHostedZone {
@@ -33,6 +37,7 @@ const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
     is_active
     community_id
     domain
+    ssl_checker_response
   }
 }
 `;
@@ -50,6 +55,14 @@ mutation ($id: Int!, $ssl_checker_response: jsonb) {
 }
 `;
 
+`
+query {
+  mobilizations (where:{custom_domain:{_ilike:"%minhasampa.org.br"}}) {
+    id, custom_domain
+  }
+}
+`
+
 class CertificatesController {
   private redisClient: any
   private graphqlClient: any
@@ -61,7 +74,6 @@ class CertificatesController {
 
   create = async (req: Request<DNSHostedZone>, res) => {
     await check('event').isObject().run(req);
-    // await check('password').isLength({ min: 6 }).run(req);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -76,7 +88,7 @@ class CertificatesController {
         res.status(500).json({ ok: false, ...e });
       }
     } else {
-      res.status(200).json({ ok: true, message: 'ns_ok is false' });
+      res.status(402).json({ message: 'Certificate not created because ns_ok is false.' });
     }
   }
 
@@ -96,7 +108,7 @@ class CertificatesController {
     await this.redisClient.quit();
   }
 
-  private insertCertificateGraphql = async (input: any) => {
+  private insertCertificateGraphql = async (input: any): Promise<CertificateTLS> => {
     const { domain_name: domain, community_id, id: dns_hosted_zone_id } = input;
     const data: any = await this.graphqlClient.request({
       document: insert_certificate,
@@ -119,7 +131,7 @@ class CertificatesController {
     return data.update_certificates_by_pk;
   }
 
-  check = async (req: Request<Certificate>, res) => {
+  check = async (req: Request<CertificateTLS>, res) => {
     /**
      * Esse evento deve ser chamado sempre que criar um novo certificado
      * Hasura irá fazer uma nova chamada em caso de erro no intervalo de 6 minutos
