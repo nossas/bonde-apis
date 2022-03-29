@@ -23,6 +23,7 @@ export interface DNSHostedZone {
   id: number;
   community_id: number;
   domain_name: string;
+  ns_ok?: boolean;
 }
 
 const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
@@ -65,12 +66,17 @@ class CertificatesController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    try {
-      await this.insertCertificateRedis(req.body.event.data.new);
-      res.status(200).json(await this.insertCertificateGraphql(req.body.event.data.new));
-    } catch (e: any) {
-      logger.info(e)
-      res.status(500).json({ ok: false, ...e });
+
+    if (req.body.event.data.new.ns_ok) {
+      try {
+        await this.insertCertificateRedis(req.body.event.data.new);
+        res.status(200).json(await this.insertCertificateGraphql(req.body.event.data.new));
+      } catch (e: any) {
+        logger.info(e)
+        res.status(500).json({ ok: false, ...e });
+      }
+    } else {
+      res.status(200).json({ ok: true, message: 'ns_ok is false' });
     }
   }
 
