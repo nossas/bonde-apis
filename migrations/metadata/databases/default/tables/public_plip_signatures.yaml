@@ -65,4 +65,4 @@ event_triggers:
     interval_sec: 10
     num_retries: 0
     timeout_sec: 60
-  webhook_from_env: WEBHOOK_PLIP_SIGNATURES_MAUTIC_URL
+  webhook: "{{N8N_WEBHOOK_URL}}/plip-signatures-mautic"
