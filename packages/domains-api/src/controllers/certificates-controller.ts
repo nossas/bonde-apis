@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
+import { createWildcard } from '../redis-db/certificates';
 import { validationResult, check } from 'express-validator';
 import sslChecker from "ssl-checker";
 
@@ -92,20 +93,12 @@ class CertificatesController {
     }
   }
 
-  private insertCertificateRedis = async (input: any) => {
+  private insertCertificateRedis = async (input: DNSHostedZone) => {
     const { domain_name, id: dns_hosted_zone_id } = input;
     const tRouterName = `${dns_hosted_zone_id}-${domain_name.replace('.', '-')}`
     logger.info(`In controller - createCertificate ${tRouterName}`);
-
-    await this.redisClient.connect();
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/tls`, 'true');
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/tls/certresolver`, 'myresolver');
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/rule`, `HostRegexp(\`${domain_name}\`, \`{subdomain:.+}.${domain_name}\`)`);
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/tls/domains/0/main`, domain_name);
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/tls/domains/0/sans/0`, `*.${domain_name}`);
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/service`, 'public@docker');
-    // console.log(await this.redisClient.get('traefik'));
-    await this.redisClient.quit();
+    
+    await createWildcard(tRouterName, domain_name);
   }
 
   private insertCertificateGraphql = async (input: any): Promise<CertificateTLS> => {

@@ -1,8 +1,10 @@
-import CertificatesController, {
-  Request,
-  //  Certificate, 
-  DNSHostedZone
-} from './certificates-controller';
+const mockCreateWildcard = jest.fn();
+
+jest.mock('../redis-db/certificates', () => ({
+  createWildcard: mockCreateWildcard
+}))
+
+import CertificatesController from './certificates-controller';
 
 describe('Certificates controller', () => {
   // Mock de clients externos API e Redis (Padrão para todos os testes)
@@ -67,8 +69,7 @@ describe('Certificates controller', () => {
 
       const tRouterName = `${request.body.event.data.new.id}-${request.body.event.data.new.domain_name.replace('.', '-')}`;
 
-      expect(mockRedisClient.set.mock.calls[0][0]).toEqual(`traefik/http/routers/${tRouterName}/tls`);
-      expect(mockRedisClient.set.mock.calls[0][1]).toEqual('true');
+      expect(mockCreateWildcard.mock.calls[0]).toEqual([tRouterName, request.body.event.data.new.domain_name])
     });
   });
 
