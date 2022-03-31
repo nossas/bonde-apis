@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
-import { createWildcard } from '../redis-db/certificates';
+import { createRouters, createWildcard } from '../redis-db/certificates';
 import { validationResult, check } from 'express-validator';
 import sslChecker from "ssl-checker";
 
@@ -31,6 +31,12 @@ export interface DNSHostedZone {
   ns_ok?: boolean;
 }
 
+export interface Mobilization {
+  id: number;
+  custom_domain: string;
+  community_id: number;
+}
+
 const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
   insert_certificates_one(object:$input) {
     id
@@ -56,20 +62,20 @@ mutation ($id: Int!, $ssl_checker_response: jsonb) {
 }
 `;
 
-`
-query {
-  mobilizations (where:{custom_domain:{_ilike:"%minhasampa.org.br"}}) {
-    id, custom_domain
+export const fetch_mobilizations_by_domain = gql`
+  query ($domainName: String) {
+    mobilizations (where:{ custom_domain:{ _ilike: $domainName } }) {
+      id
+      custom_domain
+      community_id
+    }
   }
-}
-`
+`;
 
 class CertificatesController {
-  private redisClient: any
   private graphqlClient: any
 
-  constructor(redisClient, graphqlClient) {
-    this.redisClient = redisClient;
+  constructor(graphqlClient) {
     this.graphqlClient = graphqlClient;
   }
 
@@ -80,10 +86,13 @@ class CertificatesController {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    if (req.body.event.data.new.ns_ok) {
+    const dns_hosted_zone = req.body.event.data.new;
+
+    if (dns_hosted_zone.ns_ok) {
       try {
-        await this.insertCertificateRedis(req.body.event.data.new);
-        res.status(200).json(await this.insertCertificateGraphql(req.body.event.data.new));
+        const domains: string[] = await this.fetchCustomDomains(dns_hosted_zone.domain_name);
+        await this.insertCertificateRedis(dns_hosted_zone, domains);
+        res.status(200).json(await this.insertCertificateGraphql(dns_hosted_zone));
       } catch (e: any) {
         logger.info(e)
         res.status(500).json({ ok: false, ...e });
@@ -93,12 +102,13 @@ class CertificatesController {
     }
   }
 
-  private insertCertificateRedis = async (input: DNSHostedZone) => {
+  private insertCertificateRedis = async (input: DNSHostedZone, domains: string[]) => {
     const { domain_name, id: dns_hosted_zone_id } = input;
     const tRouterName = `${dns_hosted_zone_id}-${domain_name.replace('.', '-')}`
     logger.info(`In controller - createCertificate ${tRouterName}`);
     
     await createWildcard(tRouterName, domain_name);
+    await createRouters(`${tRouterName}-www`, domains);
   }
 
   private insertCertificateGraphql = async (input: any): Promise<CertificateTLS> => {
@@ -122,6 +132,17 @@ class CertificatesController {
     logger.child({ data }).info('update_certificates');
 
     return data.update_certificates_by_pk;
+  }
+
+  private fetchCustomDomains = async (domain: string): Promise<string[]> => {
+    const data: { mobilizations: Mobilization[] } = await this.graphqlClient.request({
+      document: fetch_mobilizations_by_domain,
+      variables: { domain: `%${domain}%` }
+    });
+
+    logger.child({ data }).info('fetch_mobilizations_by_domain');
+
+    return data.mobilizations.map((mob) => mob.custom_domain);
   }
 
   check = async (req: Request<CertificateTLS>, res) => {
