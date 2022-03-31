@@ -74,6 +74,15 @@ describe('Certificates controller', () => {
       expect(mockCreateWildcard.mock.calls[0]).toEqual([tRouterName, request.body.event.data.new.domain_name])
     });
 
+    it('should call fetchMobilizationsByDomain', async () => {
+      const certificatesController = new CertificatesController(mockGraphQLClient);
+      await certificatesController.create(request, response);
+
+      expect(mockGraphQLClient.request.mock.calls[0][0].variables).toEqual({
+        domainName: `%${dns.domain_name}%`
+      });
+    });
+
     it('should create traefik routers for subdomains in redis', async () => {
       const mobilizations = [
         { id: 1, community_id: 2, custom_domain: `www.campaign0.${dns.domain_name}` },

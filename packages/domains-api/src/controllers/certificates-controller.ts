@@ -137,7 +137,7 @@ class CertificatesController {
   private fetchCustomDomains = async (domain: string): Promise<string[]> => {
     const data: { mobilizations: Mobilization[] } = await this.graphqlClient.request({
       document: fetch_mobilizations_by_domain,
-      variables: { domain: `%${domain}%` }
+      variables: { domainName: `%${domain}%` }
     });
 
     logger.child({ data }).info('fetch_mobilizations_by_domain');
