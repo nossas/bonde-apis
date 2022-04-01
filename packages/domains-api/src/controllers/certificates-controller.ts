@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
+import { createRouters, createWildcard } from '../redis-db/certificates';
 import { validationResult, check } from 'express-validator';
 import sslChecker from "ssl-checker";
 
@@ -14,15 +15,26 @@ export interface Request<T> {
   }
 }
 
-export interface Certificate {
+export interface CertificateTLS {
   id: number;
+  dns_hosted_zone_id: number;
+  is_active: boolean;
+  community_id: number;
   domain: string;
+  ssl_checker_response?: any;
 }
 
 export interface DNSHostedZone {
   id: number;
   community_id: number;
   domain_name: string;
+  ns_ok?: boolean;
+}
+
+export interface Mobilization {
+  id: number;
+  custom_domain: string;
+  community_id: number;
 }
 
 const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
@@ -32,6 +44,7 @@ const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
     is_active
     community_id
     domain
+    ssl_checker_response
   }
 }
 `;
@@ -49,48 +62,56 @@ mutation ($id: Int!, $ssl_checker_response: jsonb) {
 }
 `;
 
+export const fetch_mobilizations_by_domain = gql`
+  query ($domainName: String) {
+    mobilizations (where:{ custom_domain:{ _ilike: $domainName } }) {
+      id
+      custom_domain
+      community_id
+    }
+  }
+`;
+
 class CertificatesController {
-  private redisClient: any
   private graphqlClient: any
 
-  constructor(redisClient, graphqlClient) {
-    this.redisClient = redisClient;
+  constructor(graphqlClient) {
     this.graphqlClient = graphqlClient;
   }
 
   create = async (req: Request<DNSHostedZone>, res) => {
     await check('event').isObject().run(req);
-    // await check('password').isLength({ min: 6 }).run(req);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    try {
-      await this.insertCertificateRedis(req.body.event.data.new);
-      res.status(200).json(await this.insertCertificateGraphql(req.body.event.data.new));
-    } catch (e: any) {
-      logger.info(e)
-      res.status(500).json({ ok: false, ...e });
+
+    const dns_hosted_zone = req.body.event.data.new;
+
+    if (dns_hosted_zone.ns_ok) {
+      try {
+        const domains: string[] = await this.fetchCustomDomains(dns_hosted_zone.domain_name);
+        await this.insertCertificateRedis(dns_hosted_zone, domains);
+        res.status(200).json(await this.insertCertificateGraphql(dns_hosted_zone));
+      } catch (e: any) {
+        logger.info(e)
+        res.status(500).json({ ok: false, ...e });
+      }
+    } else {
+      res.status(402).json({ message: 'Certificate not created because ns_ok is false.' });
     }
   }
 
-  private insertCertificateRedis = async (input: any) => {
+  private insertCertificateRedis = async (input: DNSHostedZone, domains: string[]) => {
     const { domain_name, id: dns_hosted_zone_id } = input;
     const tRouterName = `${dns_hosted_zone_id}-${domain_name.replace('.', '-')}`
     logger.info(`In controller - createCertificate ${tRouterName}`);
-
-    await this.redisClient.connect();
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/tls`, 'true');
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/tls/certresolver`, 'myresolver');
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/rule`, `HostRegexp(\`${domain_name}\`, \`{subdomain:.+}.${domain_name}\`)`);
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/tls/domains/0/main`, domain_name);
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/tls/domains/0/sans/0`, `*.${domain_name}`);
-    await this.redisClient.set(`traefik/http/routers/${tRouterName}/service`, 'public@docker');
-    // console.log(await this.redisClient.get('traefik'));
-    await this.redisClient.quit();
+    
+    await createWildcard(tRouterName, domain_name);
+    await createRouters(`${tRouterName}-www`, domains);
   }
 
-  private insertCertificateGraphql = async (input: any) => {
+  private insertCertificateGraphql = async (input: any): Promise<CertificateTLS> => {
     const { domain_name: domain, community_id, id: dns_hosted_zone_id } = input;
     const data: any = await this.graphqlClient.request({
       document: insert_certificate,
@@ -113,7 +134,18 @@ class CertificatesController {
     return data.update_certificates_by_pk;
   }
 
-  check = async (req: Request<Certificate>, res) => {
+  private fetchCustomDomains = async (domain: string): Promise<string[]> => {
+    const data: { mobilizations: Mobilization[] } = await this.graphqlClient.request({
+      document: fetch_mobilizations_by_domain,
+      variables: { domainName: `%${domain}%` }
+    });
+
+    logger.child({ data }).info('fetch_mobilizations_by_domain');
+
+    return data.mobilizations.map((mob) => mob.custom_domain);
+  }
+
+  check = async (req: Request<CertificateTLS>, res) => {
     /**
      * Esse evento deve ser chamado sempre que criar um novo certificado
      * Hasura irá fazer uma nova chamada em caso de erro no intervalo de 6 minutos
