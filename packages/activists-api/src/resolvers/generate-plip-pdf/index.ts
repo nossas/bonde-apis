@@ -37,18 +37,21 @@ const generatePlipPdf = async (unique_identifier: string, state : string, expect
     doc.addImage(uiQRCode, 'JPEG', (docWidth - margin - imgWidth), 5,imgWidth,imgHeight);
     doc.setFontSize(8.5);
     doc.setFont( "helvetica" ,"bold");
-    doc.text( `Lista de Apoio ao Projeto de Lei de Iniciativa Popular nº13.567`,220,15, { align:'center' });
+    doc.text( `Projeto de Lei Amazônia de Pé`,220,13, { align:'center' });
     doc.setFont( "helvetica", 'normal');
-    doc.setFontSize(8);
-    doc.text( `Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
-    dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit
-    lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit.\nSaiba mais em www.sitedaplip.org`,220,25, { align:'center' });
-  
+    doc.setFontSize(7);
+    doc.text( `Altera a Lei nº 6.001, de 19 de dezembro de 1973, que cria o Estatuto do Índio; a Lei nº 11.952, de 25 de junho de 2009,
+    que dispõe sobre a regularização fundiária das ocupações incidentes em terras situadas em áreas da União, no âmbito 
+    da Amazônia Legal; e a Lei nº 9.985, de 18 de julho de 2000, que institui o Sistema Nacional de Unidades de Conservação da Natureza,`,220,22, { align:'center' });
+    doc.setFont( "helvetica" ,"bold");
+    doc.text(`a fim de promover a transferência de todas as terras públicas não destinadas na Amazônia Legal para a 
+    ampliação de terras indígenas demarcadas, ampliação de terras ocupadas por remanescentes das comunidades
+    de quilombos e instituir novas Unidades de Conservação da Natureza.\nSaiba mais em amazoniadepe.com.br`,220,40, { align:'center' });
     //form
     doc.setFontSize(6);
     doc.setFont( "helvetica", 'normal');
-    doc.cell(margin,60,(formWidth/2),12,`ESTADO: ${state}`,0,'left');
-    doc.cell(formWidth,60,formWidth/2,12,`MUNICÍPIO:`,0,'left');
+    doc.cell(margin,62,(formWidth/2),12,`ESTADO: ${state}`,0,'left');
+    doc.cell(formWidth,62,formWidth/2,12,`MUNICÍPIO:`,0,'left');
     doc.cell(margin,100,90,5,``,1,'left');
   
     //background color
@@ -60,28 +63,32 @@ const generatePlipPdf = async (unique_identifier: string, state : string, expect
     }
     for (let i = 0; i < 10; i++) {
       doc.cell(margin,110,(formWidth-cellSignatureWidth),
-        cellHeight,`NOME COMPLETO: (Por extenso e legível, sem abreviar)`,2,'left');
+        cellHeight,`NOME COMPLETO (Por extenso e legível, sem abreviar):`,2,'left');
     
       doc.cell((formWidth-cellSignatureWidth ),110,100,cellSignatureHeight,
         `ASSINATURA OU IMPRESSÃO DIGITAL`,2,'right');
       doc.cell(margin,134,(formWidth-cellSignatureWidth),cellHeight,``,2,'left'); 
 
       doc.cell(margin,134,(formWidth-cellSignatureWidth),
-        cellHeight,`ENDEREÇO: (Completo, legível, sem abreviar, com CEP)`,3,'left');
+        cellHeight,`ENDEREÇO (Completo, legível, sem abreviar, com CEP):`,3,'left');
 
       doc.cell(margin,158,(formWidth-cellSignatureWidth)/4,
         cellHeight,`DATA DE NASCIMENTO: `,4,'left');
 
       doc.cell((formWidth-cellSignatureWidth)/4,158,
-        (formWidth-cellSignatureWidth)-((formWidth-cellSignatureWidth)/4),
-        cellHeight,`NÚMERO DO TÍTULO DE ELEITOR: (Ou nome completo da mãe)`,4,'left');
+        (formWidth-cellSignatureWidth)-((formWidth-cellSignatureWidth)/2),
+        cellHeight,`NÚMERO DO TÍTULO DE ELEITOR (Ou nome completo da mãe):`,4,'left');
+     
+      doc.cell((formWidth-cellSignatureWidth)-((formWidth-cellSignatureWidth)/2),158,
+        (formWidth-cellSignatureWidth)/4,
+        cellHeight,`WHATSAPP (Com DDD):`,4,'left'); 
     }
   
     //footer
     doc.setFontSize(7);
     doc.setFont( "helvetica" ,"normal");
     doc.text( `${unique_identifier}`,10 , docHeight - 5);
-    doc.text( `Enviar para: Nome do Destinatário, Av. N2 - Bloco 16, CEP 70165-900, DF`,docWidth -183 , docHeight - 5);
+    doc.text( `Enviar para: NOSSAS CIDADES, CAIXA POSTAL: 34033, CEP 22460970 - Rio de Janeiro RJ`,docWidth - 230 , docHeight - 5);
 
   }
   const deferred = q;
