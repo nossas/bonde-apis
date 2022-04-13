@@ -1,0 +1,1 @@
+DROP TABLE "public"."donations_integrations_logs";

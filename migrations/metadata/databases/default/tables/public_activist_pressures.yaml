@@ -20,6 +20,14 @@ object_relationships:
 - name: widget
   using:
     foreign_key_constraint_on: widget_id
+array_relationships:
+- name: pressures_integration_logs
+  using:
+    foreign_key_constraint_on:
+      column: pressure_id
+      table:
+        name: pressures_integration_logs
+        schema: public
 select_permissions:
 - permission:
     allow_aggregations: true
