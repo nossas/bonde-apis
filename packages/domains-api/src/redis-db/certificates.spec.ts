@@ -20,7 +20,8 @@ describe('Certificates Redis', () => {
   const dns: DNSHostedZone = {
     id: 1,
     community_id: 75,
-    domain_name: 'nossas.link'
+    domain_name: 'nossas.link',
+    is_external_domain: false
   };
 
   beforeEach(() => {

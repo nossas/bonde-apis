@@ -22,8 +22,14 @@ array_relationships:
       table:
         name: dns_records
         schema: public
-select_permissions:
+insert_permissions:
 - permission:
+    backend_only: false
+    check:
+      community:
+        community_users:
+          user_id:
+            _eq: X-Hasura-User-Id
     columns:
     - id
     - community_id
@@ -34,6 +40,21 @@ select_permissions:
     - response
     - ns_ok
     - status
+    - is_external_domain
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - comment
+    - community_id
+    - created_at
+    - domain_name
+    - id
+    - is_external_domain
+    - ns_ok
+    - response
+    - status
+    - updated_at
     filter:
       community:
         community_users:
@@ -48,6 +69,7 @@ update_permissions:
     - created_at
     - domain_name
     - id
+    - is_external_domain
     - ns_ok
     - response
     - status
