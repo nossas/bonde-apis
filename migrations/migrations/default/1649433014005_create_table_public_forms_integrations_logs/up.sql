@@ -6,7 +6,6 @@ create table "public"."forms_integration_logs"(
 	"community_id" int4 NOT NULL,
 	"integration_id" int4 NOT NULL,
 	"message" text,
-	"action_type" varchar(50) not null,
 	"form_entry_id" int4 not null,
 	
 	CONSTRAINT "forms_integration_logs_pkey" PRIMARY KEY ("id"),
@@ -15,4 +14,4 @@ create table "public"."forms_integration_logs"(
   CONSTRAINT "forms_integration_logs_integrations_id_fkey" FOREIGN KEY ("integration_id") REFERENCES public.integrations("id") ON DELETE RESTRICT ON UPDATE restrict,
   CONSTRAINT "forms_integration_logs_form_entry_id_fkey" FOREIGN KEY ("form_entry_id") REFERENCES public.form_entries("id") ON DELETE RESTRICT ON UPDATE restrict
 
-);COMMENT ON TABLE "public"."forms_integrations_logs" IS E'Tabela responsável por armazenar logs das integrações realizadas a cada ação.';
+);COMMENT ON TABLE "public"."forms_integration_logs" IS E'Tabela responsável por armazenar logs das integrações realizadas a cada ação.';

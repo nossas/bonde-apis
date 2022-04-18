@@ -6,7 +6,6 @@ create table "public"."donations_integration_logs"(
 	"community_id" int4 NOT NULL,
 	"integration_id" int4 NOT NULL,
 	"message" text,
-	"action_type" varchar(50) not null,
 	"donation_id" int4 not null,
 	
 	CONSTRAINT "donations_integration_logs_pkey" PRIMARY KEY ("id"),

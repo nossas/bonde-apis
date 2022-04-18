@@ -1,1 +1,1 @@
-DROP TABLE "public"."donations_integrations_logs";
+DROP TABLE "public"."donations_integration_logs";
