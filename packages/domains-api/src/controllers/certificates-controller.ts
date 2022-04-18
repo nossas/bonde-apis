@@ -28,6 +28,7 @@ export interface DNSHostedZone {
   id: number;
   community_id: number;
   domain_name: string;
+  is_external_domain: boolean;
   ns_ok?: boolean;
 }
 
@@ -73,7 +74,7 @@ export const fetch_mobilizations_by_domain = gql`
 `;
 
 class CertificatesController {
-  private graphqlClient: any
+  private graphqlClient: any;
 
   constructor(graphqlClient) {
     this.graphqlClient = graphqlClient;
@@ -103,12 +104,16 @@ class CertificatesController {
   }
 
   private insertCertificateRedis = async (input: DNSHostedZone, domains: string[]) => {
-    const { domain_name, id: dns_hosted_zone_id } = input;
+    const { domain_name, id: dns_hosted_zone_id, is_external_domain } = input;
     const tRouterName = `${dns_hosted_zone_id}-${domain_name.replace('.', '-')}`
     logger.info(`In controller - createCertificate ${tRouterName}`);
     
-    await createWildcard(tRouterName, domain_name);
-    await createRouters(`${tRouterName}-www`, domains);
+    if (!is_external_domain) {
+      await createWildcard(tRouterName, domain_name);
+      await createRouters(`${tRouterName}-www`, domains);
+    } else {
+      await createRouters(`${tRouterName}-external`, [...domains, domain_name]);
+    }
   }
 
   private insertCertificateGraphql = async (input: any): Promise<CertificateTLS> => {

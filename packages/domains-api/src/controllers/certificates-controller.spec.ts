@@ -27,7 +27,7 @@ describe('Certificates controller', () => {
       domain_name: 'test.org',
       ns_ok: true
     };
-    const request = {
+    const request: any = {
       body: {
         event: {
           data: {
@@ -98,11 +98,37 @@ describe('Certificates controller', () => {
       expect(mockCreateRouters.mock.calls[0])
         .toEqual([routerName, mobilizations.map(m => m.custom_domain)])
     });
+
+    it('should create only traefik routers for external domain in redis', async () => {
+      const mobilizations = [
+        { id: 1, community_id: 1, custom_domain: `www.${dns.domain_name}` }
+      ]
+      
+      mockGraphQLClient.request.mockResolvedValue({ mobilizations });
+
+      const certificatesController = new CertificatesController(mockGraphQLClient);
+      await certificatesController.create({
+        body: {
+          event: {
+            data: {
+              new: {
+                ...dns,
+                is_external_domain: true
+              }
+            }
+          }
+        }
+      }, response);
+      const routerName = `${request.body.event.data.new.id}-${request.body.event.data.new.domain_name.replace('.', '-')}-external`;
+
+      expect(mockCreateRouters.mock.calls[0])
+        .toEqual([routerName, [...mobilizations.map(m => m.custom_domain), dns.domain_name]])
+    });
   });
 
   describe('certificate is not create', () => {
     // Mock de entradas da função (Padrão para testes que não criam certificado)
-    const request = {
+    const request: any = {
       body: {
         event: {
           data: {
