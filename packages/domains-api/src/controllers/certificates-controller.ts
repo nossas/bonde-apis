@@ -112,7 +112,7 @@ class CertificatesController {
       await createWildcard(tRouterName, domain_name);
       await createRouters(`${tRouterName}-www`, domains);
     } else {
-      await createRouters(`${tRouterName}-external`, [...domains, domain_name]);
+      await createRouters(`${tRouterName}-external`, domains.length > 0 ? [...domains, domain_name] : [`www.${domain_name}`, domain_name]);
     }
   }
 
