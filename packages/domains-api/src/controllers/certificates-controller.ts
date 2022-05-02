@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
-import { createRouters, createWildcard } from '../redis-db/certificates';
+import { createRouters, createWildcard } from '../etcd-db/certificates';
 import { validationResult, check } from 'express-validator';
 import sslChecker from "ssl-checker";
 

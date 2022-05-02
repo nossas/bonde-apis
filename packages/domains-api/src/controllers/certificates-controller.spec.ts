@@ -2,7 +2,7 @@
 const mockCreateWildcard = jest.fn();
 const mockCreateRouters = jest.fn();
 
-jest.mock('../redis-db/certificates', () => ({
+jest.mock('../etcd-db/certificates', () => ({
   createWildcard: mockCreateWildcard,
   createRouters: mockCreateRouters
 }))
