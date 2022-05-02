@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p .",
-    "postinstall": "pnpm --filter permissions-utils run build",
+    "postinstall": "yarn run build",
     "clean": "rm -rf node_modules dist",
     "lint": "eslint . --ext ts,tsx --fix",
     "test": "jest --passWithNoTests",

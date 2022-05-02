@@ -19,6 +19,4 @@ COPY utils utils
 
 RUN pnpm i
 
-RUN pnpm m run build --filter permissions-utils
-
-RUN pnpm m run build --filter {packages}
+RUN pnpm m run build

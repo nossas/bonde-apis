@@ -36,6 +36,7 @@
     "express-pino-logger": "^5.0.0",
     "graphql": "^15.8.0",
     "graphql-depth-limit": "^1.1.0",
+    "graphql-type-json": "^0.3.2",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "ncp": "^2.0.0",
