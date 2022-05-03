@@ -19,4 +19,5 @@ COPY utils utils
 
 RUN pnpm i
 
-RUN pnpm m run build
+RUN pnpm --filter "*-api" build
+RUN pnpm --filter "notifications" build
