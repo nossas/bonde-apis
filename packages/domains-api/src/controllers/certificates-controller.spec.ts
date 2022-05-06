@@ -124,6 +124,29 @@ describe('Certificates controller', () => {
       expect(mockCreateRouters.mock.calls[0])
         .toEqual([routerName, [...mobilizations.map(m => m.custom_domain), dns.domain_name]])
     });
+
+    it('should update certificate method', async () => {
+      const certificate = { id: 2, domain: 'nossas.link', dns_hosted_zone_id: 23 };
+      mockGraphQLClient.request.mockResolvedValueOnce({ data: { certificate } });
+      const mobilizations = [
+        { id: 1, community_id: 1, custom_domain: `www.sudomain.nossas.link` }
+      ]
+      mockGraphQLClient.request.mockResolvedValueOnce({ mobilizations });
+      
+      const certificatesController = new CertificatesController(mockGraphQLClient);
+      await certificatesController.update({ body: { input: { certificate: { id: certificate.id } } } }, { json: jest.fn() });
+
+      expect(mockGraphQLClient.request.mock.calls.length).toEqual(certificate.id);
+      expect(mockGraphQLClient.request.mock.calls[0][0].variables).toEqual({ id: certificate.id });
+      expect(mockGraphQLClient.request.mock.calls[1][0].variables).toEqual({ domainName: `%${certificate.domain}%` });
+
+      const tRouterName = `${certificate.dns_hosted_zone_id}-${certificate.domain.replace('.', '-')}`;
+      expect(mockCreateWildcard.mock.calls[0]).toEqual([tRouterName, certificate.domain]);
+
+      const routerName = `${certificate.dns_hosted_zone_id}-${certificate.domain.replace('.', '-')}-www`;
+      expect(mockCreateRouters.mock.calls[0])
+        .toEqual([routerName, mobilizations.map(m => m.custom_domain)]);
+    });
   });
 
   describe('certificate is not create', () => {
