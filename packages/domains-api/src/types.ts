@@ -40,8 +40,8 @@ export interface SessionVariables {
 
 export interface HasuraActionRequest<T> {
   body: {
-    request_query: string;
-    session_variables: any;
+    request_query?: string;
+    session_variables?: any;
     action?: { name: string }
     input: T
   }

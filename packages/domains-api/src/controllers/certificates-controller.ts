@@ -2,6 +2,7 @@
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
 import { createRouters, createWildcard } from '../etcd-db/certificates';
+import { HasuraActionRequest } from '../types';
 import { validationResult, check } from 'express-validator';
 import sslChecker from "ssl-checker";
 
@@ -38,6 +39,12 @@ export interface Mobilization {
   community_id: number;
 }
 
+interface InputCertificate {
+  certificate: {
+    id: number;
+  }
+}
+
 const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
   insert_certificates_one(object:$input) {
     id
@@ -72,6 +79,17 @@ export const fetch_mobilizations_by_domain = gql`
     }
   }
 `;
+
+export const get_cerificate = gql`
+  query ($id: Int!) {
+    certificate: certificates_by_pk(id: $id) {
+      id
+      domain
+      is_active
+      dns_hosted_zone_id
+    }
+  }
+`
 
 class CertificatesController {
   private graphqlClient: any;
@@ -178,6 +196,29 @@ class CertificatesController {
       logger.info(e)
       res.status(500).json({ ok: false, ...e });
     }
+  }
+
+  private getCertificate = async (id: number): Promise<{ id: number, domain: string, is_active: boolean, dns_hosted_zone_id: number }> => {
+    const { data: { certificate } } = await this.graphqlClient.request({
+      document: get_cerificate,
+      variables: { id }
+    });
+
+    logger.child({ certificate }).info('get_cerificate');
+
+    return certificate;
+  }
+
+  update = async (req: HasuraActionRequest<InputCertificate>, res: any) => {
+    const certificate = await this.getCertificate(req.body.input.certificate.id);
+    const domains = await this.fetchCustomDomains(certificate.domain)
+
+    const tRouterName = `${certificate.dns_hosted_zone_id}-${certificate.domain.replace('.', '-')}`
+    
+    await createWildcard(tRouterName, certificate.domain);
+    await createRouters(`${tRouterName}-www`, domains);
+
+    res.json(certificate);
   }
 }
 
