@@ -40,14 +40,9 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
     doc.text(`Projeto de Lei Amazônia de Pé`, 220, 13, { align: 'center' });
     doc.setFont("helvetica", 'normal');
     doc.setFontSize(7);
-    doc.text(`Altera a Lei nº 6.001, de 19 de dezembro de 1973, que cria o Estatuto do Índio; a Lei nº 11.952, de 25 de junho de 2009,
-    que dispõe sobre a regularização fundiária das ocupações incidentes em terras situadas em áreas da União, no âmbito
-    da Amazônia Legal; e a Lei nº 9.985, de 18 de julho de 2000, que institui o Sistema Nacional de Unidades de Conservação da Natureza,`, 220, 22, { align: 'center' });
-    doc.setFont("helvetica", "bold");
-    doc.text(`a fim de promover a transferência de todas as terras públicas não destinadas na Amazônia Legal para a
-    ampliação de terras indígenas demarcadas, ampliação de terras ocupadas por remanescentes das comunidades
-    de quilombos e instituir novas Unidades de Conservação da Natureza.\nSaiba mais em amazoniadepe.org.br`, 220, 40, { align: 'center' });
-    //form
+    doc.text(`Dispõe sobre a destinação de terras públicas cobertas por vegetação, a vedação do registro,
+    suspensão de validade e inativação do Cadastro Ambiental Rural (CAR) de imóveis rurais em áreas
+    protegidas e em florestas públicas não destinadas nas condições que especifica e dá outras providências.`, 220, 27, { align: 'center' });
     doc.setFontSize(6);
     doc.setFont("helvetica", 'normal');
     doc.cell(margin, 62, (formWidth / 2), 12, `ESTADO: ${state}`, 0, 'left');
