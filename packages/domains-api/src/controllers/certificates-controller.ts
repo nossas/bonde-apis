@@ -197,26 +197,33 @@ class CertificatesController {
   }
 
   private getCertificate = async (id: number): Promise<{ id: number, domain: string, is_active: boolean, dns_hosted_zone_id: number }> => {
-    const { data: { certificate } } = await this.graphqlClient.request({
+    const data = await this.graphqlClient.request({
       document: get_cerificate,
       variables: { id }
     });
 
-    logger.child({ certificate }).info('get_cerificate');
+    if (!data?.certificate) throw new Error('certificate not found');
+    
+    logger.child({ data }).info('get_cerificate');
 
-    return certificate;
+    return data.certificate;
   }
 
   update = async (req: HasuraActionRequest<InputCertificate>, res: any) => {
-    const certificate = await this.getCertificate(req.body.input.id);
-    const domains = await this.fetchCustomDomains(certificate.domain)
-
-    const tRouterName = `${certificate.dns_hosted_zone_id}-${certificate.domain.replace('.', '-')}`
-    
-    await createWildcard(tRouterName, certificate.domain);
-    await createRouters(`${tRouterName}-www`, domains);
-
-    res.json(certificate);
+    try {
+      const certificate = await this.getCertificate(req.body.input.id);
+      const domains = await this.fetchCustomDomains(certificate.domain)
+  
+      const tRouterName = `${certificate.dns_hosted_zone_id}-${certificate.domain.replace('.', '-')}`
+      
+      await createWildcard(tRouterName, certificate.domain);
+      await createRouters(`${tRouterName}-www`, domains);
+  
+      res.json(certificate);
+    } catch (e: any) {
+      logger.info(e)
+      res.status(400).json({ message: e.message });
+    }
   }
 }
 
