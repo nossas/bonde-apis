@@ -42,7 +42,7 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
     doc.setFontSize(7);
     doc.text(`Dispõe sobre a destinação de terras públicas cobertas por vegetação, a vedação do registro,
     suspensão de validade e inativação do Cadastro Ambiental Rural (CAR) de imóveis rurais em áreas
-    protegidas e em florestas públicas não destinadas nas condições que especifica e dá outras providências.`, 220, 27, { align: 'center' });
+    protegidas e em florestas públicas não destinadas nas condições que especifica e dá outras providências. \nSaiba mais em amazoniadepe.org.br`, 220, 22, { align: 'center' });
     doc.setFontSize(6);
     doc.setFont("helvetica", 'normal');
     doc.cell(margin, 62, (formWidth / 2), 12, `ESTADO: ${state}`, 0, 'left');
