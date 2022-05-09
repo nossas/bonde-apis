@@ -94,6 +94,7 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
   }
 
   const deferred = q;
+  doc.save('teste.pdf');
   return await deferred.resolve(doc.output('datauristring'));
 }
 
