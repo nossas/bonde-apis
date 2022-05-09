@@ -17,6 +17,6 @@ router.post('/create-domain', domainsController.createDomains);
 router.post('/delete-domain', domainsController.deleteDomains);
 router.post('/create-record', recordsController.createRecords);
 router.post('/delete-record', recordsController.deleteRecords);
-router.post('/update-certificate', certificatesController.update);
+router.post('/create-or-update-certificate', certificatesController.create_or_update);
 
 export default router;

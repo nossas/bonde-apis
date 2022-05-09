@@ -27,3 +27,30 @@ export const createRouters = async (routerName: string, domainNames: string[]): 
       );
   }))
 }
+
+export const getRouters = async (id: number, domain: string) => {
+  const routerName = `${id}-${domain.replace('.', '-')}`;
+
+  const value = await etcdClient.get(`traefik/http/routers/${routerName}/tls/domains/0/main`).string();
+  
+  if (!value) throw new Error('wildcard_not_found');
+
+  const values: any = await etcdClient.getAll().prefix(`traefik/http/routers/${routerName}-www`).strings();
+  
+  const res: any = [];
+  for (let i = 0; i < values.length; i += 8) {
+    const chunk: string[] = values.slice(i, i + 8);
+    res.push(chunk);
+  }
+
+  const routers: any[] = []
+  res.forEach(element => {
+    const elementSplit = element[1].split(',').map((host) => host.match(/`(.+)`/gi)).map(
+      el => el[0].replaceAll('`', '')
+    );
+    
+    routers.push(...elementSplit);
+  });
+
+  return routers;
+}
