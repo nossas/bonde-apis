@@ -134,7 +134,7 @@ describe('Certificates controller', () => {
       mockGraphQLClient.request.mockResolvedValueOnce({ mobilizations });
       
       const certificatesController = new CertificatesController(mockGraphQLClient);
-      await certificatesController.update({ body: { input: { certificate: { id: certificate.id } } } }, { json: jest.fn() });
+      await certificatesController.update({ body: { input: { id: certificate.id } } }, { json: jest.fn() });
 
       expect(mockGraphQLClient.request.mock.calls.length).toEqual(certificate.id);
       expect(mockGraphQLClient.request.mock.calls[0][0].variables).toEqual({ id: certificate.id });

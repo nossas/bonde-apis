@@ -40,9 +40,7 @@ export interface Mobilization {
 }
 
 interface InputCertificate {
-  certificate: {
-    id: number;
-  }
+  id: number;
 }
 
 const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
@@ -210,7 +208,7 @@ class CertificatesController {
   }
 
   update = async (req: HasuraActionRequest<InputCertificate>, res: any) => {
-    const certificate = await this.getCertificate(req.body.input.certificate.id);
+    const certificate = await this.getCertificate(req.body.input.id);
     const domains = await this.fetchCustomDomains(certificate.domain)
 
     const tRouterName = `${certificate.dns_hosted_zone_id}-${certificate.domain.replace('.', '-')}`
