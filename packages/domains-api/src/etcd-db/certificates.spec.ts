@@ -8,12 +8,25 @@ const mockPut = jest.fn().mockImplementation(() => ({
   value: mockValue
 }));
 
+const mockGet = jest.fn().mockImplementation(() => ({
+  string: mockValue
+}))
+
+const mockPrefix = jest.fn().mockImplementation(() => ({
+  strings: mockValue.mockImplementation(() => [])
+}))
+const mockGetAll = jest.fn().mockImplementation(() => ({
+  prefix: mockPrefix
+}))
+
 jest.mock('./client', () => ({
   put: mockPut,
+  get: mockGet,
+  getAll: mockGetAll
 }))
 
 import { DNSHostedZone } from "../controllers/certificates-controller";
-import { createWildcard, createRouters } from "./certificates";
+import { createWildcard, createRouters, getRouters } from "./certificates";
 
 describe('Certificates Redis', () => {
   const dns: DNSHostedZone = {
@@ -50,6 +63,51 @@ describe('Certificates Redis', () => {
 
       expect(mockPut.mock.calls[5][0]).toEqual(`traefik/http/routers/${routerName}/service`);
       expect(mockValue.mock.calls[5][0]).toEqual('public@docker')
+    });
+  });
+
+  describe('getRouters', () => {
+    it('should call get main configuration to domain', async () => {
+      mockValue.mockReturnValueOnce('nossas.link');
+
+      await getRouters(587, 'nossas.link');
+      expect(mockGet.mock.calls[0][0]).toEqual('traefik/http/routers/587-nossas-link/tls/domains/0/main');
+    });
+
+    it('should call get subrouters configuration to domain', async () => {
+      mockValue.mockReturnValueOnce('nossas.link');
+      mockValue.mockReturnValueOnce([
+        "traefik/http/routers/587-nossas-link-www-0/rule",
+        "Host(`www.other1.nossas.link`, `www.other2.nossas.link`)",
+        "traefik/http/routers/587-nossas-link-www-0/service",
+        "public@docker",
+        "traefik/http/routers/587-nossas-link-www-0/tls",
+        "true",
+        "traefik/http/routers/587-nossas-link-www-0/tls/certresolver",
+        "myresolver"
+      ])
+
+      await getRouters(587, 'nossas.link');
+      const routerName = `587-nossas-link`;
+      expect(mockGetAll.mock.calls.length).toEqual(1);
+      expect(mockPrefix.mock.calls[0][0]).toEqual(`traefik/http/routers/${routerName}-www`);
+    });
+
+    it('should return all routers configuration to domain', async () => {
+      mockValue.mockReturnValueOnce('nossas.link');
+      mockValue.mockReturnValueOnce([
+        "traefik/http/routers/587-nossas-link-www-0/rule",
+        "Host(`www.other1.nossas.link`, `www.other2.nossas.link`)",
+        "traefik/http/routers/587-nossas-link-www-0/service",
+        "public@docker",
+        "traefik/http/routers/587-nossas-link-www-0/tls",
+        "true",
+        "traefik/http/routers/587-nossas-link-www-0/tls/certresolver",
+        "myresolver"
+      ])
+
+      const routers = await getRouters(587, 'nossas.link');
+      expect(routers).toEqual(['www.other1.nossas.link', 'www.other2.nossas.link']);
     });
   });
 

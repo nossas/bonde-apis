@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import logger from '../config/logger';
 import { gql } from '../graphql-api/client';
-import { createRouters, createWildcard } from '../etcd-db/certificates';
+import { createRouters, createWildcard, getRouters } from '../etcd-db/certificates';
 import { HasuraActionRequest } from '../types';
 import { validationResult, check } from 'express-validator';
 import sslChecker from "ssl-checker";
@@ -89,6 +89,23 @@ export const get_cerificate = gql`
   }
 `
 
+export const get_domain = gql`
+  query ($id: Int!) {
+      dns_hosted_zones_by_pk(id: 516) {
+      id
+      domain_name
+      is_external_domain
+      ns_ok
+      certificates {
+        id
+        domain
+        created_at
+        is_active
+      }
+    }
+  }
+`
+
 class CertificatesController {
   private graphqlClient: any;
 
@@ -97,10 +114,12 @@ class CertificatesController {
   }
 
   create = async (req: Request<DNSHostedZone>, res) => {
-    await check('event').isObject().run(req);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    if (!req.body.event) {
+      await check('event').isObject().run(req);
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
     }
 
     const dns_hosted_zone = req.body.event.data.new;
@@ -223,6 +242,46 @@ class CertificatesController {
     } catch (e: any) {
       logger.info(e)
       res.status(400).json({ message: e.message });
+    }
+  }
+
+  create_or_update = async (req: HasuraActionRequest<InputCertificate>, res?: any) => {
+    try {
+      const data = await this.graphqlClient.request({
+        document: get_domain,
+        variables: { id: req.body.input.id }
+      });
+
+      const hostedZone = data?.dns_hosted_zones_by_pk;
+
+      if (!hostedZone) throw new Error('domain_not_found');
+      if (!hostedZone.ns_ok) throw new Error('domain_not_propagated');
+
+      if (hostedZone.certificates.length === 0) {
+        const req: any = {
+          body: {
+            event: {
+              data: {
+                new: hostedZone
+              }
+            }
+          }
+        };
+        return await this.create(req, res);
+      }
+
+      const routers = await getRouters(data.dns_hosted_zones_by_pk.id, data.dns_hosted_zones_by_pk.domain_name);
+      const customDomains = await this.fetchCustomDomains(data.dns_hosted_zones_by_pk.domain_name);
+
+      if (JSON.stringify(routers.sort()) !== JSON.stringify(customDomains.sort())) {
+        const tRouterName = `${hostedZone.id}-${hostedZone.domain_name.replace('.', '-')}`;
+        await createRouters(`${tRouterName}-www`, customDomains);
+      }
+
+      return hostedZone.certificates[0];
+    } catch (e: any) {
+      logger.info(e);
+      res?.status(400).json({ message: e.message });
     }
   }
 }
