@@ -275,9 +275,15 @@ class CertificatesController {
 
       const tRouterName = `${hostedZone.id}-${hostedZone.domain_name.replace(/\./g, '-')}`;
       if (!wildcard) {
+        logger.child({ routerName: tRouterName }).info('create_or_update#createWildcard');
         await createWildcard(tRouterName, hostedZone.domain_name);
       }
       if (JSON.stringify(routers.sort()) !== JSON.stringify(customDomains.sort())) {
+        logger.child({
+          routerName: tRouterName,
+          routers: JSON.stringify(routers.sort()),
+          customDomain: JSON.stringify(customDomains.sort())
+        }).info('create_or_update#createRouters');
         await createRouters(`${tRouterName}-www`, customDomains);
       }
 
