@@ -287,7 +287,7 @@ class CertificatesController {
         await createRouters(`${tRouterName}-www`, customDomains);
       }
 
-      return hostedZone.certificates[0];
+      res?.json(hostedZone.certificates[0]);
     } catch (e: any) {
       logger.info(e);
       res?.status(400).json({ message: e.message });
