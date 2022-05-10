@@ -38,20 +38,19 @@ export const getRouters = async (id: number, domain: string): Promise<[string | 
 
   const value = await etcdClient.get(`traefik/http/routers/${routerName}/tls/domains/0/main`).string();
 
-  const values: any = await etcdClient.getAll().prefix(`traefik/http/routers/${routerName}-www`).strings();
+  const values: any = Object.values(await etcdClient.getAll().prefix(`traefik/http/routers/${routerName}-www`).strings());
   
   const res: any = [];
-  for (let i = 0; i < values.length; i += 8) {
-    const chunk: string[] = values.slice(i, i + 8);
+  for (let i = 0; i < values.length; i += 4) {
+    const chunk: string[] = values.slice(i, i + 4);
     res.push(chunk);
   }
 
   const routers: any[] = []
   res.forEach(element => {
-    const elementSplit = element[1].split(',').map((host) => host.match(/`(.+)`/gi)).map(
+    const elementSplit = element[0].split(',').map((host) => host.match(/`(.+)`/gi)).map(
       el => el[0].replace(/`/g, '')
-    );
-    
+    );  
     routers.push(...elementSplit);
   });
 
