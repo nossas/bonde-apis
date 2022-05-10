@@ -1,3 +1,4 @@
+import logger from '../config/logger';
 import etcdClient from './client';
 
 export const createWildcard = async (routerName: string, domainName: string): Promise<void> => {
@@ -8,6 +9,8 @@ export const createWildcard = async (routerName: string, domainName: string): Pr
   await etcdClient.put(`traefik/http/routers/${routerName}/tls/domains/0/main`).value(domainName);
   await etcdClient.put(`traefik/http/routers/${routerName}/tls/domains/0/sans/0`).value(`*.${domainName}`);
   await etcdClient.put(`traefik/http/routers/${routerName}/service`).value('public@docker');
+  
+  logger.child({ routerName, domainName }).info('createWildcard');
 }
 
 export const createRouters = async (routerName: string, domainNames: string[]): Promise<void> => {
@@ -27,6 +30,7 @@ export const createRouters = async (routerName: string, domainNames: string[]): 
         );
     }))
   }
+  logger.child({ routerName, domainNames }).info('createRouters');
 }
 
 export const getRouters = async (id: number, domain: string): Promise<[string | null, string[]]> => {
@@ -51,5 +55,6 @@ export const getRouters = async (id: number, domain: string): Promise<[string | 
     routers.push(...elementSplit);
   });
 
+  logger.child({ routerName, wildcard: value, routers, values }).info('getRouters');
   return [value, routers];
 }
