@@ -32,7 +32,7 @@ describe('Certificates Redis', () => {
   const dns: DNSHostedZone = {
     id: 1,
     community_id: 75,
-    domain_name: 'nossas.link',
+    domain_name: 'nossas.tec.br',
     is_external_domain: false
   };
 
@@ -106,8 +106,18 @@ describe('Certificates Redis', () => {
         "myresolver"
       ])
 
-      const routers = await getRouters(587, 'nossas.link');
+      const [wildcard, routers] = await getRouters(587, 'nossas.link');
+      expect(wildcard).toEqual('nossas.link');
       expect(routers).toEqual(['www.other1.nossas.link', 'www.other2.nossas.link']);
+    });
+
+    it('should return wildcard undefined when not configuration', async () => {
+      mockValue.mockReturnValueOnce(undefined);
+      mockValue.mockReturnValueOnce([])
+
+      const [wildcard, routers] = await getRouters(587, 'nossas.link');
+      expect(wildcard).toEqual(undefined);
+      expect(routers).toEqual([]);
     });
   });
 
@@ -160,5 +170,12 @@ describe('Certificates Redis', () => {
       expect(mockPut.mock.calls[7][0]).toEqual(`traefik/http/routers/${routerName}-1/rule`);
       expect(mockValue.mock.calls[7][0]).toEqual(`Host(${manyDomainNames.slice(100, 150).map((domain) => `\`${domain}\``).join(',')})`)
     });
-  })
+
+    it('should not call configuration if domains is empty', async () => {
+      await createRouters('qualquer-nome', []);
+
+      expect(mockPut.mock.calls.length).toEqual(0);
+      expect(mockValue.mock.calls.length).toEqual(0);
+    });
+  });
 });

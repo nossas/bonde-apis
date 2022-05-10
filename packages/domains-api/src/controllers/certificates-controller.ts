@@ -140,7 +140,7 @@ class CertificatesController {
 
   private insertCertificateRedis = async (input: DNSHostedZone, domains: string[]) => {
     const { domain_name, id: dns_hosted_zone_id, is_external_domain } = input;
-    const tRouterName = `${dns_hosted_zone_id}-${domain_name.replace('.', '-')}`
+    const tRouterName = `${dns_hosted_zone_id}-${domain_name.replace(/\./g, '-')}`
     logger.info(`In controller - createCertificate ${tRouterName}`);
     
     if (!is_external_domain) {
@@ -182,7 +182,7 @@ class CertificatesController {
 
     logger.child({ data }).info('fetch_mobilizations_by_domain');
 
-    return data.mobilizations.map((mob) => mob.custom_domain);
+    return data.mobilizations.filter((mob) => mob.custom_domain !== `www.${domain}`).map((mob) => mob.custom_domain);
   }
 
   check = async (req: Request<CertificateTLS>, res) => {
@@ -233,7 +233,7 @@ class CertificatesController {
       const certificate = await this.getCertificate(req.body.input.id);
       const domains = await this.fetchCustomDomains(certificate.domain)
   
-      const tRouterName = `${certificate.dns_hosted_zone_id}-${certificate.domain.replace('.', '-')}`
+      const tRouterName = `${certificate.dns_hosted_zone_id}-${certificate.domain.replace(/\./g, '-')}`
       
       await createWildcard(tRouterName, certificate.domain);
       await createRouters(`${tRouterName}-www`, domains);
@@ -270,11 +270,14 @@ class CertificatesController {
         return await this.create(req, res);
       }
 
-      const routers = await getRouters(data.dns_hosted_zones_by_pk.id, data.dns_hosted_zones_by_pk.domain_name);
+      const [wildcard, routers] = await getRouters(data.dns_hosted_zones_by_pk.id, data.dns_hosted_zones_by_pk.domain_name);
       const customDomains = await this.fetchCustomDomains(data.dns_hosted_zones_by_pk.domain_name);
 
+      const tRouterName = `${hostedZone.id}-${hostedZone.domain_name.replace(/\./g, '-')}`;
+      if (!wildcard) {
+        await createWildcard(tRouterName, hostedZone.domain_name);
+      }
       if (JSON.stringify(routers.sort()) !== JSON.stringify(customDomains.sort())) {
-        const tRouterName = `${hostedZone.id}-${hostedZone.domain_name.replace('.', '-')}`;
         await createRouters(`${tRouterName}-www`, customDomains);
       }
 

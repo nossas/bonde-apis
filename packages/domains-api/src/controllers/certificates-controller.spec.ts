@@ -128,10 +128,10 @@ describe('Certificates controller', () => {
     });
 
     // it('should update certificate method', async () => {
-    //   const certificate = { id: 2, domain: 'nossas.link', dns_hosted_zone_id: 23 };
+    //   const certificate = { id: 2, domain: 'nossas.tec.br', dns_hosted_zone_id: 23 };
     //   mockGraphQLClient.request.mockResolvedValueOnce({ data: { certificate } });
     //   const mobilizations = [
-    //     { id: 1, community_id: 1, custom_domain: `www.sudomain.nossas.link` }
+    //     { id: 1, community_id: 1, custom_domain: `www.sudomain.nossas.tec.br` }
     //   ]
     //   mockGraphQLClient.request.mockResolvedValueOnce({ mobilizations });
       
@@ -198,42 +198,70 @@ describe('Certificates controller', () => {
       mockGraphQLClient.request.mockReturnValueOnce({
         dns_hosted_zones_by_pk: {
           id: 587,
-          domain_name: 'nossas.link',
+          domain_name: 'nossas.tec.br',
           ns_ok: true,
           certificates: [
-            { id: 3, domain: 'nossas.link', is_active: true }
+            { id: 3, domain: 'nossas.tec.br', is_active: true }
           ]
         }
       });
 
       await certificatesController.create_or_update(actionInput, mockRes);
-      expect(mockGetRouters.mock.calls[0]).toEqual([587, 'nossas.link']);
+      expect(mockGetRouters.mock.calls[0]).toEqual([587, 'nossas.tec.br']);
     });
 
     it('should call createRouters when mobilizations custom domain not exists', async () => {
       mockGraphQLClient.request.mockReturnValueOnce({
         dns_hosted_zones_by_pk: {
           id: 587,
-          domain_name: 'nossas.link',
+          domain_name: 'nossas.tec.br',
           ns_ok: true,
           certificates: [
-            { id: 3, domain: 'nossas.link', is_active: true }
+            { id: 3, domain: 'nossas.tec.br', is_active: true }
           ]
         }
       });
       mockGraphQLClient.request.mockReturnValueOnce({
         mobilizations: [
-          { id: 123, custom_domain: 'www.other1.nossas.link' },
-          { id: 124, custom_domain: 'www.other2.nossas.link' },
-          { id: 125, custom_domain: 'www.other3.nossas.link' }
+          { id: 123, custom_domain: 'www.other1.nossas.tec.br' },
+          { id: 124, custom_domain: 'www.other2.nossas.tec.br' },
+          { id: 125, custom_domain: 'www.other3.nossas.tec.br' }
         ]
       });
 
-      mockGetRouters.mockResolvedValueOnce(['www.other1.nossas.link', 'www.other2.nossas.link']);
+      mockGetRouters.mockResolvedValueOnce(['nossas.tec.br', ['www.other1.nossas.tec.br', 'www.other2.nossas.tec.br']]);
 
       await certificatesController.create_or_update(actionInput, mockRes);
       expect(mockCreateRouters.mock.calls[0]).toEqual(
-        [`587-nossas-link-www`, ['www.other1.nossas.link', 'www.other2.nossas.link', 'www.other3.nossas.link']]
+        [`587-nossas-tec-br-www`, ['www.other1.nossas.tec.br', 'www.other2.nossas.tec.br', 'www.other3.nossas.tec.br']]
+      );
+    });
+
+    it('should call createRouters only subdomains', async () => {
+      mockGraphQLClient.request.mockReturnValueOnce({
+        dns_hosted_zones_by_pk: {
+          id: 587,
+          domain_name: 'nossas.tec.br',
+          ns_ok: true,
+          certificates: [
+            { id: 3, domain: 'nossas.tec.br', is_active: true }
+          ]
+        }
+      });
+      mockGraphQLClient.request.mockReturnValueOnce({
+        mobilizations: [
+          { id: 122, custom_domain: 'www.nossas.tec.br' },
+          { id: 123, custom_domain: 'www.other1.nossas.tec.br' },
+          { id: 124, custom_domain: 'www.other2.nossas.tec.br' },
+          { id: 125, custom_domain: 'www.other3.nossas.tec.br' }
+        ]
+      });
+
+      mockGetRouters.mockResolvedValueOnce(['nossas.tec.br', ['www.other1.nossas.tec.br', 'www.other2.nossas.tec.br']]);
+
+      await certificatesController.create_or_update(actionInput, mockRes);
+      expect(mockCreateRouters.mock.calls[0]).toEqual(
+        [`587-nossas-tec-br-www`, ['www.other1.nossas.tec.br', 'www.other2.nossas.tec.br', 'www.other3.nossas.tec.br']]
       );
     });
 
@@ -241,22 +269,22 @@ describe('Certificates controller', () => {
       mockGraphQLClient.request.mockReturnValueOnce({
         dns_hosted_zones_by_pk: {
           id: 587,
-          domain_name: 'nossas.link',
+          domain_name: 'nossas.tec.br',
           ns_ok: true,
           certificates: [
-            { id: 3, domain: 'nossas.link', is_active: true }
+            { id: 3, domain: 'nossas.tec.br', is_active: true }
           ]
         }
       });
       mockGraphQLClient.request.mockReturnValueOnce({
         mobilizations: [
-          { id: 124, custom_domain: 'www.other2.nossas.link' },
-          { id: 125, custom_domain: 'www.other3.nossas.link' },
-          { id: 123, custom_domain: 'www.other1.nossas.link' }
+          { id: 124, custom_domain: 'www.other2.nossas.tec.br' },
+          { id: 125, custom_domain: 'www.other3.nossas.tec.br' },
+          { id: 123, custom_domain: 'www.other1.nossas.tec.br' }
         ]
       });
 
-      mockGetRouters.mockResolvedValueOnce(['www.other3.nossas.link', 'www.other1.nossas.link', 'www.other2.nossas.link']);
+      mockGetRouters.mockResolvedValueOnce(['nossas.tec.br', ['www.other3.nossas.tec.br', 'www.other1.nossas.tec.br', 'www.other2.nossas.tec.br']]);
 
       await certificatesController.create_or_update(actionInput, mockRes);
       expect(mockCreateRouters.mock.calls.length).toEqual(0);
@@ -268,7 +296,7 @@ describe('Certificates controller', () => {
       mockGraphQLClient.request.mockReturnValueOnce({
         dns_hosted_zones_by_pk: {
           id: 587,
-          domain_name: 'nossas.link',
+          domain_name: 'nossas.tec.br',
           ns_ok: true,
           certificates: []
         }
@@ -282,7 +310,7 @@ describe('Certificates controller', () => {
             data: {
               new: {
                 id: 587,
-                domain_name: 'nossas.link',
+                domain_name: 'nossas.tec.br',
                 ns_ok: true,
                 certificates: []
               }
@@ -290,7 +318,33 @@ describe('Certificates controller', () => {
           }
         }
       });
-    })
+    });
+
+    it('should call createWildcard when wildcard not found', async () => {
+      mockGraphQLClient.request.mockReturnValueOnce({
+        dns_hosted_zones_by_pk: {
+          id: 587,
+          domain_name: 'nossas.tec.br',
+          ns_ok: true,
+          certificates: [
+            { id: 3, domain: 'nossas.tec.br', is_active: true }
+          ]
+        }
+      });
+      mockGraphQLClient.request.mockReturnValueOnce({
+        mobilizations: [
+          { id: 124, custom_domain: 'www.other2.nossas.tec.br' },
+          { id: 125, custom_domain: 'www.other3.nossas.tec.br' },
+          { id: 123, custom_domain: 'www.other1.nossas.tec.br' }
+        ]
+      });
+
+      mockGetRouters.mockResolvedValueOnce([undefined, []]);
+
+      await certificatesController.create_or_update(actionInput, mockRes);
+      expect(mockCreateWildcard.mock.calls.length).toEqual(1);
+      expect(mockCreateRouters.mock.calls.length).toEqual(1);
+    });
   });
 
   describe('certificate is not create', () => {
