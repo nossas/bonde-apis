@@ -76,16 +76,12 @@ describe('Certificates Redis', () => {
 
     it('should call get subrouters configuration to domain', async () => {
       mockValue.mockReturnValueOnce('nossas.link');
-      mockValue.mockReturnValueOnce([
-        "traefik/http/routers/587-nossas-link-www-0/rule",
-        "Host(`www.other1.nossas.link`, `www.other2.nossas.link`)",
-        "traefik/http/routers/587-nossas-link-www-0/service",
-        "public@docker",
-        "traefik/http/routers/587-nossas-link-www-0/tls",
-        "true",
-        "traefik/http/routers/587-nossas-link-www-0/tls/certresolver",
-        "myresolver"
-      ])
+      mockValue.mockReturnValueOnce({
+        "traefik/http/routers/587-nossas-link-www-0/rule": "Host(`www.other1.nossas.link`, `www.other2.nossas.link`)",
+        "traefik/http/routers/587-nossas-link-www-0/service": "public@docker",
+        "traefik/http/routers/587-nossas-link-www-0/tls": "true",
+        "traefik/http/routers/587-nossas-link-www-0/tls/certresolver": "myresolver"
+      })
 
       await getRouters(587, 'nossas.link');
       const routerName = `587-nossas-link`;
@@ -95,16 +91,12 @@ describe('Certificates Redis', () => {
 
     it('should return all routers configuration to domain', async () => {
       mockValue.mockReturnValueOnce('nossas.link');
-      mockValue.mockReturnValueOnce([
-        "traefik/http/routers/587-nossas-link-www-0/rule",
-        "Host(`www.other1.nossas.link`, `www.other2.nossas.link`)",
-        "traefik/http/routers/587-nossas-link-www-0/service",
-        "public@docker",
-        "traefik/http/routers/587-nossas-link-www-0/tls",
-        "true",
-        "traefik/http/routers/587-nossas-link-www-0/tls/certresolver",
-        "myresolver"
-      ])
+      mockValue.mockReturnValueOnce({
+        "traefik/http/routers/587-nossas-link-www-0/rule": "Host(`www.other1.nossas.link`, `www.other2.nossas.link`)",
+        "traefik/http/routers/587-nossas-link-www-0/service": "public@docker",
+        "traefik/http/routers/587-nossas-link-www-0/tls": "true",
+        "traefik/http/routers/587-nossas-link-www-0/tls/certresolver": "myresolver"
+      })
 
       const [wildcard, routers] = await getRouters(587, 'nossas.link');
       expect(wildcard).toEqual('nossas.link');
