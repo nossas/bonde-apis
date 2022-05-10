@@ -40,9 +40,9 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
     doc.text(`Projeto de Lei Amazônia de Pé`, 220, 13, { align: 'center' });
     doc.setFont("helvetica", 'normal');
     doc.setFontSize(9);
-    doc.text(`Dispõe sobre a destinação de terras públicas cobertas por vegetação, a vedação do registro,
-    suspensão de validade e inativação do Cadastro Ambiental Rural (CAR) de imóveis rurais em áreas
-    protegidas e em florestas públicas não destinadas nas condições que especifica e dá outras providências.`, 220, 24, { align: 'center' });
+    doc.text(`Dispõe sobre a destinação das terras públicas cobertas por florestas ou outras formas de vegetação,
+    priorizando a conservação ambiental e a justiça social, determina a vedação e inativação do registro no
+    Sistema de Cadastro Ambiental Rural (Sicar) nas situações que especifica, e dá outras providências.`, 220, 24, { align: 'center' });
     doc.setFont("helvetica", "bold");
     doc.text(`Saiba mais em amazoniadepe.org.br`, 220, 48, { align: 'center' });
     doc.setFontSize(6);
