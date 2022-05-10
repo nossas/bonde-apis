@@ -91,7 +91,7 @@ export const get_cerificate = gql`
 
 export const get_domain = gql`
   query ($id: Int!) {
-      dns_hosted_zones_by_pk(id: 516) {
+      dns_hosted_zones_by_pk(id: $id) {
       id
       domain_name
       is_external_domain
