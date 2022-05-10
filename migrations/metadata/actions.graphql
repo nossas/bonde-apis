@@ -5,6 +5,12 @@ type Mutation {
 }
 
 type Mutation {
+  create_or_update_certificate(
+    id: Int!
+  ): UpdateCertificateResult
+}
+
+type Mutation {
   create_record(
     record: RecordInput
   ): RecordResult
@@ -71,6 +77,10 @@ input PageInput {
   hosted_zone_id: Int!
 }
 
+input UpdateCertificateInput {
+  id: Int!
+}
+
 type MailchimpStart {
   status: String
 }
@@ -125,6 +135,13 @@ type RecordResult {
   value: [String!]!
   ttl: Int!
   comment: String
+}
+
+type UpdateCertificateResult {
+  id: Int
+  domain: String
+  is_active: Boolean
+  dns_hosted_zone_id: Int
 }
 
 scalar String
