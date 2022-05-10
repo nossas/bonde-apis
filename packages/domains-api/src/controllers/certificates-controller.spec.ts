@@ -174,7 +174,7 @@ describe('Certificates controller', () => {
       await certificatesController.create_or_update(actionInput);
       expect(mockGraphQLClient.request.mock.calls[0][0]).toEqual({
         document: get_domain,
-        variables: { id: actionInput.body.input.id }
+        variables: { id: actionInput.body.input.dns_hosted_zone_id }
       });
     });
 

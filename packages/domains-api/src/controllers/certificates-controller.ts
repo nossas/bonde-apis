@@ -40,7 +40,7 @@ export interface Mobilization {
 }
 
 interface InputCertificate {
-  id: number;
+  dns_hosted_zone_id: number;
 }
 
 const insert_certificate = gql`mutation ($input: certificates_insert_input!) {
@@ -91,7 +91,7 @@ export const get_cerificate = gql`
 
 export const get_domain = gql`
   query ($id: Int!) {
-      dns_hosted_zones_by_pk(id: $id) {
+    dns_hosted_zones_by_pk(id: $id) {
       id
       domain_name
       is_external_domain
@@ -101,6 +101,7 @@ export const get_domain = gql`
         domain
         created_at
         is_active
+        dns_hosted_zone_id
       }
     }
   }
@@ -215,10 +216,10 @@ class CertificatesController {
     }
   }
 
-  private getCertificate = async (id: number): Promise<{ id: number, domain: string, is_active: boolean, dns_hosted_zone_id: number }> => {
+  private getCertificate = async (dns_hosted_zone_id: number): Promise<{ id: number, domain: string, is_active: boolean, dns_hosted_zone_id: number }> => {
     const data = await this.graphqlClient.request({
       document: get_cerificate,
-      variables: { id }
+      variables: { id: dns_hosted_zone_id }
     });
 
     if (!data?.certificate) throw new Error('certificate not found');
@@ -230,7 +231,7 @@ class CertificatesController {
 
   update = async (req: HasuraActionRequest<InputCertificate>, res: any) => {
     try {
-      const certificate = await this.getCertificate(req.body.input.id);
+      const certificate = await this.getCertificate(req.body.input.dns_hosted_zone_id);
       const domains = await this.fetchCustomDomains(certificate.domain)
   
       const tRouterName = `${certificate.dns_hosted_zone_id}-${certificate.domain.replace(/\./g, '-')}`
@@ -249,7 +250,7 @@ class CertificatesController {
     try {
       const data = await this.graphqlClient.request({
         document: get_domain,
-        variables: { id: req.body.input.id }
+        variables: { id: req.body.input.dns_hosted_zone_id }
       });
 
       const hostedZone = data?.dns_hosted_zones_by_pk;
