@@ -33,18 +33,21 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
     }
 
     //header
-    doc.addImage(logo, 'JPEG', 10, 5, imgWidth, imgHeight);
-    doc.addImage(uiQRCode, 'JPEG', (docWidth - margin - imgWidth), 5, imgWidth, imgHeight);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Enviar para: NOSSAS CIDADES, CAIXA POSTAL: 34033, CEP 22460970 - Rio de Janeiro RJ`, docWidth - 230, 8);
+    doc.addImage(logo, 'JPEG', 10, 10, imgWidth, imgHeight);
+    doc.addImage(uiQRCode, 'JPEG', (docWidth - margin - imgWidth), 12, imgWidth, imgHeight);
     doc.setFontSize(10.8);
     doc.setFont("helvetica", "bold");
-    doc.text(`Projeto de Lei Amazônia de Pé`, 220, 13, { align: 'center' });
+    doc.text(`Projeto de Lei Amazônia de Pé`, 220, 20, { align: 'center' });
     doc.setFont("helvetica", 'normal');
     doc.setFontSize(8.8);
     doc.text(`Dispõe sobre a destinação das terras públicas cobertas por florestas ou outras formas de vegetação na
     Amazônia Legal, priorizando a conservação ambiental e a justiça social, determina a vedação e inativação do
-    registro no Sistema de Cadastro Ambiental Rural (Sicar) nas situações que especifica, e dá outras providências.`, 220, 24, { align: 'center' });
+    registro no Sistema de Cadastro Ambiental Rural (Sicar) nas situações que especifica, e dá outras providências.`, 220, 31, { align: 'center' });
     doc.setFont("helvetica", "bold");
-    doc.text(`Saiba mais em amazoniadepe.org.br`, 220, 48, { align: 'center' });
+    doc.text(`Saiba mais em amazoniadepe.org.br`, 220, 54, { align: 'center' });
     doc.setFontSize(6);
     doc.setFont("helvetica", 'normal');
     doc.cell(margin, 62, (formWidth / 2), 12, `ESTADO: ${state}`, 0, 'left');
@@ -85,14 +88,13 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
 
       doc.cell((formWidth - cellSignatureWidth) - ((formWidth - cellSignatureWidth) / 2), 158,
         (formWidth - cellSignatureWidth) / 4,
-        cellHeight, `WHATSAPP (Com DDD):`, 4, 'left');
+        cellHeight, `WHATSAPP Com DDD (Opcional):`, 4, 'left');
     }
 
     //footer
     doc.setFontSize(7);
     doc.setFont("helvetica", "normal");
     doc.text(`${unique_identifier}`, 10, docHeight - 5);
-    doc.text(`Enviar para: NOSSAS CIDADES, CAIXA POSTAL: 34033, CEP 22460970 - Rio de Janeiro RJ`, docWidth - 230, docHeight - 5);
   }
 
   const deferred = q;
