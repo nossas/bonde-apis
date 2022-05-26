@@ -1,52 +1,52 @@
 table:
-  name: users
   schema: public
+  name: users
 array_relationships:
-- name: community_users
-  using:
-    manual_configuration:
-      column_mapping:
-        id: user_id
-      insertion_order: null
-      remote_table:
-        name: community_users
-        schema: public
+  - name: community_users
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: community_users
+        insertion_order: null
+        column_mapping:
+          id: user_id
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - admin
-    - avatar
-    - created_at
-    - email
-    - first_name
-    - id
-    - is_admin
-    - last_name
-    - locale
-    - updated_at
-    filter:
-      community_users:
-        community:
-          community_users:
-            user_id:
-              _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      columns:
+        - admin
+        - avatar
+        - created_at
+        - email
+        - first_name
+        - id
+        - is_admin
+        - last_name
+        - locale
+        - updated_at
+      filter:
+        community_users:
+          community:
+            community_users:
+              user_id:
+                _eq: X-Hasura-User-Id
+      allow_aggregations: true
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - avatar
-    - confirmed_at
-    - created_at
-    - email
-    - first_name
-    - id
-    - last_name
-    - locale
-    - reset_password_token
-    - updated_at
-    filter:
-      id:
-        _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      columns:
+        - avatar
+        - confirmed_at
+        - created_at
+        - email
+        - first_name
+        - id
+        - last_name
+        - locale
+        - reset_password_token
+        - updated_at
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: null

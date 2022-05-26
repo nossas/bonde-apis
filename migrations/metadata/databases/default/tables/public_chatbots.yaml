@@ -1,49 +1,49 @@
 table:
-  name: chatbots
   schema: public
+  name: chatbots
 object_relationships:
-- name: community
-  using:
-    foreign_key_constraint_on: community_id
+  - name: community
+    using:
+      foreign_key_constraint_on: community_id
 array_relationships:
-- name: chatbot_campaigns
-  using:
-    foreign_key_constraint_on:
-      column: chatbot_id
-      table:
-        name: chatbot_campaigns
-        schema: public
-- name: chatbot_settings
-  using:
-    foreign_key_constraint_on:
-      column: chatbot_id
-      table:
-        name: chatbot_settings
-        schema: public
+  - name: chatbot_campaigns
+    using:
+      foreign_key_constraint_on:
+        column: chatbot_id
+        table:
+          schema: public
+          name: chatbot_campaigns
+  - name: chatbot_settings
+    using:
+      foreign_key_constraint_on:
+        column: chatbot_id
+        table:
+          schema: public
+          name: chatbot_settings
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - created_at
-    - updated_at
-    - id
-    - name
-    - community_id
-    - persistent_menu
-    filter:
-      community:
-        community_users:
-          user_id:
-            _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      columns:
+        - created_at
+        - updated_at
+        - id
+        - name
+        - community_id
+        - persistent_menu
+      filter:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - persistent_menu
-    filter:
-      community:
-        community_users:
-          user_id:
-            _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      columns:
+        - persistent_menu
+      filter:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
+      check: null

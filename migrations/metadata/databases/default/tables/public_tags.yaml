@@ -1,13 +1,13 @@
 table:
-  name: tags
   schema: public
+  name: tags
 select_permissions:
-- permission:
-    columns:
-    - id
-    - name
-    - taggings_count
-    - label
-    - kind
-    filter: {}
-  role: common_user
+  - role: common_user
+    permission:
+      columns:
+        - id
+        - name
+        - taggings_count
+        - label
+        - kind
+      filter: {}

@@ -1,25 +1,25 @@
 table:
-  name: twilio_call_transitions
   schema: public
+  name: twilio_call_transitions
 object_relationships:
-- name: twilio_call
-  using:
-    manual_configuration:
-      column_mapping:
-        twilio_call_sid: twilio_call_sid
-      insertion_order: null
-      remote_table:
-        name: twilio_calls
-        schema: public
+  - name: twilio_call
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: twilio_calls
+        insertion_order: null
+        column_mapping:
+          twilio_call_sid: twilio_call_sid
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - call_duration
-    - created_at
-    - id
-    - sequence_number
-    - status
-    - updated_at
-    filter: {}
-  role: anonymous
+  - role: anonymous
+    permission:
+      columns:
+        - call_duration
+        - created_at
+        - id
+        - sequence_number
+        - status
+        - updated_at
+      filter: {}
+      allow_aggregations: true

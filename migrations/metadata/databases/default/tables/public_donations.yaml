@@ -1,41 +1,41 @@
 table:
-  name: donations
   schema: public
+  name: donations
 object_relationships:
-- name: activist
-  using:
-    foreign_key_constraint_on: activist_id
-- name: community
-  using:
-    foreign_key_constraint_on: cached_community_id
-- name: mobilization
-  using:
-    manual_configuration:
-      column_mapping:
-        mobilization_id: id
-      insertion_order: null
-      remote_table:
-        name: mobilizations
-        schema: public
-- name: widget
-  using:
-    foreign_key_constraint_on: widget_id
+  - name: activist
+    using:
+      foreign_key_constraint_on: activist_id
+  - name: community
+    using:
+      foreign_key_constraint_on: cached_community_id
+  - name: mobilization
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: mobilizations
+        insertion_order: null
+        column_mapping:
+          mobilization_id: id
+  - name: widget
+    using:
+      foreign_key_constraint_on: widget_id
 array_relationships:
-- name: donations_integration_logs
-  using:
-    foreign_key_constraint_on:
-      column: donation_id
-      table:
-        name: donations_integration_logs
-        schema: public
+  - name: donations_integration_logs
+    using:
+      foreign_key_constraint_on:
+        column: donation_id
+        table:
+          schema: public
+          name: donations_integration_logs
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns: []
-    filter:
-      widget:
-        block:
-          mobilization:
-            status:
-              _eq: active
-  role: anonymous
+  - role: anonymous
+    permission:
+      columns: []
+      filter:
+        widget:
+          block:
+            mobilization:
+              status:
+                _eq: active
+      allow_aggregations: true

@@ -1,87 +1,87 @@
 table:
-  name: activist_pressures
   schema: public
+  name: activist_pressures
 object_relationships:
-- name: activist
-  using:
-    foreign_key_constraint_on: activist_id
-- name: community
-  using:
-    foreign_key_constraint_on: cached_community_id
-- name: mobilization
-  using:
-    manual_configuration:
-      column_mapping:
-        mobilization_id: id
-      insertion_order: null
-      remote_table:
-        name: mobilizations
-        schema: public
-- name: widget
-  using:
-    foreign_key_constraint_on: widget_id
+  - name: activist
+    using:
+      foreign_key_constraint_on: activist_id
+  - name: community
+    using:
+      foreign_key_constraint_on: cached_community_id
+  - name: mobilization
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: mobilizations
+        insertion_order: null
+        column_mapping:
+          mobilization_id: id
+  - name: widget
+    using:
+      foreign_key_constraint_on: widget_id
 array_relationships:
-- name: pressures_integration_logs
-  using:
-    foreign_key_constraint_on:
-      column: pressure_id
-      table:
-        name: pressures_integration_logs
-        schema: public
+  - name: pressures_integration_logs
+    using:
+      foreign_key_constraint_on:
+        column: pressure_id
+        table:
+          schema: public
+          name: pressures_integration_logs
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns: []
-    filter:
-      widget:
-        block:
-          mobilization:
-            status:
-              _eq: active
-  role: anonymous
-- permission:
-    allow_aggregations: true
-    columns:
-    - id
-    - activist_id
-    - widget_id
-    - created_at
-    - updated_at
-    - synchronized
-    - mailchimp_syncronization_at
-    - mailchimp_syncronization_error_reason
-    - cached_community_id
-    - mobilization_id
-    - targets
-    - syncronized
-    - form_data
-    - status
-    filter:
-      community:
-        community_users:
-          user_id:
-            _eq: X-Hasura-User-Id
-  role: common_user
-- permission:
-    allow_aggregations: true
-    columns:
-    - synchronized
-    - syncronized
-    - activist_id
-    - cached_community_id
-    - id
-    - mobilization_id
-    - widget_id
-    - form_data
-    - targets
-    - mailchimp_syncronization_error_reason
-    - status
-    - created_at
-    - mailchimp_syncronization_at
-    - updated_at
-    filter:
-      community:
-        community_users:
-          user_id:
-            _eq: X-Hasura-User-Id
-  role: user
+  - role: anonymous
+    permission:
+      columns: []
+      filter:
+        widget:
+          block:
+            mobilization:
+              status:
+                _eq: active
+      allow_aggregations: true
+  - role: common_user
+    permission:
+      columns:
+        - id
+        - activist_id
+        - widget_id
+        - created_at
+        - updated_at
+        - synchronized
+        - mailchimp_syncronization_at
+        - mailchimp_syncronization_error_reason
+        - cached_community_id
+        - mobilization_id
+        - targets
+        - syncronized
+        - form_data
+        - status
+      filter:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: user
+    permission:
+      columns:
+        - synchronized
+        - syncronized
+        - activist_id
+        - cached_community_id
+        - id
+        - mobilization_id
+        - widget_id
+        - form_data
+        - targets
+        - mailchimp_syncronization_error_reason
+        - status
+        - created_at
+        - mailchimp_syncronization_at
+        - updated_at
+      filter:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true

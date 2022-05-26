@@ -1,5 +1,5 @@
 function:
-  name: get_widget_donation_stats
   schema: public
+  name: get_widget_donation_stats
 permissions:
-- role: anonymous
+  - role: anonymous

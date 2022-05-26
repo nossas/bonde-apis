@@ -1,44 +1,44 @@
 table:
-  name: certificates
   schema: public
+  name: certificates
 object_relationships:
-- name: community
-  using:
-    manual_configuration:
-      column_mapping:
-        community_id: id
-      insertion_order: null
-      remote_table:
-        name: communities
-        schema: public
+  - name: community
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: communities
+        insertion_order: null
+        column_mapping:
+          community_id: id
 select_permissions:
-- permission:
-    columns:
-    - is_active
-    - domain
-    - community_id
-    - dns_hosted_zone_id
-    - id
-    - mobilization_id
-    - ssl_checker_response
-    - file_content
-    - created_at
-    - expire_on
-    - updated_at
-    filter:
-      community:
-        community_users:
-          user_id:
-            _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      columns:
+        - is_active
+        - domain
+        - community_id
+        - dns_hosted_zone_id
+        - id
+        - mobilization_id
+        - ssl_checker_response
+        - file_content
+        - created_at
+        - expire_on
+        - updated_at
+      filter:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
 event_triggers:
-- definition:
-    enable_manual: false
-    insert:
-      columns: "*"
-  name: check_certificate
-  retry_conf:
-    interval_sec: 360
-    num_retries: 20
-    timeout_sec: 60
-  webhook: "{{API_DOMAINS_URL}}/events/check-certificate"
+  - name: check_certificate
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 20
+      interval_sec: 360
+      timeout_sec: 60
+    webhook: '{{API_DOMAINS_URL}}/events/check-certificate'

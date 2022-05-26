@@ -1,68 +1,68 @@
 actions:
-- name: create_domain
-  definition:
-    kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/create-domain'
-  permissions:
-  - role: user
-- name: create_or_update_certificate
-  definition:
-    kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/create-or-update-certificate'
-  permissions:
-  - role: common_user
-  - role: user
-  comment: This mutation update routers configuration based on traefik and etcd
-- name: create_record
-  definition:
-    kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/create-record'
-  permissions:
-  - role: user
-- name: delete_domain
-  definition:
-    kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/delete-domain'
-  permissions:
-  - role: user
-- name: delete_records
-  definition:
-    kind: synchronous
-    handler: '{{API_DOMAINS_URL}}/actions/delete-record'
-  permissions:
-  - role: user
-- name: resync_mailchimp_start
-  definition:
-    kind: synchronous
-    handler: '{{ACTION_BASE_URL}}/start-resync-mailchimp'
-    forward_client_headers: true
-  permissions:
-  - role: user
-- name: resync_mailchimp_status
-  definition:
-    kind: ""
-    handler: '{{ACTION_BASE_URL}}/status-resync-mailchimp'
-  permissions:
-  - role: user
+  - name: create_domain
+    definition:
+      kind: synchronous
+      handler: '{{API_DOMAINS_URL}}/actions/create-domain'
+    permissions:
+      - role: user
+  - name: create_or_update_certificate
+    definition:
+      kind: synchronous
+      handler: '{{API_DOMAINS_URL}}/actions/create-or-update-certificate'
+    permissions:
+      - role: common_user
+      - role: user
+    comment: This mutation update routers configuration based on traefik and etcd
+  - name: create_record
+    definition:
+      kind: synchronous
+      handler: '{{API_DOMAINS_URL}}/actions/create-record'
+    permissions:
+      - role: user
+  - name: delete_domain
+    definition:
+      kind: synchronous
+      handler: '{{API_DOMAINS_URL}}/actions/delete-domain'
+    permissions:
+      - role: user
+  - name: delete_records
+    definition:
+      kind: synchronous
+      handler: '{{API_DOMAINS_URL}}/actions/delete-record'
+    permissions:
+      - role: user
+  - name: resync_mailchimp_start
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE_URL}}/start-resync-mailchimp'
+      forward_client_headers: true
+    permissions:
+      - role: user
+  - name: resync_mailchimp_status
+    definition:
+      kind: ""
+      handler: '{{ACTION_BASE_URL}}/status-resync-mailchimp'
+    permissions:
+      - role: user
 custom_types:
   enums: []
   input_objects:
-  - name: DomainInput
-  - name: DeleteDomainInput
-  - name: RecordInput
-  - name: DeleteRecordsInput
-  - name: CertificateInput
-  - name: PageInput
-  - name: UpdateCertificateInput
+    - name: DomainInput
+    - name: DeleteDomainInput
+    - name: RecordInput
+    - name: DeleteRecordsInput
+    - name: CertificateInput
+    - name: PageInput
+    - name: UpdateCertificateInput
   objects:
-  - name: MailchimpStart
-  - name: MailchimpStatus
-  - name: DomainResult
-  - name: CertificateResult
-  - name: PageResult
-  - name: DeleteDomainResult
-  - name: DeleteRecordsResult
-  - name: RecordResult
-  - name: UpdateCertificateResult
+    - name: MailchimpStart
+    - name: MailchimpStatus
+    - name: DomainResult
+    - name: CertificateResult
+    - name: PageResult
+    - name: DeleteDomainResult
+    - name: DeleteRecordsResult
+    - name: RecordResult
+    - name: UpdateCertificateResult
   scalars:
-  - name: String
+    - name: String

@@ -1,164 +1,164 @@
 table:
-  name: widgets
   schema: public
+  name: widgets
 object_relationships:
-- name: block
-  using:
-    manual_configuration:
-      column_mapping:
-        block_id: id
-      insertion_order: null
-      remote_table:
-        name: blocks
-        schema: public
+  - name: block
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: blocks
+        insertion_order: null
+        column_mapping:
+          block_id: id
 array_relationships:
-- name: activist_actions
-  using:
-    foreign_key_constraint_on:
-      column: widget_id
-      table:
-        name: activist_actions
-        schema: public
-- name: activist_pressures
-  using:
-    foreign_key_constraint_on:
-      column: widget_id
-      table:
-        name: activist_pressures
-        schema: public
-- name: donations
-  using:
-    foreign_key_constraint_on:
-      column: widget_id
-      table:
-        name: donations
-        schema: public
-- name: form_entries
-  using:
-    foreign_key_constraint_on:
-      column: widget_id
-      table:
-        name: form_entries
-        schema: public
-- name: pressure_targets
-  using:
-    foreign_key_constraint_on:
-      column: widget_id
-      table:
-        name: pressure_targets
-        schema: public
+  - name: activist_actions
+    using:
+      foreign_key_constraint_on:
+        column: widget_id
+        table:
+          schema: public
+          name: activist_actions
+  - name: activist_pressures
+    using:
+      foreign_key_constraint_on:
+        column: widget_id
+        table:
+          schema: public
+          name: activist_pressures
+  - name: donations
+    using:
+      foreign_key_constraint_on:
+        column: widget_id
+        table:
+          schema: public
+          name: donations
+  - name: form_entries
+    using:
+      foreign_key_constraint_on:
+        column: widget_id
+        table:
+          schema: public
+          name: form_entries
+  - name: pressure_targets
+    using:
+      foreign_key_constraint_on:
+        column: widget_id
+        table:
+          schema: public
+          name: pressure_targets
 insert_permissions:
-- permission:
-    backend_only: false
-    check:
-      block:
-        mobilization:
-          community:
-            community_users:
-              user_id:
-                _eq: X-Hasura-User-Id
-    columns:
-    - id
-    - block_id
-    - settings
-    - kind
-    - created_at
-    - updated_at
-    - sm_size
-    - md_size
-    - lg_size
-    - mailchimp_segment_id
-    - action_community
-    - exported_at
-    - mailchimp_unique_segment_id
-    - mailchimp_recurring_active_segment_id
-    - mailchimp_recurring_inactive_segment_id
-    - goal
-    - deleted_at
-  role: user
+  - role: user
+    permission:
+      check:
+        block:
+          mobilization:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      columns:
+        - id
+        - block_id
+        - settings
+        - kind
+        - created_at
+        - updated_at
+        - sm_size
+        - md_size
+        - lg_size
+        - mailchimp_segment_id
+        - action_community
+        - exported_at
+        - mailchimp_unique_segment_id
+        - mailchimp_recurring_active_segment_id
+        - mailchimp_recurring_inactive_segment_id
+        - goal
+        - deleted_at
+      backend_only: false
 select_permissions:
-- permission:
-    columns:
-    - block_id
-    - created_at
-    - goal
-    - id
-    - kind
-    - lg_size
-    - md_size
-    - settings
-    - sm_size
-    - updated_at
-    filter:
-      block:
-        mobilization:
-          status:
-            _eq: active
-  role: anonymous
-- permission:
-    allow_aggregations: true
-    columns:
-    - action_community
-    - block_id
-    - id
-    - lg_size
-    - md_size
-    - sm_size
-    - settings
-    - goal
-    - created_at
-    - deleted_at
-    - exported_at
-    - updated_at
-    - kind
-    - mailchimp_recurring_active_segment_id
-    - mailchimp_recurring_inactive_segment_id
-    - mailchimp_segment_id
-    - mailchimp_unique_segment_id
-    filter:
-      block:
-        mobilization:
-          community:
-            community_users:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: user
+  - role: anonymous
+    permission:
+      columns:
+        - block_id
+        - created_at
+        - goal
+        - id
+        - kind
+        - lg_size
+        - md_size
+        - settings
+        - sm_size
+        - updated_at
+      filter:
+        block:
+          mobilization:
+            status:
+              _eq: active
+  - role: user
+    permission:
+      columns:
+        - action_community
+        - block_id
+        - id
+        - lg_size
+        - md_size
+        - sm_size
+        - settings
+        - goal
+        - created_at
+        - deleted_at
+        - exported_at
+        - updated_at
+        - kind
+        - mailchimp_recurring_active_segment_id
+        - mailchimp_recurring_inactive_segment_id
+        - mailchimp_segment_id
+        - mailchimp_unique_segment_id
+      filter:
+        block:
+          mobilization:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      allow_aggregations: true
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - action_community
-    - block_id
-    - id
-    - lg_size
-    - md_size
-    - sm_size
-    - settings
-    - goal
-    - created_at
-    - deleted_at
-    - exported_at
-    - updated_at
-    - kind
-    - mailchimp_recurring_active_segment_id
-    - mailchimp_recurring_inactive_segment_id
-    - mailchimp_segment_id
-    - mailchimp_unique_segment_id
-    filter:
-      block:
-        mobilization:
-          community:
-            community_users:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      columns:
+        - action_community
+        - block_id
+        - id
+        - lg_size
+        - md_size
+        - sm_size
+        - settings
+        - goal
+        - created_at
+        - deleted_at
+        - exported_at
+        - updated_at
+        - kind
+        - mailchimp_recurring_active_segment_id
+        - mailchimp_recurring_inactive_segment_id
+        - mailchimp_segment_id
+        - mailchimp_unique_segment_id
+      filter:
+        block:
+          mobilization:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
+      check: null
 delete_permissions:
-- permission:
-    filter:
-      block:
-        mobilization:
-          community:
-            community_users:
-              user_id:
-                _eq: X-Hasura-User-Id
-  role: user
+  - role: user
+    permission:
+      filter:
+        block:
+          mobilization:
+            community:
+              community_users:
+                user_id:
+                  _eq: X-Hasura-User-Id
