@@ -10,7 +10,8 @@ export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): P
   const unique_identifier = crypto.createHash("sha1").update(action?.email || '').digest("hex");
   const state = action?.state || '';
   const expected_signatures = action?.expected_signatures || 10;
-  const pdf_datauristring = await generatePlipPdf(unique_identifier, state, expected_signatures);
+  const pdf_datauristring = await generatePlipPdf(unique_identifier, state, expected_signatures, action?.name || '');
+
 
   const { id, errors } = await ActionsAPI.plip({
     widget_id: widget.id,

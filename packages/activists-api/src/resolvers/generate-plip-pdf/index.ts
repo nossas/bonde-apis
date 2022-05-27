@@ -2,8 +2,9 @@ import jsPDF from "jspdf";
 import q from "q";
 import QRCode from 'qrcode';
 import { logo } from "./logo";
+import uploadS3 from "../upload-s3";
 
-const generatePlipPdf = async (unique_identifier: string, state: string, expected_signatures: number): Promise<string> => {
+const generatePlipPdf = async (unique_identifier: string, state: string, expected_signatures: number, fileName: string): Promise<string> => {
   if (!unique_identifier) {
     const msg = 'Invalid unique_identifier'
 
@@ -98,6 +99,7 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
   }
 
   const deferred = q;
+  uploadS3(await deferred.resolve(doc.output('arraybuffer')), `${fileName}.pdf`)
   return await deferred.resolve(doc.output('datauristring'));
 }
 
