@@ -24,6 +24,13 @@ array_relationships:
         insertion_order: null
         column_mapping:
           id: mobilization_id
+  - name: mobilizations_subthemes
+    using:
+      foreign_key_constraint_on:
+        column: mobilization_id
+        table:
+          schema: public
+          name: mobilizations_subthemes
 insert_permissions:
   - role: user
     permission:
@@ -53,6 +60,7 @@ insert_permissions:
         - name
         - slug
         - status
+        - theme_id
         - traefik_backend_address
         - traefik_host_rule
         - twitter_share_text
