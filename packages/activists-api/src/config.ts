@@ -11,8 +11,8 @@ type Config = {
   hasuraSecret?: string
   awsAccessKey?: string
   awsSecretKey?: string
-  awsRoute53Region: string
-  awsRouteIp: string
+  awsEndpoint: string
+  awsBucket: string
 }
 
 const config: Config = {
@@ -24,8 +24,8 @@ const config: Config = {
   hasuraSecret: process.env.HASURA_SECRET,
   awsAccessKey: process.env.AWS_ACCESS_KEY,
   awsSecretKey: process.env.AWS_SECRET_KEY,
-  awsRoute53Region: process.env.AWS_ROUTE53_REGION || 'us-east-1',
-  awsRouteIp: process.env.AWS_ROUTE_IP || 'http://localhost:9099'
+  awsEndpoint: process.env.AWS_ENDPOINT || 'http://localhost:9099',
+  awsBucket: process.env.AWS_BUCKET || 'plip-dev'
 };
 
 export default config;

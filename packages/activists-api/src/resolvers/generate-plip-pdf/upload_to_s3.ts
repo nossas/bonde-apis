@@ -7,7 +7,7 @@ const uploadS3 = async (file: any, fileName: string) => {
   const s3 = new S3({
     accessKeyId: config.awsAccessKey,
     secretAccessKey: config.awsSecretKey,
-    endpoint: config.awsRouteIp,
+    endpoint: config.awsEndpoint,
     sslEnabled: false,
     s3ForcePathStyle: true
   });
@@ -15,7 +15,7 @@ const uploadS3 = async (file: any, fileName: string) => {
   const uploadFile = Buffer.from(file.replace("data:application/pdf;filename=generated.pdf;base64,", ""), 'base64');
 
   const uploadParams = {
-    Bucket: "plip",
+    Bucket: config.awsBucket,
     Key: fileName,
     Body: uploadFile,
     ContentEncoding: "base64",
@@ -24,10 +24,10 @@ const uploadS3 = async (file: any, fileName: string) => {
 
   try {
     const data = await s3.upload(uploadParams).promise();
-    logger.info(`Upload Success!${data.Location}`)
+    logger.info(`Upload Success! ${data.Location}`)
     return data.Location;
   } catch (err) {
-    logger.error(`Upload Failed!${err}`)
+    logger.error(`Upload Failed! ${err}`)
     return ''
   }
 }
