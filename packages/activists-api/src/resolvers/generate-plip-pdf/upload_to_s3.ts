@@ -11,6 +11,7 @@ const uploadS3 = async (file: any, fileName: string) => {
     sslEnabled: false,
     s3ForcePathStyle: true
   });
+  
 
   const uploadFile = Buffer.from(file.replace("data:application/pdf;filename=generated.pdf;base64,", ""), 'base64');
 
@@ -18,8 +19,7 @@ const uploadS3 = async (file: any, fileName: string) => {
     Bucket: config.awsBucket,
     Key: fileName,
     Body: uploadFile,
-    ContentEncoding: "base64",
-    contentType: "application/pdf",
+    ContentType: "application/pdf"
   };
 
   try {
@@ -28,7 +28,7 @@ const uploadS3 = async (file: any, fileName: string) => {
     return data.Location;
   } catch (err) {
     logger.error(`Upload Failed! ${err}`)
-    return ''
+    return null
   }
 }
 
