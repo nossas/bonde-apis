@@ -12,7 +12,6 @@ const uploadS3 = async (file: any, fileName: string) => {
     s3ForcePathStyle: true
   });
   
-
   const uploadFile = Buffer.from(file.replace("data:application/pdf;filename=generated.pdf;base64,", ""), 'base64');
 
   const uploadParams = {
@@ -28,7 +27,7 @@ const uploadS3 = async (file: any, fileName: string) => {
     return data.Location;
   } catch (err) {
     logger.error(`Upload Failed! ${err}`)
-    return null
+    throw new Error(`${err}`);
   }
 }
 
