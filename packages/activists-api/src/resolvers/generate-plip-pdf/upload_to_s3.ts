@@ -3,7 +3,7 @@ import S3 from 'aws-sdk/clients/s3';
 import logger from "../../logger";
 
 const uploadS3 = async (file: any, fileName: string) => {
-  console.log(config.awsAccessKey)
+  
   const s3 = new S3({
     accessKeyId: config.awsAccessKey,
     secretAccessKey: config.awsSecretKey,
