@@ -9,6 +9,9 @@ actions:
   definition:
     kind: synchronous
     handler: '{{API_DOMAINS_URL}}/actions/create-or-update-certificate'
+  permissions:
+  - role: common_user
+  - role: user
   comment: This mutation update routers configuration based on traefik and etcd
 - name: create_record
   definition:
