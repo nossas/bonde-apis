@@ -5,6 +5,9 @@ object_relationships:
   - name: community
     using:
       foreign_key_constraint_on: community_id
+  - name: theme
+    using:
+      foreign_key_constraint_on: theme_id
 array_relationships:
   - name: activist_actions
     using:
@@ -88,6 +91,7 @@ select_permissions:
         - slug
         - status
         - twitter_share_text
+        - updated_at
       filter:
         _and:
           - deleted_at:
@@ -95,6 +99,40 @@ select_permissions:
           - status:
               _eq: active
       allow_aggregations: true
+  - role: user
+    permission:
+      columns:
+        - body_font
+        - color_scheme
+        - custom_domain
+        - facebook_share_image
+        - facebook_share_title
+        - favicon
+        - google_analytics_code
+        - header_font
+        - language
+        - name
+        - slug
+        - traefik_backend_address
+        - traefik_host_rule
+        - twitter_share_text
+        - community_id
+        - id
+        - theme_id
+        - user_id
+        - facebook_share_description
+        - goal
+        - created_at
+        - deleted_at
+        - updated_at
+        - status
+      filter:
+        community:
+          community_users:
+            user_id:
+              _eq: X-Hasura-User-Id
+      allow_aggregations: true
+update_permissions:
   - role: user
     permission:
       columns:
@@ -116,46 +154,14 @@ select_permissions:
         - name
         - slug
         - status
+        - theme_id
         - traefik_backend_address
         - traefik_host_rule
         - twitter_share_text
         - updated_at
-        - user_id
       filter:
         community:
           community_users:
             user_id:
               _eq: X-Hasura-User-Id
-      allow_aggregations: true
-update_permissions:
-  - role: user
-    permission:
-      columns:
-        - body_font
-        - color_scheme
-        - community_id
-        - custom_domain
-        - deleted_at
-        - facebook_share_description
-        - facebook_share_image
-        - facebook_share_title
-        - favicon
-        - goal
-        - google_analytics_code
-        - header_font
-        - id
-        - language
-        - name
-        - slug
-        - status
-        - twitter_share_text
-      filter:
-        community:
-          community_users:
-            user_id:
-              _eq: X-Hasura-User-Id
-      check:
-        community:
-          community_users:
-            user_id:
-              _eq: X-Hasura-User-Id
+      check: null

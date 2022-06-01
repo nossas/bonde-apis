@@ -1,3 +1,49 @@
 table:
   schema: public
   name: mobilizations_subthemes
+object_relationships:
+  - name: mobilization
+    using:
+      foreign_key_constraint_on: mobilization_id
+  - name: subtheme
+    using:
+      foreign_key_constraint_on: subtheme_id
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        mobilization:
+          community:
+            community_users:
+              user_id:
+                _eq: X-Hasura-User-Id
+      columns:
+        - mobilization_id
+        - subtheme_id
+      backend_only: false
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - mobilization_id
+        - subtheme_id
+      filter:
+        mobilization:
+          community:
+            community_users:
+              user_id:
+                _eq: X-Hasura-User-Id
+      allow_aggregations: true
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - mobilization_id
+        - subtheme_id
+      filter:
+        mobilization:
+          community:
+            community_users:
+              user_id:
+                _eq: X-Hasura-User-Id
+      check: null
