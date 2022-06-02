@@ -10,7 +10,8 @@ export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): P
   const unique_identifier = crypto.createHash("sha1").update(action?.email || '').digest("hex");
   const state = action?.state || '';
   const expected_signatures = action?.expected_signatures || 10;
-  const pdf_datauristring = await generatePlipPdf(unique_identifier, state, expected_signatures);
+  const pdf_data = await generatePlipPdf(unique_identifier, state, expected_signatures);
+
 
   const { id, errors } = await ActionsAPI.plip({
     widget_id: widget.id,
@@ -18,7 +19,7 @@ export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): P
     //community_id: widget.block.mobilization.community.id,
     //mobilization_id: widget.block.mobilization.id,
     unique_identifier: unique_identifier,
-    pdf_data: pdf_datauristring,
+    pdf_data: pdf_data.url,
     expected_signatures: expected_signatures,
     state: state,
     form_data: action || {}
@@ -30,8 +31,8 @@ export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): P
     data: {
       plip_id: id,
       //transforma pdf data para base64 para anexar ao email
-      pdf_data: pdf_datauristring,
-      filename: `${action?.name}.pdf`,
+      pdf_data: pdf_data,
+      filename: `${action?.name}.pdf`
     },
   };
 };

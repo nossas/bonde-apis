@@ -6,7 +6,7 @@ import * as NotificationsAPI from '../../graphql-api/notifications';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction, data?: any): Promise<any> => {
   const { community } = widget.block.mobilization;
- // as an experimentation to plip, we filter widget by kind and will not sync mailchimp in these scenario
+  // as an experimentation to plip, we filter widget by kind and will not sync mailchimp in these scenario
   if (community.mailchimp_api_key && community.mailchimp_list_id && widget.kind !== 'plip' && !!done) {
     // Update Contact on Mailchimp
     const { subscribe } = mailchimp({ activist, widget });
@@ -30,7 +30,7 @@ export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction
   if (widget.kind === "plip" && data?.pdf_data) {
     notifyOpts.attachments = [
       {
-        content: data?.pdf_data.replace("data:application/pdf;filename=generated.pdf;base64,", ""),
+        content: data?.pdf_data.datauristring.replace("data:application/pdf;filename=generated.pdf;base64,", ""),
         filename: data?.filename || "formulario-plip.pdf",
         type: "application/pdf",
         disposition: "attachment"
