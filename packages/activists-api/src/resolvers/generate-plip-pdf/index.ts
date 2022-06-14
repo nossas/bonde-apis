@@ -56,8 +56,8 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
     doc.text(`Saiba mais em amazoniadepe.org.br`, 220, 54, { align: 'center' });
     doc.setFontSize(6);
     doc.setFont("helvetica", 'normal');
-    doc.cell(margin, 62, (formWidth / 2), 12, `ESTADO: ${state}`, 0, 'left');
-    doc.cell(formWidth, 62, formWidth / 2, 12, `MUNICÍPIO:`, 0, 'left');
+    doc.cell(margin, 62, 100, 12, `ESTADO: ${state}`, 0, 'left');
+    doc.cell(formWidth, 62, formWidth - cellSignatureWidth, 12, `MUNICÍPIO:`, 0, 'left');
     doc.cell(margin, 100, 90, 5, ``, 1, 'left');
 
     //background color
