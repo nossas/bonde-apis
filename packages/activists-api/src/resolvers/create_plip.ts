@@ -7,10 +7,11 @@ import generatePlipPdf from './generate-plip-pdf';
 
 export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): Promise<IActionData> => {
 
-  const unique_identifier = crypto.createHash("sha1").update(action?.email || '').digest("hex");
+  const name = action?.name || ''
   const state = action?.state || '';
   const expected_signatures = action?.expected_signatures || 10;
-  const pdf_data = await generatePlipPdf(unique_identifier, state, expected_signatures);
+  const unique_identifier = crypto.createHash("sha1").update(`${action?.email}${state}${expected_signatures}` || '').digest("hex");
+  const pdf_data = await generatePlipPdf(unique_identifier, state, expected_signatures, name);
 
 
   const { id, errors } = await ActionsAPI.plip({

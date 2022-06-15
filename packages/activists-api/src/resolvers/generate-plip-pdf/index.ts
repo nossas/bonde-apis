@@ -9,7 +9,7 @@ interface pdfData {
   url?: any;
 }
 
-const generatePlipPdf = async (unique_identifier: string, state: string, expected_signatures: number): Promise<pdfData> => {
+const generatePlipPdf = async (unique_identifier: string, state: string, expected_signatures: number, name: string): Promise<pdfData> => {
   if (!unique_identifier) {
     const msg = 'Invalid unique_identifier'
 
@@ -108,7 +108,7 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
   const deferred = q;
   const file = await deferred.resolve(doc.output('datauristring'));
   // console.log("FILEEE", file)
-  const url = await uploadS3(`${file}`, `${unique_identifier}.pdf`);
+  const url = await uploadS3(`${file}`, `${name}-${unique_identifier}.pdf`);
   return {
     datauristring: file,
     url
