@@ -37,6 +37,13 @@ insert_permissions:
         - unique_identifier
       backend_only: false
 select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - confirmed_signatures
+        - widget_id
+      filter: {}
+      allow_aggregations: true
   - role: user
     permission:
       columns:
