@@ -36,6 +36,17 @@ computed_fields:
         name: plips_status
     comment: 'Atributo computado para retornar status a partir do período. Resultados: CONCLUIDO, PENDENTE ou INSCRITO'
 select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - expected_signatures
+        - id
+        - widget_id
+      computed_fields:
+        - confirmed_signatures
+        - status
+      filter: {}
+      allow_aggregations: true
   - role: common_user
     permission:
       columns:
@@ -94,4 +105,4 @@ event_triggers:
       num_retries: 0
       interval_sec: 10
       timeout_sec: 60
-    webhook: '{{N8N_WEBHOOK_URL}}/plip-mautic'
+    webhook: http://n8n.enedina.bonde.org/webhook-test/plip-mautic
