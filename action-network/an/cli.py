@@ -3,6 +3,7 @@ import click
 from logger import logging
 # Normalize Functions
 from normalize import donations
+from normalize import pressures
 
 @click.group()
 def cli():
@@ -14,7 +15,10 @@ def cli():
 def normalize(community, action):
     """Normalize Bonde actions to inserted on BigQuery dataset"""
     logging.info("Starting pipeline for normalize {} actions to community {}".format(action, community))
-    donations.run(community)
+    if action == "donation":
+        donations.run(community)
+    elif action == "pressure":
+        pressures.run(community)
 
 cli.add_command(normalize)
 
