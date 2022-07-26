@@ -1,0 +1,1 @@
+DROP TABLE public.mda_forms_answers;
