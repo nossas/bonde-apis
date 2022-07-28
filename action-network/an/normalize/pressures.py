@@ -1,10 +1,10 @@
 """
-Fetch Bonde donation actions in PostgreSQL and normalize to insert on BigQuery
+Fetch Bonde pressure actions in PostgreSQL and normalize to insert on BigQuery
 """
 from logger import logging
+from database.bigquery import insert
 from database.postgres import cnx
 from normalize.utils import find_by_ddd
-from database.bigquery import insert
 from validate_docbr import CPF
 import pandas as pd
 import numpy as np
@@ -107,7 +107,6 @@ def run(community_id):
         ]]
 
         # Normalizando estado
-        logging.info("Normalizando informações de endereço...")
         df['state'] = np.where(df['state'].isnull() & df['phone'].notnull(
         ), df['phone'].str.replace(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', regex=True), df['state'])
 

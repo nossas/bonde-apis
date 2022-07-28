@@ -5,3 +5,4 @@ psycopg2
 validate-docbr
 python-dotenv
 pandas_gbq
+fsspec
