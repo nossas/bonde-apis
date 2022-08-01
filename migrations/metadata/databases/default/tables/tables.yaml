@@ -23,6 +23,7 @@
 - "!include public_forms_integration_logs.yaml"
 - "!include public_integrations.yaml"
 - "!include public_invitations.yaml"
+- "!include public_mda_forms_answers.yaml"
 - "!include public_mobilizations.yaml"
 - "!include public_mobilizations_subthemes.yaml"
 - "!include public_notification_templates.yaml"
