@@ -6,3 +6,7 @@ validate-docbr
 python-dotenv
 pandas_gbq
 fsspec
+enlighten
+pandas
+numpy
+validate_docbr
