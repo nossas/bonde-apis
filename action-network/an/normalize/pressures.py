@@ -1,26 +1,18 @@
 """
 Fetch Bonde pressure actions in PostgreSQL and normalize to insert on BigQuery
 """
-from logger import logging
-from database.bigquery import insert
-from database.postgres import cnx
+from normalize.base import NormalizeWorkflowInterface
 from normalize.utils import find_by_ddd
 from validate_docbr import CPF
-import pandas as pd
 import numpy as np
 
 cpf = CPF()
 
+class PressureNormalizeWorkflowInterface(NormalizeWorkflowInterface):
 
-def run(community_id):
-    """
-    Fetch Bonde pressure actions in PostgreSQL and normalize to insert on BigQuery
-    """
-    limit = 100000
-    page = 0
-    while True:
-        logging.info(f"Carregando página {page}")
-        df = pd.read_sql_query(f'''
+    def query(self, offset: int) -> str:
+        """Query activist actions pressure"""
+        return f'''
         SELECT
             'pressure'::text AS action,
             ap.id AS action_id,
@@ -43,20 +35,20 @@ def run(community_id):
         JOIN widgets w ON w.id = ap.widget_id
         JOIN blocks b ON b.id = w.block_id
         JOIN mobilizations m ON m.id = b.mobilization_id
-        WHERE m.community_id = {community_id}
+        WHERE m.community_id = {self.params.get('community_id')}
         ORDER BY ap.created_at ASC
-        OFFSET {page * limit}
-        LIMIT {limit}
-        ''', cnx)
+        OFFSET {offset}
+        LIMIT {self.limit}
+        '''
 
-        # Normalizando estado
-        logging.info("Normalizando informações...")
-        # logging.info("Normalizando informações de endereço...")
+    def normalize(self, df):
+        """Normalize activist actions pressure"""
+
         df['state'] = np.where(
             df['state'].isnull() & df['form_state'].notnull(), df['form_state'], df['state'])
 
-        # Normalizando nomes
-        # logging.info("Normalizando informações sobre o nome...")
+        df['name'] = np.where(df['name'].isnull(), df['form_name'], df['name'])
+
         df['first_name'] = np.where(
             df['first_name'].isnull(), df['form_name'], df['first_name'])
         df['last_name'] = np.where(
@@ -74,8 +66,6 @@ def run(community_id):
         df['first_name'] = df['first_name'].str.title()
         df['last_name'] = df['last_name'].str.title()
 
-        # Normalizando telefone
-        # logging.info("Normalizando informações de telefone...")
         df["phone"] = df["phone"].str.replace(r'[\(\) -]+', '', regex=True)
         df["phone"] = df["phone"].str.replace(
             r'^\d{1}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
@@ -106,17 +96,9 @@ def run(community_id):
             "phone"
         ]]
 
-        # Normalizando estado
         df['state'] = np.where(df['state'].isnull() & df['phone'].notnull(
         ), df['phone'].str.replace(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', regex=True), df['state'])
 
         df['state'] = df['state'].map(lambda x: find_by_ddd(x) if x else x)
 
-        # Insert in bigquery
-        insert(df)
-
-        # Change page
-        page += 1
-
-        if len(df) < limit:
-            break
+        return df

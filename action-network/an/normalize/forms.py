@@ -5,13 +5,10 @@ import json
 import warnings
 import re
 from io import StringIO
-from logger import logging
-from database.bigquery import insert
-from database.postgres import cnx
+from normalize.base import NormalizeWorkflowInterface
 from normalize.utils import find_by_ddd
 from validate_docbr import CPF
 import pandas as pd
-# import time
 
 warnings.filterwarnings("ignore", 'This pattern has match groups')
 
@@ -68,9 +65,13 @@ def parse_item(item):
     item['birthday'] = get_field_name(
         df2, r'(data[de ]*nascimento|idade|[ano]*[de ]*nascimento)')
 
+    item['name'] = item['form_first_name'] + \
+        item['form_last_name'] if item['form_last_name'] else item['form_first_name']
+
     # normalizando os state
     item['state'] = item['form_state'] if item['form_state'] else item['state']
-    item['state'] = re.sub(r'[\w Á-ù]+\((\w{2})\)', r'\1', item['state']) if '(' in (item['state'] or '') else item['state']
+    item['state'] = re.sub(
+        r'[\w Á-ù]+\((\w{2})\)', r'\1', item['state']) if '(' in (item['state'] or '') else item['state']
     item['city'] = item['form_city'] if not item['city'] else item['city']
 
     # Normalizando nomes
@@ -120,20 +121,11 @@ def parse_item(item):
     return item
 
 
-def run(community_id, sbar, manager, default_limit=30000):
-    """
-    Fetch Bonde form actions in PostgreSQL and normalize to insert on BigQuery
-    """
-    limit = default_limit
-    page = 0
-    total = 0
+class FormNormalizeWorkflowInterface(NormalizeWorkflowInterface):
 
-    # sbar = kwargs.get('sbar')
-    # manager = kwargs.get('manager')
-
-    while True:
-        sbar.update(stage=f'Initializing SLOT {page}', status='LOADING')
-        df = pd.read_sql_query(f'''
+    def query(self, offset: int) -> str:
+        """Query activist actions form"""
+        return f'''
         SELECT
             'form'::text AS action,
             fe.id AS action_id,
@@ -157,14 +149,17 @@ def run(community_id, sbar, manager, default_limit=30000):
         JOIN widgets w ON w.id = fe.widget_id
         JOIN blocks b ON b.id = w.block_id
         JOIN mobilizations m ON m.id = b.mobilization_id
-        WHERE m.community_id = {community_id}
+        WHERE m.community_id = {self.params.get("community_id")}
         ORDER BY fe.created_at ASC
-        OFFSET {page * limit}
-        LIMIT {limit}
-        ''', cnx)
+        OFFSET {offset}
+        LIMIT {self.limit}
+        '''
 
-        sbar.update(stage=f'Parsing SLOT {page}', status='PROCESSING')
-        pbar = manager.counter(total=len(df), desc=f'Processing {page}', unit='ticks')
+    def normalize(self, df):
+        """Normalize activist actions form"""
+        self.sbar.update(stage=f'Parsing {self.page}', status='PROCESSING')
+        pbar = self.manager.counter(
+            total=len(df), desc=f'Processing {self.page}', unit='ticks')
 
         items = []
         for i, item in df.iterrows():
@@ -196,17 +191,4 @@ def run(community_id, sbar, manager, default_limit=30000):
             "birthday"
         ]]
 
-        logging.info(f'SLOT {page} is processed')
-        sbar.update(stage=f'Inserting SLOT {page}', status='PROCESSING')
-
-        insert(df)
-        logging.info(f'SLOT {page} is inserted')
-
-        page += 1
-        total += len(df)
-
-        if len(df) < limit:
-            break
-    
-    logging.info(f'Success to process and insert {total}')
-    sbar.update(stage=f'Success to process and insert {total}', status='DONE')
+        return df
