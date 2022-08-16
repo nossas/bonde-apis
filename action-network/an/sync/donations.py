@@ -50,7 +50,7 @@ def sync_actions(community_id: int):
             an_action = response.json()
             an_action_id = list(filter(lambda x: x.startswith(
                 'action_network:'), an_action['identifiers']))[0]
-            an_resource_name = 'signatures'
+            an_resource_name = 'donations'
             an_action_id = an_action_id.split(':')[1]
             mobilization_id = payload['id']
 
