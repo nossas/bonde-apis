@@ -1,4 +1,5 @@
-"""Criar Petitions"""
+"""Criar Fundraising"""
+
 import json
 import requests
 from database.bigquery import insert_actions, select_groups
