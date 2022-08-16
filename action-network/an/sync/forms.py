@@ -6,7 +6,7 @@ from database.postgres import cnx
 import pandas as pd
 
 
-def sync_actions(community_id: int):
+def form_sync_actions(community_id: int):
     """Insert form widgets Bonde on forms Action Network"""
     df = pd.read_sql_query(f'''
       SELECT

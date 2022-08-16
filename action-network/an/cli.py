@@ -3,6 +3,9 @@ from normalize.pressures import PressureNormalizeWorkflowInterface
 from normalize.forms import FormNormalizeWorkflowInterface
 from normalize.donations import DonationNormalizeWorkflowInterface
 from sync.pressures import sync_actions
+from sync.forms import form_sync_actions
+from sync.donations import donations_sync_actions
+
 
 
 @click.group()
@@ -34,7 +37,7 @@ def normalize(community, action, page):
 # @click.option('--page', type=int, default=0)
 def syncronize(community):
     """Syncronize Bonde widgets to inserted on Action Network and BigQuery dataset"""
-    sync_actions(community_id=community)
+    form_sync_actions(community_id=community)
 
 
 cli.add_command(normalize)

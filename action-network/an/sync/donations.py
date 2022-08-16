@@ -7,7 +7,7 @@ from database.postgres import cnx
 import pandas as pd
 
 
-def sync_actions(community_id: int):
+def donations_sync_actions(community_id: int):
     """Insert donation widgets Bonde on fundraising pages Action Network"""
     df = pd.read_sql_query(f'''
       SELECT
