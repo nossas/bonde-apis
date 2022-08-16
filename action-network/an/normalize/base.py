@@ -53,12 +53,6 @@ class NormalizeWorkflowInterface:
 
             df = pd.read_sql_query(
                 self.query(self.page * self.limit), cnx)
-            
-            df['name'] = None
-            df['first_name'] = None
-            df['last_name'] = None
-            df['state'] = None
-            df['phone'] = None
 
             if len(df) == 0:
                 self.sbar.update(stage='Not found items', status='DONE')
