@@ -41,6 +41,7 @@ select_permissions:
       columns:
         - expected_signatures
         - id
+        - unique_identifier
         - widget_id
       computed_fields:
         - confirmed_signatures
@@ -105,4 +106,4 @@ event_triggers:
       num_retries: 0
       interval_sec: 10
       timeout_sec: 60
-    webhook: http://n8n.enedina.bonde.org/webhook-test/plip-mautic
+    webhook: '{{N8N_WEBHOOK_URL}}/plip-mautic'
