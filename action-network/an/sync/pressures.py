@@ -1,6 +1,6 @@
 """Criar Petitions"""
 
-from database.bigquery import insert
+from database.bigquery import insertactions
 from database.bigquery import read
 from database.postgres import cnx
 import pandas as pd
@@ -54,4 +54,4 @@ def InsertActions():
             df_an['widget_id'] = pd.Series(item['widgets_id'], dtype="int")
             df_an['an_resource_name'] = an_resource_name
             df_an['an_response'] = pd.Series([an_action], dtype="string")
-            insert(df_an)
+            insertactions(df_an)
