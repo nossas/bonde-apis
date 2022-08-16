@@ -6,7 +6,7 @@ import warnings
 import re
 from io import StringIO
 from normalize.base import NormalizeWorkflowInterface
-from normalize.utils import find_by_ddd
+# from normalize.utils import find_by_ddd
 from validate_docbr import CPF
 import pandas as pd
 
@@ -26,6 +26,25 @@ def get_field_name(dataframe, regex_pattern):
         return dataframe[field_name].str.strip().str.cat()
 
 
+def only_digits(field):
+    """function to extract only digits of phone number"""
+    phone = ""
+    if field:
+        for char in field:
+            if char.isdigit():
+                phone += char
+
+        if phone.startswith('55'):
+            phone = phone[2:]
+        if phone.startswith('0'):
+            phone = phone[1:]
+
+        if len(phone) >= 8 and len(phone) <= 11:
+            return phone
+        else:
+            return field
+
+
 def parse_item(item):
     """
     Parse fields to column
@@ -39,22 +58,22 @@ def parse_item(item):
     df2 = df2.loc[:, ~df2.columns.duplicated()].copy()
 
     # Pegar nome ou primeiro nome
-    item['form_first_name'] = get_field_name(
+    item['given_name'] = get_field_name(
         df2, r'(nombre|first[-\s]?name|seu nome|nome|name|primeiro[-\s]?nome)')
     # Pegar sobrenome
-    item['form_last_name'] = get_field_name(
+    item['family_name'] = get_field_name(
         df2, r'(sobre[\s-]?nome|seu sobre[\s-]?nome|surname|last[\s-]?name|apellido)')
     # Pegar email
-    item['form_email'] = get_field_name(
+    item['email'] = get_field_name(
         df2, r'(e-?mail|correo electr(o|ó)nico|email)')
     # Pegar telefone
-    item['form_phone'] = get_field_name(
+    item['phone'] = get_field_name(
         df2, r'(celular|mobile|portable|whatsapp)')
     # Pegar cidade
-    item['form_city'] = get_field_name(
+    item['locality'] = get_field_name(
         df2, r'(cidade|city|ciudad)')
     # Pegar estado
-    item['form_state'] = get_field_name(df2, r'(estado|state)')
+    item['region'] = get_field_name(df2, r'(estado|state)')
     # Pegar genero
     item['gender'] = get_field_name(
         df2, r'(gen[e|ê]ro|orienta[ç|c][a|ã]o sexual)')
@@ -65,58 +84,57 @@ def parse_item(item):
     item['birthday'] = get_field_name(
         df2, r'(data[de ]*nascimento|idade|[ano]*[de ]*nascimento)')
 
-    item['name'] = item['form_first_name'] + \
-        item['form_last_name'] if item['form_last_name'] else item['form_first_name']
+    item['name'] = item['given_name'] + \
+        f" {item['family_name']}" if item['family_name'] else item['given_name']
 
     # normalizando os state
-    item['state'] = item['form_state'] if item['form_state'] else item['state']
-    item['state'] = re.sub(
-        r'[\w Á-ù]+\((\w{2})\)', r'\1', item['state']) if '(' in (item['state'] or '') else item['state']
-    item['city'] = item['form_city'] if not item['city'] else item['city']
+    item['locality'] = item['locality'].lstrip(
+    ) if item['locality'] else item['locality']
+
+    item['region'] = re.sub(
+        r'[\w Á-ù]+\((\w{2})\)', r'\1', item['region']) if '(' in (item['region'] or '') \
+        else item['region']
 
     # Normalizando nomes
-    item['name'] = item['form_first_name'] + \
-        (item['form_last_name'] or '') if '{' in item['name'] else item['name']
+    item['name'] = item['given_name'] + \
+        (f" {item['family_name']}" or '') if '{' in (
+            item['name'] or '') else item['name']
 
-    item['first_name'] = item['form_first_name'] if not item['first_name'] else item['first_name']
-    item['last_name'] = item['form_last_name'] if not item['last_name'] else item['last_name']
+    # Remove item wihtout name ou email
+    if not item['name'] or not item['email']:
+        return None
 
-    item['first_name'] = item['name'].split(
-        " ")[0] if not item['first_name'] else item['first_name']
-    item['last_name'] = " ".join(item['name'].split(
-        " ")[1:]) if not item['last_name'] else item['last_name']
+    item['given_name'] = item['name'].split(
+        " ")[0] if not item['given_name'] else item['given_name']
+    item['family_name'] = " ".join(item['name'].split(
+        " ")[1:]) if not item['family_name'] else item['family_name']
 
     # Removendo espaco em branco no inicio da string
-    item['first_name'] = item['first_name'].lstrip()
+    item['given_name'] = item['given_name'].lstrip()
 
-    item['first_name'] = item['first_name'].split(" ")[0] if len(
-        item['first_name'].split(" ")) > 1 else item['first_name']
+    item['given_name'] = item['given_name'].split(" ")[0] if len(
+        item['given_name'].split(" ")) > 1 else item['given_name']
 
     item['name'] = item['name'].title()
-    item['first_name'] = item['first_name'].title()
-    item['last_name'] = item['last_name'].title()
+    item['given_name'] = item['given_name'].title()
+    item['family_name'] = item['family_name'].title()
 
-    item['phone'] = item['form_phone'] if not item['phone'] else item['phone']
+    item['phone'] = only_digits(item['phone'])
 
-    item["phone"] = re.sub(r'[\(\) -]+', '', item['phone']
-                           ) if item['phone'] else item['phone']
-    item["phone"] = re.sub(r'^\d{1}(\d{2})(\d{1})(\d{4})(\d{4})$',
-                           r'+55 (\1) \2 \3 \4', item["phone"]) if item['phone'] else item['phone']
-    item["phone"] = re.sub(r'^\d{2}(\d{2})(\d{1})(\d{4})(\d{4})$',
-                           r'+55 (\1) \2 \3 \4', item["phone"]) if item['phone'] else item['phone']
-    item["phone"] = re.sub(r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4',
-                           item["phone"]) if item['phone'] else item['phone']
-    item["phone"] = re.sub(r'^\+(\d{2})(\d{2})(\d{1})(\d{4})(\d{4})$',
-                           r'+\1 (\2) \3 \4 \5', item["phone"]) if item['phone'] else item['phone']
-    item["phone"] = re.sub(r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3',
-                           item["phone"]) if item['phone'] else item['phone']
-    item["phone"] = re.sub(r'^\{"ddd"=>"(\d{2})","number"=>"(\d{1})(\d{8})"\}$',
-                           r'+55 (\1) \2 \3', item["phone"]) if item['phone'] else item['phone']
+    if item['phone']:
+        item['phone'] = re.sub(
+            r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', item['phone'])
+        item['phone'] = re.sub(
+            r'^(\d{1})(\d{4})(\d{4})$', r'+55 (xx) \1 \2 \3', item['phone'])
+        item['phone'] = re.sub(
+            r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3', item['phone'])
+        item['phone'] = re.sub(
+            r'^(\d{4})(\d{4})$', r'+55 (xx) 9 \1 \2', item['phone'])
 
-    item['state'] = re.sub(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', item["phone"]
-                           ) if not item['state'] and item['phone'] else item['state']
+    # item['region'] = re.sub(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', item["phone"]
+    #                         ) if not item['region'] and item['phone'] else item['region']
 
-    item['state'] = find_by_ddd(item['state'])
+    # item['region'] = find_by_ddd(item['region'])
 
     return item
 
@@ -134,18 +152,8 @@ class FormNormalizeWorkflowInterface(NormalizeWorkflowInterface):
             m.community_id AS community_id,
             fe.activist_id as activist_id,
             fe.created_at AS action_date,
-            a.email AS email,
-            a.name AS name,
-            a.first_name AS first_name,
-            a.last_name AS last_name,
-            a.city AS city,
-            a.state AS state,
-            a.phone AS phone,
-            a.document_type AS document_type,
-            a.document_number AS document_number,
             fe.fields AS fields
         FROM form_entries fe
-        JOIN activists a ON a.id = fe.activist_id
         JOIN widgets w ON w.id = fe.widget_id
         JOIN blocks b ON b.id = w.block_id
         JOIN mobilizations m ON m.id = b.mobilization_id
@@ -163,7 +171,9 @@ class FormNormalizeWorkflowInterface(NormalizeWorkflowInterface):
 
         items = []
         for i, item in df.iterrows():
-            items.append(parse_item(item))
+            result = parse_item(item)
+            if result is None: print('No name item')
+            else: items.append(result)
             pbar.update()
 
         pbar.close(clear=True)
@@ -171,21 +181,19 @@ class FormNormalizeWorkflowInterface(NormalizeWorkflowInterface):
         df = pd.DataFrame(items)
         df = df[[
             "action",
+            "action_id",
+            "action_date",
             "widget_id",
             "mobilization_id",
             "community_id",
-            "activist_id",
-            "action_id",
-            "action_date",
             "email",
             "name",
-            "first_name",
-            "last_name",
-            "city",
-            "state",
+            "given_name",
+            "family_name",
+            # "address_lines",
+            "locality",
+            "region",
             "phone",
-            "document_type",
-            "document_number",
             "gender",
             "color",
             "birthday"

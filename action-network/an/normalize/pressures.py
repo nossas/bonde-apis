@@ -4,6 +4,7 @@ Fetch Bonde pressure actions in PostgreSQL and normalize to insert on BigQuery
 from normalize.base import NormalizeWorkflowInterface
 from normalize.utils import find_by_ddd
 from validate_docbr import CPF
+import pandas as pd
 import numpy as np
 
 cpf = CPF()
@@ -23,13 +24,15 @@ class PressureNormalizeWorkflowInterface(NormalizeWorkflowInterface):
             ap.created_at AS action_date,
             a.email AS email,
             a.name AS name,
-            a.first_name AS first_name,
-            a.last_name AS last_name,
+            a.first_name AS given_name,
+            a.last_name AS family_name,
             a.state AS state,
             a.phone AS phone,
+            ap.form_data,
             ap.form_data->'state' AS form_state,
             ap.form_data->'name' AS form_name,
-            ap.form_data->'lastname' AS form_lastname
+            ap.form_data->'lastname' AS form_lastname,
+            ap.form_data->'phone' AS form_phone
         FROM activist_pressures ap
         JOIN activists a ON a.id = ap.activist_id
         JOIN widgets w ON w.id = ap.widget_id
@@ -44,27 +47,34 @@ class PressureNormalizeWorkflowInterface(NormalizeWorkflowInterface):
     def normalize(self, df):
         """Normalize activist actions pressure"""
 
-        df['state'] = np.where(
-            df['state'].isnull() & df['form_state'].notnull(), df['form_state'], df['state'])
+        df2 = df[df['form_data'].isnull()]
+        df3 = df[df['form_data'].notnull()]
+
+        df3['region'] = np.where(df3['form_state'].notnull(), df3['form_state'], df3['state'])
+        df3['given_name'] = np.where(df3['form_name'].notnull(), df3['form_name'], df3['given_name'])
+        df3['family_name'] = np.where(df3['form_lastname'].notnull(), df3['form_lastname'], df3['family_name'])
+        df3['phone'] = np.where(df3['form_phone'].notnull(), df3['form_phone'], df3['phone'])
+
+        df = pd.concat([df2, df3])
 
         df['name'] = np.where(df['name'].isnull(), df['form_name'], df['name'])
 
-        df['first_name'] = np.where(
-            df['first_name'].isnull(), df['form_name'], df['first_name'])
-        df['last_name'] = np.where(
-            df['last_name'].isnull(), df['form_lastname'], df['last_name'])
+        df['given_name'] = np.where(
+            df['given_name'].isnull(), df['form_name'], df['given_name'])
+        df['family_name'] = np.where(
+            df['family_name'].isnull(), df['form_lastname'], df['family_name'])
 
-        df['first_name'] = np.where(df['first_name'].isnull(
-        ), df['name'].str.split(pat=" ").str[0], df['first_name'])
-        df['last_name'] = np.where(df['last_name'].isnull(), df['name'].str.split(
-            pat=" ").str[1:].str.join(" "), df['last_name'])
+        df['given_name'] = np.where(df['given_name'].isnull(
+        ), df['name'].str.split(pat=" ").str[0], df['given_name'])
+        df['family_name'] = np.where(df['family_name'].isnull(), df['name'].str.split(
+            pat=" ").str[1:].str.join(" "), df['family_name'])
 
-        df['first_name'] = np.where(len(df['first_name'].str.split(
-            pat=" ")) > 1, df['first_name'].str.split(pat=" ").str[0], df['first_name'])
+        df['given_name'] = np.where(len(df['given_name'].str.split(
+            pat=" ")) > 1, df['given_name'].str.split(pat=" ").str[0], df['given_name'])
 
         df['name'] = df['name'].str.title()
-        df['first_name'] = df['first_name'].str.title()
-        df['last_name'] = df['last_name'].str.title()
+        df['given_name'] = df['given_name'].str.title()
+        df['family_name'] = df['family_name'].str.title()
 
         df["phone"] = df["phone"].str.replace(r'[\(\) -]+', '', regex=True)
         df["phone"] = df["phone"].str.replace(
@@ -82,23 +92,24 @@ class PressureNormalizeWorkflowInterface(NormalizeWorkflowInterface):
 
         df = df[[
             "action",
+            "action_id",
+            "action_date",
             "widget_id",
             "mobilization_id",
             "community_id",
-            "activist_id",
-            "action_id",
-            "action_date",
             "email",
             "name",
-            "first_name",
-            "last_name",
-            "state",
+            "given_name",
+            "family_name",
+            # "address_lines",
+            # "locality",
+            "region",
             "phone"
         ]]
 
-        df['state'] = np.where(df['state'].isnull() & df['phone'].notnull(
-        ), df['phone'].str.replace(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', regex=True), df['state'])
+        df['region'] = np.where(df['region'].isnull() & df['phone'].notnull(
+        ), df['phone'].str.replace(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', regex=True), df['region'])
 
-        df['state'] = df['state'].map(lambda x: find_by_ddd(x) if x else x)
+        df['region'] = df['region'].map(lambda x: find_by_ddd(x) if x else x)
 
         return df
