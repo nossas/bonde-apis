@@ -5,7 +5,7 @@ import abc
 import enlighten
 import pandas as pd
 from logger import logging
-from database.bigquery import insert
+from database.bigquery import insert_activist_actions as insert
 from database.postgres import cnx
 
 # Setup progress bar

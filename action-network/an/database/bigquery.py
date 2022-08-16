@@ -3,20 +3,19 @@ import pandas_gbq
 
 client = bigquery.Client()
 
-def insertactions(df_an, project_id="data-bonde", table_id="analyze.actions"):
-    # Insert on table
+
+def insert_actions(df, project_id="data-bonde", table_id="analyze.actions"):
+    """Insert actions table"""
     pandas_gbq.to_gbq(df, table_id, project_id=project_id, if_exists="append")
 
-def insert(df, project_id="data-bonde", table_id="analyze.activist_actions"):
-    # Insert on table
+
+def insert_activist_actions(df, project_id="data-bonde", table_id="analyze.activist_actions"):
+    """Insert activist_actions table"""
     pandas_gbq.to_gbq(df, table_id, project_id=project_id, if_exists="append")
 
-def read(project_id="data-bonde"):
-    # Read table
-    sql = """
-    SELECT
-      * 
-    FROM analyze.groups g """
 
+def select_groups(project_id="data-bonde"):
+    """Fetch groups table"""
     # Run a Standard SQL query
-    df_groups = pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
+    sql = "SELECT * FROM analyze.groups g"
+    return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')

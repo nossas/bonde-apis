@@ -2,6 +2,8 @@ import click
 from normalize.pressures import PressureNormalizeWorkflowInterface
 from normalize.forms import FormNormalizeWorkflowInterface
 from normalize.donations import DonationNormalizeWorkflowInterface
+from sync.pressures import sync_actions
+
 
 @click.group()
 def cli():
@@ -26,7 +28,17 @@ def normalize(community, action, page):
             dict(community_id=community, action=action), limit=30000, page=page).run()
 
 
+@click.command()
+@click.option('--community', type=int, help='Community ID to use for normalize.')
+# @click.option('--action', help='The action kind name')
+# @click.option('--page', type=int, default=0)
+def syncronize(community):
+    """Syncronize Bonde widgets to inserted on Action Network and BigQuery dataset"""
+    sync_actions(community_id=community)
+
+
 cli.add_command(normalize)
+cli.add_command(syncronize)
 
 if __name__ == "__main__":
     # load_dotenv('../.env')
