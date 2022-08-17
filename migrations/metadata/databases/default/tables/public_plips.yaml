@@ -42,6 +42,7 @@ select_permissions:
         - expected_signatures
         - id
         - unique_identifier
+        - unique_identifier
         - widget_id
       computed_fields:
         - confirmed_signatures
