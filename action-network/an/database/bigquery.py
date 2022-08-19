@@ -21,7 +21,7 @@ def select_groups(project_id="data-bonde"):
     return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
 
 
-def select_activist_actions(start_date, end_date, project_id="data-bonde")
+def select_activist_actions(start_date, end_date, project_id="data-bonde"):
     """Fetch activist actions table"""
     sql = f'''
     SELECT

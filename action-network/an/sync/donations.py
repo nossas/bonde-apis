@@ -38,7 +38,7 @@ def sync_actions(community_id: int):
             id=item['mobilization_id'],
             title=f"{item['mobilization_name']}#{item['widgets_id']}",
             description=item['mobilization_description'],
-            origin_system="Bonde.org (Integration)"
+            origin_system="BONDE"
         )
 
         response = requests.post(
