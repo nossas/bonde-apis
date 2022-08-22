@@ -39,6 +39,7 @@ select_permissions:
   - role: anonymous
     permission:
       columns:
+        - created_at
         - expected_signatures
         - id
         - unique_identifier
