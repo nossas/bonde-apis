@@ -6,6 +6,7 @@ from sync.pressures import sync_actions as pressure_sync_actions
 from sync.forms import sync_actions as form_sync_actions
 from sync.donations import sync_actions as donations_sync_actions
 from sync.tags import sync_tags_an, sync_tags_bg
+from submit_actions import submit_actions
 
 
 
@@ -43,6 +44,15 @@ def syncronize(community, action):
         form_sync_actions(community_id=community)
     elif action == "donation":
         donations_sync_actions(community_id=community)
+
+
+@click.command()
+@click.option('--community', type=int, help='Community ID to use for normalize.')
+@click.option('--start_date')
+@click.option('--end_date')
+def submit(community, start_date, end_date):
+    """Submit BigQuery activist actions to Action Network"""
+    submit_actions(community, start_date, end_date)
 
 
 @click.command()
