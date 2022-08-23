@@ -5,6 +5,7 @@ from normalize.donations import DonationNormalizeWorkflowInterface
 from sync.pressures import sync_actions as pressure_sync_actions
 from sync.forms import sync_actions as form_sync_actions
 from sync.donations import sync_actions as donations_sync_actions
+from sync.tags import sync_tags_an, sync_tags_bg
 
 
 
@@ -44,8 +45,18 @@ def syncronize(community, action):
         donations_sync_actions(community_id=community)
 
 
+@click.command()
+@click.option('--db', help='The database to insert tags')
+def tags(db):
+    """Syncronize Bonde tags to Big Query or Action Network"""
+    if db == 'bq':
+        sync_tags_bg()
+    elif db == 'an':
+        sync_tags_an()
+
 cli.add_command(normalize)
 cli.add_command(syncronize)
+cli.add_command(tags)
 
 if __name__ == "__main__":
     # load_dotenv('../.env')

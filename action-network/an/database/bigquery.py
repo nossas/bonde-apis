@@ -14,6 +14,11 @@ def insert_activist_actions(df, project_id="data-bonde", table_id="analyze.activ
     pandas_gbq.to_gbq(df, table_id, project_id=project_id, if_exists="append")
 
 
+def insert_themes(df, project_id="data-bonde", table_id="analyze.themes"):
+    """Insert themes table"""
+    pandas_gbq.to_gbq(df, table_id, project_id=project_id, if_exists="append")
+
+
 def select_groups(project_id="data-bonde"):
     """Fetch groups table"""
     # Run a Standard SQL query
