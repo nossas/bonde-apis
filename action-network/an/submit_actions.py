@@ -1,10 +1,11 @@
 """Submit activist actions BigQuery to Action Network"""
 import json
 import requests
+from logger import logging
 from database.bigquery import select_activist_actions, select_themes, update_activist_actions
 
 
-def submit_actions(community_id: int, start_date: str, end_date: str):
+def submit_actions(community_id: int, start_date: str, end_date: str, background: bool):
     """Submit activist actions BigQuery to Action Network"""
     df = select_activist_actions(community_id, start_date, end_date)
     df = df[df['an_response'].isnull()]
@@ -54,16 +55,20 @@ def submit_actions(community_id: int, start_date: str, end_date: str):
         elif item['an_resource_name'] == 'donations':
             endpoint += f"/fundraising_pages/{item['an_action_id']}/donations"
 
+        if background:
+            endpoint += '?background_request=true'
+
         headers = {
             'OSDI-API-Token': item['an_group_id'],
             'Content-Type': 'application/json'
         }
-        # print(headers)
+        logging.info(f"Submit activist action {item['action_id']} to AN")
         response = requests.request("POST", endpoint, data=json.dumps(payload), headers=headers)
-
+        logging.info(f"Submit activist action {item['action_id']} to AN is done")
         if response.status_code == 200:
             update_activist_actions(an_response=json.dumps(
                 response.json()), action_id=item['action_id'], action=item['action'])
+            logging.info(f"Submit activist action {item['action_id']} is marked")
         else:
             update_activist_actions(an_response=json.dumps(
                 response.json()), action_id=item['action_id'], action=item['action'])

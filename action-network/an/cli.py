@@ -48,11 +48,12 @@ def syncronize(community, action):
 
 @click.command()
 @click.option('--community', type=int, help='Community ID to use for normalize.')
-@click.option('--start_date')
-@click.option('--end_date')
-def submit(community, start_date, end_date):
+@click.option('--start')
+@click.option('--end')
+@click.option('--background', is_flag=True)
+def submit(community, start, end, background):
     """Submit BigQuery activist actions to Action Network"""
-    submit_actions(community, start_date, end_date)
+    submit_actions(community, start, end, background)
 
 
 @click.command()
@@ -67,6 +68,7 @@ def tags(db):
 cli.add_command(normalize)
 cli.add_command(syncronize)
 cli.add_command(tags)
+cli.add_command(submit)
 
 if __name__ == "__main__":
     # load_dotenv('../.env')
