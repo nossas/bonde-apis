@@ -37,7 +37,7 @@ def sync_tags_an():
 
 def sync_tags_bg():
     """Insert subtemes Bonde on tags Big Query"""
-    df = pd.read_sql_query('''
+    df_subthemes = pd.read_sql_query('''
         SELECT
           s.label AS theme,
           m.id AS mobilization_id
@@ -45,5 +45,13 @@ def sync_tags_bg():
         INNER JOIN mobilizations m ON m.id = ms.mobilization_id
         INNER JOIN subthemes s ON s.id = ms.subtheme_id
     ''', cnx)
+    df_themes = pd.read_sql_query('''
+        SELECT
+            t.label AS theme,
+            m.id AS mobilization_id
+        FROM mobilizations m
+        INNER JOIN themes t ON t.id = m.theme_id
+        WHERE m.theme_id IS NOT NULL
+    ''', cnx)
 
-    insert_themes(df)
+    insert_themes(pd.concat([df_themes, df_subthemes]))
