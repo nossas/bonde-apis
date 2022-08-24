@@ -84,6 +84,7 @@ class DonationNormalizeWorkflowInterface(NormalizeWorkflowInterface):
             m.id AS mobilization_id,
             m.community_id AS community_id,
             d.created_at AS action_date,
+            d.amount AS amount,
             d.checkout_data,
             d.checkout_data->'name' AS checkout_name,
             d.checkout_data->'email' AS checkout_email,
@@ -109,6 +110,8 @@ class DonationNormalizeWorkflowInterface(NormalizeWorkflowInterface):
         pd.set_option('mode.chained_assignment', None)
 
         df = df[df['customer'].notnull() | df['checkout_data'].notnull()]
+
+        df['amount'] = df['amount'].astype(str)
 
         # Create activist fields
         df['name'] = np.where(df['customer_name'].isnull(),
@@ -167,7 +170,8 @@ class DonationNormalizeWorkflowInterface(NormalizeWorkflowInterface):
             "locality",
             "region",
             "postal_code",
-            "phone"
+            "phone",
+            "amount"
         ]]
 
         return df

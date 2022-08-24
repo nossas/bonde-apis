@@ -9,6 +9,10 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
     """Submit activist actions BigQuery to Action Network"""
     df = select_activist_actions(community_id, start_date, end_date)
     df = df[df['an_response'].isnull()]
+
+    # TODO: Remover, apenas teste!
+    df = df[df['action'] == 'donation']
+
     themes = select_themes()
 
     # import ipdb; ipdb.set_trace()
@@ -23,6 +27,14 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
                 languages_spoken=['pt-BR']
             )
         )
+
+        if item['action'] == 'donation':
+            payload['recipients'] = [
+                dict(display_name=item['mobilization_name'],
+                     amount=f"{item['amount'][:-2]}.{item['amount'][-2:]}")
+            ]
+
+            payload['created_date'] = str(item['action_date'])[:19]
 
         if item['phone']:
             payload['person']['phone_numbers'] = [dict(number=item['phone'])]
@@ -39,8 +51,8 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
 
         # CUSTOM FIELDS
         payload['person']['custom_fields'] = dict(
-            gender = item['gender'],
-            color = item['color'])
+            gender=item['gender'],
+            color=item['color'])
 
         # TAGS
         tags = [a[1]['theme'] for a in filter(
@@ -64,12 +76,17 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
             'Content-Type': 'application/json'
         }
         logging.info(f"Submit activist action {item['action_id']} to AN")
-        response = requests.request("POST", endpoint, data=json.dumps(payload), headers=headers)
-        logging.info(f"Submit activist action {item['action_id']} to AN is done")
+
+        response = requests.request(
+            "POST", endpoint, data=json.dumps(payload), headers=headers)
+        logging.info(
+            f"Submit activist action {item['action_id']} to AN is done")
+
         if response.status_code == 200:
             update_activist_actions(an_response=json.dumps(
                 response.json()), action_id=item['action_id'], action=item['action'])
-            logging.info(f"Submit activist action {item['action_id']} is marked")
+            logging.info(
+                f"Submit activist action {item['action_id']} is marked")
         else:
             update_activist_actions(an_response=json.dumps(
                 response.json()), action_id=item['action_id'], action=item['action'])

@@ -61,6 +61,7 @@ class NormalizeWorkflowInterface:
             
             self.sbar.update(stage=f'Parsing {self.page}', status='PROCESSING')
             df = self.normalize(df)
+
             insert(df)
 
             self.page += 1
