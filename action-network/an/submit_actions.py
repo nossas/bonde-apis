@@ -39,7 +39,8 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
 
         # CUSTOM FIELDS
         payload['person']['custom_fields'] = dict(
-            action_date=item['action_date'].to_pydatetime().strftime("%Y-%m-%d %H:%M:%S"))
+            gender = item['gender'],
+            color = item['color'])
 
         # TAGS
         tags = [a[1]['theme'] for a in filter(
