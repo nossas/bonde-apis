@@ -44,7 +44,7 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
         if item['locality']:
             address['locality'] = item['locality']
         if item['region']:
-            address['region'] = item['region']
+            address['region'] = f"BR-{item['region']}"
 
         address['country'] = 'BR'
         payload['person']['postal_addresses'] = [address]
