@@ -1,31 +1,51 @@
-## How to development
+## Como contribuir com o desenvolvimento
 
-Create virtualenv:
+### Preparando o ambiente virtual
+
+Em um dispositivo com Python 3, crie um ambiente virtual com o módulo `virtualenv`:
 
 `python3 -m venv environment`
 
-Activate virtualenv:
+Ative seu ambiente virtual:
 
 `source bin environment/bin/activate`
 
-Install dependencies:
+Instale as dependências do projeto para usar a CLI:
 
 `pip install -r requirements-cli.txt`
 
-## Environments
+### Variáveis de ambiente
 
-- `DATABASE_URL`
-- `GOOGLE_APPLICATION_CREDENTIALS`
+Configure um arquivo `.env` com as variáveis a seguir:
 
-## Commands
+- `DATABASE_URL`: Base de dados PostgreSQL
+- `GOOGLE_APPLICATION_CREDENTIALS`: Credencial de acesso ao BigQuery
+- `ACTION_NETWORK_API_KEY`: Chave de API do grupo principal na ActionNetwork
 
-`export $(cat .env | xargs) && python an/cli.py normalize --community 263 --action donation`
+## CLI
+
+Prefixo utilizado no shell para qualquer comando:
+
+`export $(cat .env | xargs) && python an/cli.py [COMMAND] [--ARGS]`
+
+### Lista de comandos
+
+Normalizar ações do Bonde para serem inseridas no conjunto de dados do BigQuery
+
+`normalize --community [int] --action [donation | pressure | form]`
+
+Sincronizar widgets e mobilizações do Bonde para ações da Action Network
+
+`syncronize --community [int] --action [donation | pressure | form]`
+
+Submiter ação do ativista normalizada no BigQuery para Action Network
+
+`submit --community [int] --start [datetime string] --end [datetime string] --background [boolean]`
+
+Sincronizar relação de temas e subtemas das mobilizações do Bonde para temas no BigQuery e tags na ActionNetwork
+
+`tags --db [bq | an]`
 
 ## TODO
-- [] Setup Pandas
-- [] Setup BigQuery
-- [] Setup SQLAlchemy
-- [] Setup envs
-- [] Setup logging
-- [] Setup tests
-- [] Setup CLI
+- [] Verificar funcionamento do atributo `region` com Datadat
+- [] Documentar processo de despublicar grupos ActionNetwork
