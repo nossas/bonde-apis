@@ -57,6 +57,8 @@ def sync_actions(community_id: int):
             df_an['community_id'] = pd.Series([community_id], dtype="int")
             df_an['mobilization_id'] = pd.Series(
                 [mobilization_id], dtype="int")
+            df_an['mobilization_name'] = pd.Series(
+                item['mobilization_name'], dtype="string")
             df_an['widget_id'] = pd.Series(item['widgets_id'], dtype="int")
             df_an['an_action_id'] = pd.Series([an_action_id], dtype="string")
             df_an['an_resource_name'] = an_resource_name
