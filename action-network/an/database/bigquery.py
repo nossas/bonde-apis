@@ -37,18 +37,30 @@ def select_groups(project_id="data-bonde"):
     return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
 
 
-def select_activist_actions(community_id, start_date, end_date, project_id="data-bonde"):
+def select_activist_actions(project_id="data-bonde", **kwargs):
     """Fetch activist actions table"""
-    sql = f'''
+    sql = '''
     SELECT
         *
     FROM `analyze.activist_actions` aa
     INNER JOIN `analyze.actions` a ON a.widget_id = aa.widget_id
     INNER JOIN `analyze.groups` g ON g.community_id = a.community_id
-    WHERE aa.action_date >= '{start_date}'
-    AND aa.action_date <= '{end_date}'
-    AND g.community_id = {community_id}
     '''
+
+    filters = []
+
+    if kwargs['community_id']:
+        filters.append(f"g.community_id = {kwargs['community_id']}")
+
+    if kwargs['start_date'] and kwargs['end_date']:
+        filters.append(f"aa.action_date >= '{kwargs['start_date']}'")
+        filters.append(f"aa.action_date <= '{kwargs['end_date']}'")
+
+    for i, item in enumerate(filters):
+        if i == 0:
+            sql += f"WHERE {item} "
+        else:
+            sql += f"AND {item} "
 
     return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
 

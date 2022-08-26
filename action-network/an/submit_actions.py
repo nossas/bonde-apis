@@ -5,20 +5,16 @@ from logger import logging
 from database.bigquery import select_activist_actions, select_themes, update_activist_actions
 
 
-def submit_actions(community_id: int, start_date: str, end_date: str, background: bool):
+def submit_actions(community_id: int, start_date: str, end_date: str, background: bool = False):
     """Submit activist actions BigQuery to Action Network"""
-    df = select_activist_actions(community_id, start_date, end_date)
-    df = df[df['an_response'].isnull()]
+    dataframe = select_activist_actions(
+        community_id=community_id, start_date=start_date, end_date=end_date)
 
-    # TODO: Remover, apenas teste!
-    df = df[df['action'] == 'donation']
+    dataframe = dataframe[dataframe['an_response'].isnull()]
 
     themes = select_themes()
 
-    # import ipdb; ipdb.set_trace()
-    # df = df[df['email'] == "xxxx"]
-
-    for index, item in df.iterrows():
+    for i, item in dataframe.iterrows():  # pylint: disable=unused-variable
         payload = dict(
             person=dict(
                 given_name=item['given_name'],
@@ -50,16 +46,22 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
         payload['person']['postal_addresses'] = [address]
 
         # CUSTOM FIELDS
-        payload['person']['custom_fields'] = dict(
-            gender=item['gender'],
-            color=item['color'])
+        custom_fields = dict()
+        if item['gender']:
+            custom_fields['gender'] = item['gender']
+        if item['color']:
+            custom_fields['color'] = item['color']
+        if item['region']:
+            custom_fields['state'] = item['region']
+
+        payload['person']['custom_fields'] = custom_fields
 
         # TAGS
         tags = [a[1]['theme'] for a in filter(
-            lambda x: x[1]['mobilization_id'] == item['mobilization_id'], themes.iterrows())]
+            lambda x: x[1]['mobilization_id'] == item['mobilization_id'], themes.iterrows())]  # pylint: disable=cell-var-from-loop
         payload['add_tags'] = tags
 
-        # import ipdb; ipdb.set_trace()
+        # Mount endpoint to request
         endpoint = 'https://actionnetwork.org/api/v2'
         if item['an_resource_name'] == 'submissions':
             endpoint += f"/forms/{item['an_action_id']}/submissions/"
@@ -68,25 +70,25 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
         elif item['an_resource_name'] == 'donations':
             endpoint += f"/fundraising_pages/{item['an_action_id']}/donations"
 
+        # Define background proccess
         if background:
             endpoint += '?background_request=true'
+
+        logging.info(
+            f"POST ActivistAction {item['action_id']} to ActionNetwork {item['an_resource_name']}.")
 
         headers = {
             'OSDI-API-Token': item['an_group_id'],
             'Content-Type': 'application/json'
         }
-        logging.info(f"Submit activist action {item['action_id']} to AN")
-
         response = requests.request(
             "POST", endpoint, data=json.dumps(payload), headers=headers)
-        logging.info(
-            f"Submit activist action {item['action_id']} to AN is done")
 
         if response.status_code == 200:
             update_activist_actions(an_response=json.dumps(
                 response.json()), action_id=item['action_id'], action=item['action'])
-            logging.info(
-                f"Submit activist action {item['action_id']} is marked")
         else:
             update_activist_actions(an_response=json.dumps(
                 response.json()), action_id=item['action_id'], action=item['action'])
+
+        logging.info(f"POST ActivistAction {item['action_id']} is done.")
