@@ -25,6 +25,9 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
         )
 
         if item['action'] == 'donation':
+            item['amount'] = f"{item['amount']}00" if not item["amount"].endswith(
+                '00') else item['amount']
+
             payload['recipients'] = [
                 dict(display_name=item['mobilization_name'],
                      amount=f"{item['amount'][:-2]}.{item['amount'][-2:]}")
