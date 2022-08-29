@@ -36,6 +36,20 @@ computed_fields:
         name: plips_status
     comment: 'Atributo computado para retornar status a partir do período. Resultados: CONCLUIDO, PENDENTE ou INSCRITO'
 select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - created_at
+        - expected_signatures
+        - id
+        - unique_identifier
+        - unique_identifier
+        - widget_id
+      computed_fields:
+        - confirmed_signatures
+        - status
+      filter: {}
+      allow_aggregations: true
   - role: common_user
     permission:
       columns:

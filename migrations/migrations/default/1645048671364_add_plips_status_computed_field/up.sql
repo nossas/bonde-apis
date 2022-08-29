@@ -13,7 +13,9 @@ RETURNS TEXT AS $$
                     ((p.form_data->'expected_signatures')::int = 30 AND p.created_at <= NOW() - INTERVAL '90' DAY) OR
                     ((p.form_data->'expected_signatures')::int = 40 AND p.created_at <= NOW() - INTERVAL '120' DAY) OR
                     ((p.form_data->'expected_signatures')::int = 50 AND p.created_at <= NOW() - INTERVAL '150' DAY) OR
-                    ((p.form_data->'expected_signatures')::int = 100 AND p.created_at <= NOW() - INTERVAL '180' DAY)
+                    ((p.form_data->'expected_signatures')::int = 100 AND p.created_at <= NOW() - INTERVAL '180' DAY) OR
+                    ((p.form_data->'expected_signatures')::int = 500 AND p.created_at <= NOW() - INTERVAL '210' DAY) OR
+                    ((p.form_data->'expected_signatures')::int = 1000 AND p.created_at <= NOW() - INTERVAL '240' DAY)
                 )
             ) THEN 'PENDENTE'
             ELSE 'INSCRITO'
