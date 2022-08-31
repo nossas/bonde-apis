@@ -55,7 +55,7 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
         if item['color']:
             custom_fields['color'] = item['color']
         if item['region']:
-            custom_fields['state'] = item['region']
+            custom_fields['estado'] = item['region']
 
         payload['person']['custom_fields'] = custom_fields
 
