@@ -30,17 +30,19 @@ insert_permissions:
         user_id: x-hasura-User-Id
       columns:
         - confirmed_signatures
+        - created_at
         - id
+        - state
+        - unique_identifier
         - user_id
         - widget_id
-        - created_at
-        - unique_identifier
       backend_only: false
 select_permissions:
   - role: anonymous
     permission:
       columns:
         - confirmed_signatures
+        - state
         - widget_id
       filter: {}
       allow_aggregations: true
@@ -48,11 +50,12 @@ select_permissions:
     permission:
       columns:
         - confirmed_signatures
+        - created_at
         - id
+        - state
+        - unique_identifier
         - user_id
         - widget_id
-        - created_at
-        - unique_identifier
       filter:
         widget:
           block:
