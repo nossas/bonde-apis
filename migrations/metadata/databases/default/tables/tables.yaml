@@ -29,6 +29,7 @@
 - "!include public_notification_templates.yaml"
 - "!include public_participations.yaml"
 - "!include public_plip_signatures.yaml"
+- "!include public_plip_signatures_by_state_result.yaml"
 - "!include public_plips.yaml"
 - "!include public_plips_integration_logs.yaml"
 - "!include public_plips_subscribers_range.yaml"

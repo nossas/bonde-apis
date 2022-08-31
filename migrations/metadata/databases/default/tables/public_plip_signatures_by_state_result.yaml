@@ -1,0 +1,18 @@
+table:
+  schema: public
+  name: plip_signatures_by_state_result
+select_permissions:
+  - role: common_user
+    permission:
+      columns:
+        - confirmed_signatures
+        - expected_signatures
+        - state
+      filter: {}
+  - role: user
+    permission:
+      columns:
+        - state
+        - confirmed_signatures
+        - expected_signatures
+      filter: {}
