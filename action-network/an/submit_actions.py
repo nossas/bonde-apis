@@ -18,7 +18,7 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
         payload = dict(
             person=dict(
                 given_name=item['given_name'],
-                family_name=item['given_name'],
+                family_name=item['family_name'],
                 email_addresses=[dict(address=item['email'])],
                 languages_spoken=['pt-BR']
             )
