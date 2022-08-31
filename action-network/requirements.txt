@@ -1,0 +1,12 @@
+pandas
+numpy
+sqlalchemy
+psycopg2
+validate-docbr
+python-dotenv
+pandas_gbq
+fsspec
+enlighten
+pandas
+numpy
+validate_docbr
