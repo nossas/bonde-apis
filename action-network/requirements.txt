@@ -8,3 +8,4 @@ enlighten
 pandas
 numpy
 validate_docbr
+tqdm
