@@ -59,10 +59,9 @@ def submit(community, start, end, background):
 @click.option('--community', type=int, help='Community ID to use for normalize.')
 @click.option('--start')
 @click.option('--end')
-@click.option('--background', is_flag=True)
-def update(community, start, end, background):
+def update(community, start, end):
     """Update BigQuery activist actions to Action Network"""
-    update_activists(community, start, end, background)
+    update_activists(community, start, end)
 
 
 @click.command()

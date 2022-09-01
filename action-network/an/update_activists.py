@@ -10,7 +10,7 @@ def update_activists(community_id: int, start_date: str, end_date: str, backgrou
     dataframe = select_activist_actions_update(
         community_id=community_id, start_date=start_date, end_date=end_date)
 
-    dataframe = dataframe[dataframe['an_response'].notnull()]
+    dataframe = dataframe[dataframe['person_id'].notnull()]
 
     for i, item in dataframe.iterrows():  # pylint: disable=unused-variable
         payload = dict(
@@ -32,10 +32,6 @@ def update_activists(community_id: int, start_date: str, end_date: str, backgrou
         # Mount endpoint to request
         endpoint = f"https://actionnetwork.org/api/v2/people/{item['person_id']}/"
  
-        # Define background proccess
-        if background:
-            endpoint += '?background_request=true'
-
         logging.info(
             f"PUT ActivistAction {item['action_id']} to ActionNetwork {item['an_resource_name']}.")
 
