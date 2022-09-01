@@ -64,6 +64,33 @@ def select_activist_actions(project_id="data-bonde", **kwargs):
 
     return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
 
+def select_activist_actions_update(project_id="data-bonde", **kwargs):
+    """Fetch activist actions table"""
+    sql = '''
+    SELECT
+        *
+    FROM `analyze.update_an` aa
+    INNER JOIN `analyze.actions` a ON a.widget_id = aa.widget_id
+    INNER JOIN `analyze.groups` g ON g.community_id = a.community_id
+    '''
+
+    filters = []
+
+    if kwargs['community_id']:
+        filters.append(f"g.community_id = {kwargs['community_id']}")
+
+    if kwargs['start_date'] and kwargs['end_date']:
+        filters.append(f"aa.action_date >= '{kwargs['start_date']}'")
+        filters.append(f"aa.action_date <= '{kwargs['end_date']}'")
+
+    for i, item in enumerate(filters):
+        if i == 0:
+            sql += f"WHERE {item} "
+        else:
+            sql += f"AND {item} "
+
+    return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
+
 
 def select_themes(project_id="data-bonde"):
     """Fetch themes table"""
