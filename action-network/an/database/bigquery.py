@@ -45,6 +45,7 @@ def select_activist_actions(project_id="data-bonde", **kwargs):
     FROM `analyze.activist_actions` aa
     INNER JOIN `analyze.actions` a ON a.widget_id = aa.widget_id
     INNER JOIN `analyze.groups` g ON g.community_id = a.community_id
+    order by aa.action_date desc
     '''
 
     filters = []
