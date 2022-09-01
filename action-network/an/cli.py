@@ -7,7 +7,7 @@ from sync.forms import sync_actions as form_sync_actions
 from sync.donations import sync_actions as donations_sync_actions
 from sync.tags import sync_tags_an, sync_tags_bg
 from submit_actions import submit_actions
-
+from update_activists import update_activists
 
 
 @click.group()
@@ -55,6 +55,15 @@ def submit(community, start, end, background):
     """Submit BigQuery activist actions to Action Network"""
     submit_actions(community, start, end, background)
 
+@click.command()
+@click.option('--community', type=int, help='Community ID to use for normalize.')
+@click.option('--start')
+@click.option('--end')
+@click.option('--background', is_flag=True)
+def update(community, start, end, background):
+    """Update BigQuery activist actions to Action Network"""
+    update_activists(community, start, end, background)
+
 
 @click.command()
 @click.option('--db', help='The database to insert tags')
@@ -69,6 +78,8 @@ cli.add_command(normalize)
 cli.add_command(syncronize)
 cli.add_command(tags)
 cli.add_command(submit)
+cli.add_command(update)
+
 
 if __name__ == "__main__":
     # load_dotenv('../.env')
