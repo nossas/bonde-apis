@@ -18,6 +18,7 @@ def insert_themes(df, project_id="data-bonde", table_id="analyze.themes"):
     """Insert themes table"""
     pandas_gbq.to_gbq(df, table_id, project_id=project_id, if_exists="append")
 
+
 def update_activist_actions(an_response: str, action_id: int, action: str):
     """Update activist_actions table"""
     sql = f'''
@@ -27,6 +28,7 @@ def update_activist_actions(an_response: str, action_id: int, action: str):
     '''
     query_job = client.query(sql)
     query_job.result()
+
 
 def select_groups(project_id="data-bonde"):
     """Fetch groups table"""
