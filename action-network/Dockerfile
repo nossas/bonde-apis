@@ -1,11 +1,21 @@
-FROM python:3.10-alpine
-
-RUN apk add --update \
-    postgresql-dev \
-    gcc
-
+FROM python:3.10
+# RUN apk --update --no-cache add musl-dev linux-headers g++ build-base \
+#     postgresql-dev \
+#     gcc
 RUN mkdir /app
-COPY . /app
 WORKDIR /app
-
+RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common gcc zlib1g-dev python3.8-dev \
+    libjemalloc-dev libboost-dev \
+    libboost-filesystem-dev \
+    libboost-system-dev \
+    libboost-regex-dev \
+    python-dev \
+    autoconf \
+    flex \
+    bison
+COPY requirements* /app/
 RUN pip install -r requirements-cli.txt
+ARG GOOGLE_APPLICATION_CONTENT
+ENV GOOGLE_APPLICATION_CONTENT $GOOGLE_APPLICATION_CONTENT
+RUN echo "$GOOGLE_APPLICATION_CONTENT" > /gac.yml
+COPY . /app
