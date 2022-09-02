@@ -35,7 +35,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       # - name: Create Google Credentials JSON
       #   id: create-json
       #   uses: jsdaniell/create-json@1.1.2
@@ -50,7 +50,7 @@ jobs:
           push: true
           tags: ghcr.io/nossas/bonde-action-network:latest
           build-args: |
-            GOOGLE_APPLICATION_CONTENT='${{ secrets.GOOGLE_APPLICATION_CONTENT }}'
+            GOOGLE_APPLICATION_CONTENT=${{ secrets.GOOGLE_APPLICATION_CONTENT }}
 
       # - name: Build and Publish latest Github Container image
       #   uses: VaultVulp/gp-docker-action@1.0.1
