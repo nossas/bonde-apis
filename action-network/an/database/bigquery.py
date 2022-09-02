@@ -62,6 +62,8 @@ def select_activist_actions(project_id="data-bonde", **kwargs):
         else:
             sql += f"AND {item} "
 
+    sql += f"order by aa.action_date desc"
+
     return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
 
 def select_activist_actions_update(project_id="data-bonde", **kwargs):

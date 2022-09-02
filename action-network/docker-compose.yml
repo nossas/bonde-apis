@@ -1,8 +1,16 @@
+x-cli-template:
+  &cli-template
+    image: nossas/bonde-action-network:latest
+    build: 
+      context: .
+      args:
+        GOOGLE_APPLICATION_CONTENT: ${GOOGLE_APPLICATION_CONTENT}
+    env_file: .env
+    pull_policy: always
+    command: python an/cli.py
+
 services:
   cli:
-    image: nossas/bonde-an
-    build: .
-    environment:
-      - GOOGLE_APPLICATION_CREDENTIALS=123fdsafdsa
-      - DATABASE_URL=postgres://localhost:5476/
-    command: an/cli.py normalize --community 1 --action donation
+    <<: *cli-template
+    command: python an/cli.py
+  
