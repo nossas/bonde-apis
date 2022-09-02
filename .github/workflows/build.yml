@@ -1,5 +1,8 @@
 name: Build APIs packages
 on:
+  push:
+    branches-ignore:
+      - "*/an-*"
   workflow_call:
     # inputs:
     #   environment:
