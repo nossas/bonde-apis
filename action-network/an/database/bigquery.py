@@ -37,14 +37,67 @@ def select_groups(project_id="data-bonde"):
     return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
 
 
+# SELECT
+#     aa.action,
+#     aa.action_id,
+#     aa.action_date,
+#     aa.widget_id,
+#     aa.mobilization_id,
+#     aa.community_id,
+#     aa.email,
+#     aa.name,
+#     aa.given_name,
+#     aa.family_name,
+#     aa.address_line,
+#     aa.locality,
+#     aa.region,
+#     aa.postal_code,
+#     aa.phone,
+#     aa.gender,
+#     aa.color,
+#     aa.birthday,
+#     aa.amount,
+#     a.an_action_id,
+#     a.an_resource_name,
+#     g.an_group_id,
+#     aa_log.an_response
+# FROM `analyze.activist_actions` aa
+# INNER JOIN `analyze.actions` a ON a.widget_id = aa.widget_id
+# INNER JOIN `analyze.groups` g ON g.community_id = a.community_id
+# FULL OUTER JOIN `log.activist_actions` aa_log ON aa_log.action_id = aa.action_id AND aa_log.action = aa.action
+# WHERE g.community_id = 263 AND aa_log.an_response IS NULL;
+
 def select_activist_actions(project_id="data-bonde", **kwargs):
     """Fetch activist actions table"""
     sql = '''
     SELECT
-        *
+        aa.action,
+        aa.action_id,
+        aa.action_date,
+        aa.widget_id,
+        aa.mobilization_id,
+        aa.community_id,
+        aa.email,
+        aa.name,
+        aa.given_name,
+        aa.family_name,
+        aa.address_line,
+        aa.locality,
+        aa.region,
+        aa.postal_code,
+        aa.phone,
+        aa.gender,
+        aa.color,
+        aa.birthday,
+        aa.amount,
+        a.an_action_id,
+        a.an_resource_name,
+        g.an_group_id,
+        aa_log.an_response
     FROM `analyze.activist_actions` aa
     INNER JOIN `analyze.actions` a ON a.widget_id = aa.widget_id
     INNER JOIN `analyze.groups` g ON g.community_id = a.community_id
+    FULL OUTER JOIN `log.activist_actions` aa_log ON aa_log.action_id = aa.action_id AND aa_log.action = aa.action
     '''
 
     filters = []
