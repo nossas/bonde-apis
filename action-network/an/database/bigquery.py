@@ -92,6 +92,7 @@ def select_activist_actions(project_id="data-bonde", **kwargs):
         aa.amount,
         a.an_action_id,
         a.an_resource_name,
+        a.mobilization_name,
         g.an_group_id,
         aa_log.an_response
     FROM `analyze.activist_actions` aa
