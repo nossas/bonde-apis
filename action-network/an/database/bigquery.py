@@ -22,7 +22,7 @@ def insert_themes(df, project_id="data-bonde", table_id="analyze.themes"):
 def update_activist_actions(an_response: str, action_id: int, action: str):
     """Update activist_actions table"""
     sql = f'''
-    UPDATE `analyze.activist_actions` aa
+    UPDATE `log.activist_actions` aa
     SET aa.an_response='{an_response}'
     WHERE aa.action_id={action_id} AND aa.action='{action}'
     '''
