@@ -3,6 +3,7 @@ import json
 import requests
 import pandas as pd
 from logger import logging
+from slack import notify
 from database.bigquery import select_activist_actions, select_themes, insert_activist_actions
 
 
@@ -114,8 +115,8 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
 
                 insert_streaming = []
 
-        except Exception as error:
-            # TODO: add notification to slack
+        except Exception as error: # pylint: disable=broad-except
+
             if len(insert_streaming) > 0:
                 insert_activist_actions(pd.DataFrame(
                     insert_streaming), table_id="log.activist_actions")
@@ -123,6 +124,7 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
                 insert_streaming = []
 
             logging.error(error)
+            notify(error)
         finally:
             logging.info(f"POST ActivistAction {item['action_id']} is done.")
 
