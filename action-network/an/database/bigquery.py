@@ -103,6 +103,8 @@ def select_activist_actions(project_id="data-bonde", **kwargs):
 
     filters = []
 
+    filters.append("aa_log.an_response IS NULL")
+
     if kwargs['community_id']:
         filters.append(f"g.community_id = {kwargs['community_id']}")
 
@@ -116,7 +118,7 @@ def select_activist_actions(project_id="data-bonde", **kwargs):
         else:
             sql += f"AND {item} "
 
-    sql += f"order by aa.action_date desc"
+    sql += f"ORDER BY aa.action_date DESC"
 
     return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
 
