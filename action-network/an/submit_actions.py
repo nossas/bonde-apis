@@ -124,7 +124,7 @@ def submit_actions(community_id: int, start_date: str, end_date: str, background
                 insert_streaming = []
 
             logging.error(error)
-            notify(error)
+            notify(f"Widget ID: {item['action_id']} // Kind: {item['action']} // {error}")
         finally:
             logging.info(f"POST ActivistAction {item['action_id']} is done.")
 
