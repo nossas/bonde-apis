@@ -14,3 +14,10 @@ services:
     <<: *cli-template
     command: python an/cli.py
   
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    env_file: .env
+    pull_policy: always
+    command: python an-webhook/main.py
