@@ -189,7 +189,7 @@ def to_payload(data: dict):
 
     if table == 'form_entries':
         return form(payload=payload)
-    if table == 'donation':
+    if table == 'donations':
         return donation(payload=payload)
-    if table == 'pressure':
+    if table == 'activist_pressures':
         return pressure(payload=payload)
