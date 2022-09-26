@@ -1,12 +1,14 @@
 """normalize.py"""
 import json
 import re
+
+from typings import Donation, Form, Payload, Pressure
 from utils import only_digits, get_field, find_by_ddd
 
 
-def form(payload: dict):
+def form(payload: Form):
     """form"""
-    fields = json.loads(payload['fields'])
+    fields = json.loads(payload.fields)
 
     item = dict()
 
@@ -78,20 +80,12 @@ def form(payload: dict):
         if value:
             response[key] = value
 
-    # Fill response with default params
-    response['widget_id'] = payload['widget_id']
-    response['mobilization_id'] = payload['mobilization_id']
-    response['community_id'] = payload['cached_community_id']
-    response['action_id'] = payload['id']
-    response['action_date'] = payload['created_at']
-    response['action'] = 'form'
-
     return response
 
 
-def donation(payload: dict):
+def donation(payload: Donation):
     """donation"""
-    checkout_data = payload['checkout_data']
+    checkout_data = payload.checkout_data
     checkout_data['amount'] = str(payload['amount'])
 
     item = dict()
@@ -117,25 +111,17 @@ def donation(payload: dict):
 
     item['given_name'] = item['name'].split(" ")[0]
     item['family_name'] = " ".join(item['name'].split(" ")[1:])
-    
+
     # Clean response
     response = dict()
     for key, value in item.items():
         if value:
             response[key] = value
 
-    # Fill response with default params
-    response['widget_id'] = payload['widget_id']
-    response['mobilization_id'] = payload['mobilization_id']
-    response['community_id'] = payload['cached_community_id']
-    response['action_id'] = payload['id']
-    response['action_date'] = payload['created_at']
-    response['action'] = 'donation'
-
     return response
 
 
-def pressure(payload: dict):
+def pressure(payload: Pressure):
     """pressure"""
     form_data = payload['form_data']
     item = dict()
@@ -144,30 +130,30 @@ def pressure(payload: dict):
     item['given_name'] = form_data['name'].title()
     item['family_name'] = form_data['lastname'].title()
     if 'state' in form_data:
-      item['region'] = form_data['state']
-    
+        item['region'] = form_data['state']
+
     if 'phone' in form_data:
-      item['phone'] = form_data['phone']
+        item['phone'] = form_data['phone']
 
-      item["phone"] = item["phone"].replace(r'[\(\) -]+', '', regex=True)
-      item["phone"] = item["phone"].replace(
-          r'^\d{1}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
-      item["phone"] = item["phone"].replace(
-          r'^\d{2}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
-      item["phone"] = item["phone"].replace(
-          r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
-      item["phone"] = item["phone"].replace(
-          r'^\+(\d{2})(\d{2})(\d{1})(\d{4})(\d{4})$', r'+\1 (\2) \3 \4 \5', regex=True)
-      item["phone"] = item["phone"].replace(
-          r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3', regex=True)
-      item["phone"] = item["phone"].replace(
-          r'^\{"ddd"=>"(\d{2})","number"=>"(\d{1})(\d{8})"\}$', r'+55 (\1) \2 \3', regex=True)
+        item["phone"] = item["phone"].replace(r'[\(\) -]+', '', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^\d{1}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^\d{2}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^\+(\d{2})(\d{2})(\d{1})(\d{4})(\d{4})$', r'+\1 (\2) \3 \4 \5', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^\{"ddd"=>"(\d{2})","number"=>"(\d{1})(\d{8})"\}$', r'+55 (\1) \2 \3', regex=True)
 
-      item['region'] = item['phone'].replace(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', regex=True) \
-          if not item['region'] & item['phone'] \
-          else item['region']
+        item['region'] = item['phone'].replace(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', regex=True) \
+            if not item['region'] & item['phone'] \
+            else item['region']
 
-      item['region'] = find_by_ddd(item['region'])
+        item['region'] = find_by_ddd(item['region'])
 
     # Clean response
     response = dict()
@@ -175,25 +161,31 @@ def pressure(payload: dict):
         if value:
             response[key] = value
 
-    # Fill response with default params
-    response['widget_id'] = payload['widget_id']
-    response['mobilization_id'] = payload['mobilization_id']
-    response['community_id'] = payload['cached_community_id']
-    response['action_id'] = payload['id']
-    response['action_date'] = payload['created_at']
-    response['action'] = 'pressure'
-
     return response
 
 
-def to_payload(data: dict):
+def to_payload(data: Payload):
     """to_payload"""
-    payload = data['event']['data']['new']
-    table = data['table']['name']
+    payload = data.event.data.new
+    table = data.table.name
+    response = dict()
 
     if table == 'form_entries':
-        return form(payload=payload)
-    if table == 'donations':
-        return donation(payload=payload)
-    if table == 'activist_pressures':
-        return pressure(payload=payload)
+        response = form(payload=payload)
+        response['action'] = 'form'
+
+    elif table == 'donations':
+        response = donation(payload=payload)
+        response['action'] = 'donation'
+
+    elif table == 'activist_pressures':
+        response = pressure(payload=payload)
+        response['action'] = 'pressure'
+
+    response['widget_id'] = payload.widget_id
+    response['mobilization_id'] = payload.mobilization_id
+    response['community_id'] = payload.cached_community_id
+    response['action_id'] = payload.id
+    response['action_date'] = payload.created_at
+
+    return response

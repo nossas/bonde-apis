@@ -9,3 +9,4 @@ tsconfig.tsbuildinfo
 template
 build
 my-ts-function/*
+**/environemnt/

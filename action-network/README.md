@@ -10,10 +10,6 @@ Ative seu ambiente virtual:
 
 `source bin environment/bin/activate`
 
-Instale as dependências do projeto para usar a CLI:
-
-`pip install -r requirements-cli.txt`
-
 ### Variáveis de ambiente
 
 Configure um arquivo `.env` com as variáveis a seguir:
@@ -22,7 +18,22 @@ Configure um arquivo `.env` com as variáveis a seguir:
 - `GOOGLE_APPLICATION_CREDENTIALS`: Credencial de acesso ao BigQuery
 - `ACTION_NETWORK_API_KEY`: Chave de API do grupo principal na ActionNetwork
 
+## WEB
+Projeto baseado em Python 3 e (https://fastapi.tiangolo.com)[fastapi]
+
+Instale as dependências do projeto para usar a WEB:
+
+`pip install -r requirements-web.txt`
+
+Execute o servidor dentro da pasta `web`:
+
+`uvicorn main:app --reload`
+
 ## CLI
+
+Instale as dependências do projeto para usar a CLI:
+
+`pip install -r requirements-cli.txt`
 
 Prefixo utilizado no shell para qualquer comando:
 

@@ -1,28 +1,11 @@
-FROM python:3.10
-# RUN apk --update --no-cache add musl-dev linux-headers g++ build-base \
-#     postgresql-dev \
-#     gcc
-RUN mkdir /app
-WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common gcc zlib1g-dev python3.8-dev \
-    libjemalloc-dev libboost-dev \
-    libboost-filesystem-dev \
-    libboost-system-dev \
-    libboost-regex-dev \
-    python-dev \
-    autoconf \
-    flex \
-    bison
-COPY requirements* /app/
-RUN pip install -r requirements-cli.txt
-ARG GOOGLE_APPLICATION_CONTENT
-ENV GOOGLE_APPLICATION_CONTENT $GOOGLE_APPLICATION_CONTENT
-RUN echo "$GOOGLE_APPLICATION_CONTENT" > /gac.json
+FROM python:3.9
 
-RUN ls /
+WORKDIR /code
 
-COPY . /app
+COPY ./requirements* /code/
 
-RUN ls
+RUN pip install --no-cache-dir --upgrade -r /code/requirements-web.txt
 
-RUN ls /app
+COPY ./web /code/web
+
+WORKDIR /code/web

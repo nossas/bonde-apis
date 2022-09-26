@@ -150,6 +150,18 @@ def select_activist_actions_update(project_id="data-bonde", **kwargs):
     return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
 
 
+def select_activist_actions_by_name(name: str, project_id="data-bonde"):
+    """Fetch activist actions table by name"""
+    sql = f'''
+    SELECT
+        *
+    FROM `analyze.activist_actions` aa
+    WHERE aa.name = '{name}'
+    '''
+
+    return pandas_gbq.read_gbq(sql, project_id=project_id, dialect='standard')
+
+
 def select_themes(project_id="data-bonde"):
     """Fetch themes table"""
     sql = 'SELECT * FROM `analyze.themes`'

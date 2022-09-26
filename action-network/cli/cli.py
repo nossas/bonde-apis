@@ -1,4 +1,5 @@
 import click
+from database.bigquery import select_activist_actions_by_name
 from normalize.pressures import PressureNormalizeWorkflowInterface
 from normalize.forms import FormNormalizeWorkflowInterface
 from normalize.donations import DonationNormalizeWorkflowInterface
@@ -63,6 +64,12 @@ def update(community, start, end):
     """Update BigQuery activist actions to Action Network"""
     update_activists(community, start, end)
 
+@click.command()
+@click.option('--name', type=str, help='Name to search activist actions')
+def search(name):
+    """"""
+    df = select_activist_actions_by_name(name)
+    import ipdb; ipdb.set_trace()
 
 @click.command()
 @click.option('--db', help='The database to insert tags')
@@ -78,6 +85,7 @@ cli.add_command(syncronize)
 cli.add_command(tags)
 cli.add_command(submit)
 cli.add_command(update)
+cli.add_command(search)
 
 
 if __name__ == "__main__":
