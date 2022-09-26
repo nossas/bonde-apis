@@ -92,15 +92,16 @@ def form(payload: dict):
 def donation(payload: dict):
     """donation"""
     checkout_data = payload['checkout_data']
-    checkout_data['amount'] = str(checkout_data['amount'])
+    checkout_data['amount'] = str(payload['amount'])
 
     item = dict()
 
     # Create activist fields
     item['name'] = checkout_data['name'].title()
     item['email'] = checkout_data['email']
+    item['amount'] = checkout_data['amount']
 
-    address = json.loads(checkout_data['address'])
+    address = checkout_data['address']
 
     item['address_line'] = \
         f"{address['street_number']} {address['street']} Apt {address['complementary']}" \
@@ -111,12 +112,12 @@ def donation(payload: dict):
     item['region'] = address['state']
     item['postal_code'] = address['zipcode']
 
-    phone = json.loads(checkout_data['phone'])
+    phone = checkout_data['phone']
     item['phone'] = f"+55{phone['ddd']}{phone['number']}"
 
-    item['given_name'] = item['name'].split(pat=" ")[0]
-    item['family_name'] = item['name'].split(pat=" ")[1:].join(" ")
-
+    item['given_name'] = item['name'].split(" ")[0]
+    item['family_name'] = " ".join(item['name'].split(" ")[1:])
+    
     # Clean response
     response = dict()
     for key, value in item.items():
@@ -142,28 +143,31 @@ def pressure(payload: dict):
     item['name'] = form_data['name'].title()
     item['given_name'] = form_data['name'].title()
     item['family_name'] = form_data['lastname'].title()
-    item['region'] = form_data['state']
-    item['phone'] = form_data['phone']
+    if 'state' in form_data:
+      item['region'] = form_data['state']
+    
+    if 'phone' in form_data:
+      item['phone'] = form_data['phone']
 
-    item["phone"] = item["phone"].replace(r'[\(\) -]+', '', regex=True)
-    item["phone"] = item["phone"].replace(
-        r'^\d{1}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
-    item["phone"] = item["phone"].replace(
-        r'^\d{2}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
-    item["phone"] = item["phone"].replace(
-        r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
-    item["phone"] = item["phone"].replace(
-        r'^\+(\d{2})(\d{2})(\d{1})(\d{4})(\d{4})$', r'+\1 (\2) \3 \4 \5', regex=True)
-    item["phone"] = item["phone"].replace(
-        r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3', regex=True)
-    item["phone"] = item["phone"].replace(
-        r'^\{"ddd"=>"(\d{2})","number"=>"(\d{1})(\d{8})"\}$', r'+55 (\1) \2 \3', regex=True)
+      item["phone"] = item["phone"].replace(r'[\(\) -]+', '', regex=True)
+      item["phone"] = item["phone"].replace(
+          r'^\d{1}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+      item["phone"] = item["phone"].replace(
+          r'^\d{2}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+      item["phone"] = item["phone"].replace(
+          r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+      item["phone"] = item["phone"].replace(
+          r'^\+(\d{2})(\d{2})(\d{1})(\d{4})(\d{4})$', r'+\1 (\2) \3 \4 \5', regex=True)
+      item["phone"] = item["phone"].replace(
+          r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3', regex=True)
+      item["phone"] = item["phone"].replace(
+          r'^\{"ddd"=>"(\d{2})","number"=>"(\d{1})(\d{8})"\}$', r'+55 (\1) \2 \3', regex=True)
 
-    item['region'] = item['phone'].replace(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', regex=True) \
-        if not item['region'] & item['phone'] \
-        else item['region']
+      item['region'] = item['phone'].replace(r'^\+[\d ]+\((\d{2})\)[\d ]+$', r'\1', regex=True) \
+          if not item['region'] & item['phone'] \
+          else item['region']
 
-    item['region'] = find_by_ddd(item['region'])
+      item['region'] = find_by_ddd(item['region'])
 
     # Clean response
     response = dict()
@@ -177,7 +181,7 @@ def pressure(payload: dict):
     response['community_id'] = payload['cached_community_id']
     response['action_id'] = payload['id']
     response['action_date'] = payload['created_at']
-    response['action'] = 'donation'
+    response['action'] = 'pressure'
 
     return response
 
