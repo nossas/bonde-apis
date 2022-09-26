@@ -3,6 +3,7 @@ on:
   push:
     branches-ignore:
       - "*/an-*"
+      - "feature/webhook-an"
   workflow_call:
     # inputs:
     #   environment:
