@@ -1,4 +1,4 @@
-from typing import Set, Union
+from typing import Dict, Set, Union
 from pydantic import BaseModel, Field
 
 
@@ -15,10 +15,19 @@ class Form(WidgetAction):
     """Represents widget form model"""
     fields: str
 
+class FormData(BaseModel):
+    """Represents pressure form data"""
+    email: str
+    subject: str
+    lastname: str
+    body: str
+    name: str
+    state: Union[str, None]
+    phone: Union[str, None]
 
 class Pressure(WidgetAction):
     """Represents widget pressure model"""
-    form_data: Set
+    form_data: FormData
 
 
 class Donation(WidgetAction):

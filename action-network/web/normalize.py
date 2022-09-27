@@ -123,17 +123,17 @@ def donation(payload: Donation):
 
 def pressure(payload: Pressure):
     """pressure"""
-    form_data = payload['form_data']
+    form_data = payload.form_data
     item = dict()
 
-    item['name'] = form_data['name'].title()
-    item['given_name'] = form_data['name'].title()
-    item['family_name'] = form_data['lastname'].title()
-    if 'state' in form_data:
-        item['region'] = form_data['state']
+    item['name'] = form_data.name.title()
+    item['given_name'] = form_data.name.title()
+    item['family_name'] = form_data.lastname.title()
+    if form_data.state:
+        item['region'] = form_data.state
 
-    if 'phone' in form_data:
-        item['phone'] = form_data['phone']
+    if form_data.phone:
+        item['phone'] = form_data.phone
 
         item["phone"] = item["phone"].replace(r'[\(\) -]+', '', regex=True)
         item["phone"] = item["phone"].replace(
