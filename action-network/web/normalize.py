@@ -86,28 +86,27 @@ def form(payload: Form):
 def donation(payload: Donation):
     """donation"""
     checkout_data = payload.checkout_data
-    checkout_data['amount'] = str(payload['amount'])
 
     item = dict()
 
     # Create activist fields
-    item['name'] = checkout_data['name'].title()
-    item['email'] = checkout_data['email']
-    item['amount'] = checkout_data['amount']
+    item['name'] = checkout_data.name.title()
+    item['email'] = checkout_data.email
+    item['amount'] = str(payload.amount)
 
-    address = checkout_data['address']
+    address = checkout_data.address
 
     item['address_line'] = \
-        f"{address['street_number']} {address['street']} Apt {address['complementary']}" \
-        if address['complementary'] \
-        else f"{address['street_number']} {address['street']}"
+        f"{address.street_number} {address.street} Apt {address.complementary}" \
+        if address.complementary \
+        else f"{address.street_number} {address.street}"
 
-    item['locality'] = address['city']
-    item['region'] = address['state']
-    item['postal_code'] = address['zipcode']
+    item['locality'] = address.city
+    item['region'] = address.state
+    item['postal_code'] = address.zipcode
 
-    phone = checkout_data['phone']
-    item['phone'] = f"+55{phone['ddd']}{phone['number']}"
+    phone = checkout_data.phone
+    item['phone'] = f"+55{phone.ddd}{phone.number}"
 
     item['given_name'] = item['name'].split(" ")[0]
     item['family_name'] = " ".join(item['name'].split(" ")[1:])

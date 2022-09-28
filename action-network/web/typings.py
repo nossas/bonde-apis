@@ -1,4 +1,4 @@
-from typing import Dict, Set, Union
+from typing import Union
 from pydantic import BaseModel, Field
 
 
@@ -15,6 +15,7 @@ class Form(WidgetAction):
     """Represents widget form model"""
     fields: str
 
+
 class FormData(BaseModel):
     """Represents pressure form data"""
     email: str
@@ -25,14 +26,41 @@ class FormData(BaseModel):
     state: Union[str, None]
     phone: Union[str, None]
 
+
 class Pressure(WidgetAction):
     """Represents widget pressure model"""
     form_data: FormData
 
 
+class Phone(BaseModel):
+    """Phone"""
+    ddd: str
+    number: str
+
+
+class Address(BaseModel):
+    """Address"""
+    state: str
+    zipcode: str
+    street: str
+    city: str
+    street_number: str
+    neighborhood: str
+    complementary: Union[str, None]
+
+
+class CheckoutData(BaseModel):
+    """CheckoutData"""
+    email: str
+    phone: Phone
+    document_number: str
+    name: str
+    address: Address
+
+
 class Donation(WidgetAction):
     """Represents widget donation model"""
-    checkout_data: Set
+    checkout_data: CheckoutData
 
 
 class Data(BaseModel):
