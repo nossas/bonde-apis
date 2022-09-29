@@ -20,11 +20,9 @@ def webhook_activist_action(body: Payload):
     try:
         # Insert normalized action in database
         cnx.execute(activist_actions.insert(), result)
-    except IntegrityError as err:
-        print(err)
-        return JSONResponse(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            content=dict(message="sqlalchemy.IntegrityError")
-        )
+    except IntegrityError:
+        # Continue process don't stop workflow
+        # Database is responsible not duplicate
+        pass
 
     return result
