@@ -126,7 +126,7 @@ def pressure(payload: Pressure):
     item = dict()
 
     item['name'] = form_data.name.title()
-    item['email'] = form_data.email.title()
+    item['email'] = form_data.email
     item['given_name'] = form_data.name.title()
     item['family_name'] = form_data.lastname.title()
     if form_data.state:
