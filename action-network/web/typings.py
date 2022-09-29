@@ -61,6 +61,7 @@ class CheckoutData(BaseModel):
 class Donation(WidgetAction):
     """Represents widget donation model"""
     checkout_data: CheckoutData
+    amount: int
 
 
 class Data(BaseModel):
