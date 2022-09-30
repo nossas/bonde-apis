@@ -2,8 +2,7 @@
 
 -- DROP SCHEMA IF EXISTS "analyze" ;
 
-CREATE SCHEMA IF NOT EXISTS "analyze"
-    AUTHORIZATION cobrador;
+CREATE SCHEMA IF NOT EXISTS "analyze";
 
 
 -- Table: analyze.actions
@@ -19,10 +18,7 @@ CREATE TABLE IF NOT EXISTS "analyze".actions
     an_resource_name text COLLATE pg_catalog."default" NOT NULL,
     an_response jsonb,
     mobilization_name text COLLATE pg_catalog."default"
-)
-
-ALTER TABLE IF EXISTS "analyze".actions
-    OWNER to cobrador;
+);
 
 
 -- Table: analyze.activist_actions
@@ -52,10 +48,7 @@ CREATE TABLE IF NOT EXISTS "analyze".activist_actions
     an_response jsonb,
     amount double precision,
     CONSTRAINT activist_actions_pkey PRIMARY KEY (action, action_id)
-)
-
-ALTER TABLE IF EXISTS "analyze".activist_actions
-    OWNER to cobrador;
+);
 
 
 -- View: analyze.themes
@@ -70,6 +63,3 @@ CREATE OR REPLACE VIEW "analyze".themes
      JOIN mobilizations m ON m.id = ms.mobilization_id
      JOIN subthemes s ON s.id = ms.subtheme_id
      JOIN themes t ON t.id = m.theme_id;
-
-ALTER TABLE "analyze".themes
-    OWNER TO cobrador;
