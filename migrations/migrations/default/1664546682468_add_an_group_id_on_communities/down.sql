@@ -1,0 +1,1 @@
+ALTER TABLE "public".communities DROP COLUMN an_group_id;

@@ -1,0 +1,1 @@
+ALTER TABLE "public".communities ADD COLUMN an_group_id TEXT NULLABLE;
