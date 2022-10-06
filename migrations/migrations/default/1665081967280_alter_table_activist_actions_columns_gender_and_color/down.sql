@@ -1,0 +1,3 @@
+--ALTER TABLE  "analyze".activist_actions   
+--ALTER COLUMN color TYPE float8,
+--ALTER COLUMN gender TYPE float8;
