@@ -1,8 +1,14 @@
-name: Publish docker images AN
+name: Publish Action Network CLI images
 on:
   push:
     branches:
-      - "*/an-*"
+      - "release/*"
+      - "feature/*"
+      - "hotfix/*"
+    tags:
+      - v*
+    paths:
+      - "action-network/cli/**"
   workflow_call:
     secrets:
       DOCKER_USERNAME:

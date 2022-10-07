@@ -1,4 +1,4 @@
-name: Publish API images
+name: Publish remote schemas API images
 on:
   push:
     branches:
@@ -7,6 +7,13 @@ on:
       - "hotfix/*"
     tags:
       - v*
+    paths:
+      - "packages/**"
+      - "utils/**"
+      - "package.json"
+      - "Dockerfile"
+      - "tsconfig.json"
+      - "pnpm-*"
 jobs:
   tests:
     name: Tests for all apis and libs

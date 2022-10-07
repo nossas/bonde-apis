@@ -2,7 +2,13 @@ name: Publish docker images AN webhook
 on:
   push:
     branches:
-      - "feature/webhook-an"
+      - "release/*"
+      - "feature/*"
+      - "hotfix/*"
+    tags:
+      - v*
+    paths:
+      - "action-network/**"
   workflow_call:
     secrets:
       DOCKER_USERNAME:
