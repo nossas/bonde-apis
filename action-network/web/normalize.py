@@ -17,7 +17,7 @@ def form(payload: Form):
     item['family_name'] = get_field(
         r'(sobre[\s-]?nome|seu sobre[\s-]?nome|surname|last[\s-]?name|apellido)', fields)
     item['email'] = get_field(
-        r'(e-?mail|correo electr(o|ó)nico|email|seu email)', fields)
+        r'(e-?mail|correo electr(o|ó)nico|email|seu.*email)', fields)
     item['locality'] = get_field(r'(cidade|city|ciudad)', fields)
     item['phone'] = get_field(r'(celular|mobile|portable|whatsapp)', fields)
     item['region'] = get_field(r'(estado|state)', fields)
@@ -62,9 +62,9 @@ def form(payload: Form):
     item['given_name'] = item['given_name'].title()
     item['family_name'] = item['family_name'].title()
 
-    item['phone'] = only_digits(item['phone'])
 
     if item['phone']:
+        item['phone'] = only_digits(item['phone'])
         item['phone'] = re.sub(
             r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', item['phone'])
         item['phone'] = re.sub(

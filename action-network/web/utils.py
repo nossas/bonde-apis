@@ -67,7 +67,7 @@ def get_field(regex_pattern, fields):
 
     results = list(filter(lambda x: pattern.match(x['label'].lower()), fields))
 
-    if len(results) == 1:
+    if len(results) == 1 and 'value' in results[0]:
         return results[0]['value']
 
     return None
