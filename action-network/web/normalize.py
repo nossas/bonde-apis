@@ -91,7 +91,11 @@ def donation(payload: Donation):
     # Create activist fields
     item['name'] = checkout_data.name.title()
     item['email'] = checkout_data.email
-    item['amount'] = str(payload.amount)
+    item['metadata'] = dict(
+        amount=str(payload.amount),
+        transaction_status=payload.transaction_status,
+        payment_method=payload.payment_method
+    )
 
     address = checkout_data.address
 
