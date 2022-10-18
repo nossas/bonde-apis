@@ -13,9 +13,9 @@ def form(payload: Form):
     item = dict()
 
     item['given_name'] = get_field(
-        r'(nombre|first[-\s]?name|seu nome|nome|name|primeiro[-\s]?nome)', fields)
+        r'(nombre|first[\s\-\_]?name|seu nome|nome|name|primeiro[\s\-\_]?nome)', fields)
     item['family_name'] = get_field(
-        r'(sobre[\s-]?nome|seu sobre[\s-]?nome|surname|last[\s-]?name|apellido)', fields)
+        r'(sobre[\s\-\_]?nome|seu sobre[\s\-\_]?nome|surname|last[\s\-\_]?name|apellido)', fields)
     item['email'] = get_field(
         r'(e-?mail|correo electr(o|ó)nico|email|seu.*email)', fields)
     item['locality'] = get_field(r'(cidade|city|ciudad)', fields)
