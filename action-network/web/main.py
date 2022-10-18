@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from typings import Payload
 from database import cnx, activist_actions
 from normalize import to_payload
+import json
 
 app = FastAPI()
 
@@ -18,8 +19,13 @@ def webhook_activist_action(body: Payload):
     result = to_payload(body)
 
     try:
-        # Insert normalized action in database
-        cnx.execute(activist_actions.insert(), result)
+        
+        if result['action'] == "donation" and result['metadata']['transaction_status'] not in ['pending','processing']:
+            # Update transaction_status from donation
+            cnx.execute('UPDATE "analyze".activist_actions SET metadata = \'' + json.dumps(result['metadata']) + '\' WHERE action_id = ' + str(result['action_id']))
+        else:
+            # Insert normalized action in database
+            cnx.execute(activist_actions.insert(), result)
     except IntegrityError:
         # Continue process don't stop workflow
         # Database is responsible not duplicate
