@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, JSON
 
 DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://')
 
@@ -20,16 +20,16 @@ activist_actions = Table("activist_actions", analyze_metadata,
                          Column("mobilization_id", Integer),
                          Column("community_id", Integer),
                          Column("email", String),
-                         Column("name", String, nullable=False),
-                         Column("given_name", String, nullable=False),
-                         Column("family_name", String, nullable=False),
-                         Column("address_line", String, nullable=False),
-                         Column("locality", String, nullable=False),
-                         Column("region", String, nullable=False),
-                         Column("postal_code", String, nullable=False),
-                         Column("phone", String, nullable=False),
-                         Column("gender", String, nullable=False),
-                         Column("color", String, nullable=False),
-                         Column("birthday", String, nullable=False),
-                         Column("amount", String, nullable=False)
+                         Column("name", String),
+                         Column("given_name", String),
+                         Column("family_name", String),
+                         Column("address_line", String, nullable=True),
+                         Column("locality", String, nullable=True),
+                         Column("region", String, nullable=True),
+                         Column("postal_code", String, nullable=True),
+                         Column("phone", String, nullable=True),
+                         Column("gender", String, nullable=True),
+                         Column("color", String, nullable=True),
+                         Column("birthday", String, nullable=True),
+                         Column("metadata", JSON, nullable=True)
                          )
