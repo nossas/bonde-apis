@@ -52,10 +52,10 @@ class Address(BaseModel):
 class CheckoutData(BaseModel):
     """CheckoutData"""
     email: str
-    phone: Phone
+    phone: Union[Phone, None]
     document_number: str
     name: str
-    address: Address
+    address: Union[Address, None]
 
 
 class Donation(WidgetAction):

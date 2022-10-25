@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, JSON
 
 DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://')
 
@@ -31,5 +31,6 @@ activist_actions = Table("activist_actions", analyze_metadata,
                          Column("gender", String, nullable=False),
                          Column("color", String, nullable=False),
                          Column("birthday", String, nullable=False),
-                         Column("amount", String, nullable=False)
+                         Column("amount", String, nullable=False),
+                         Column("metadata", JSON, nullable=True)
                          )

@@ -9,13 +9,15 @@ from utils import only_digits, get_field, find_by_ddd
 def form(payload: Form):
     """form"""
     fields = json.loads(payload.fields)
+    # if (payload.id == 3045442):
+    #     import ipdb; ipdb.set_trace()
 
     item = dict()
 
     item['given_name'] = get_field(
-        r'(nombre|first[-\s]?name|seu nome|nome|name|primeiro[-\s]?nome)', fields)
+        r'(nombre|first[\s\-\_]?name|seu nome|nome|name|primeiro[\s\-\_]?nome)', fields)
     item['family_name'] = get_field(
-        r'(sobre[\s-]?nome|seu sobre[\s-]?nome|surname|last[\s-]?name|apellido)', fields)
+        r'(sobre[\s-]?nome|seu sobre[\s\-\_]?nome|surname|last[\s\-\_]?name|apellido)', fields)
     item['email'] = get_field(
         r'(e-?mail|correo electr(o|ó)nico|email)', fields)
     item['locality'] = get_field(r'(cidade|city|ciudad)', fields)
@@ -45,6 +47,7 @@ def form(payload: Form):
 
     # Remove item wihtout name ou email
     if not item['name'] or not item['email']:
+        import ipdb;ipdb.set_trace()
         return None
 
     item['given_name'] = item['name'].split(
@@ -90,23 +93,26 @@ def donation(payload: Donation):
     item = dict()
 
     # Create activist fields
-    item['name'] = checkout_data.name.title()
+    item['name'] = checkout_data.name.title().strip()
     item['email'] = checkout_data.email
     item['amount'] = str(payload.amount)
 
     address = checkout_data.address
 
-    item['address_line'] = \
-        f"{address.street_number} {address.street} Apt {address.complementary}" \
-        if address.complementary \
-        else f"{address.street_number} {address.street}"
+    if address:
+        item['address_line'] = \
+            f"{address.street_number} {address.street.strip()} Apt {address.complementary.strip()}" \
+            if address.complementary \
+            else f"{address.street_number} {address.street.strip()}"
 
-    item['locality'] = address.city
-    item['region'] = address.state
-    item['postal_code'] = address.zipcode
-
+        item['locality'] = address.city.strip()
+        item['region'] = address.state.strip()
+        item['postal_code'] = address.zipcode.strip()
+    
     phone = checkout_data.phone
-    item['phone'] = f"+55{phone.ddd}{phone.number}"
+    
+    if phone:
+        item['phone'] = f"+55{phone.ddd}{phone.number}"
 
     item['given_name'] = item['name'].split(" ")[0]
     item['family_name'] = " ".join(item['name'].split(" ")[1:])
