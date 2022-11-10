@@ -89,10 +89,11 @@ def donation(payload: Donation):
     item = dict()
 
     # Create activist fields
+    amount = str(payload.amount)
     item['name'] = checkout_data.name.title()
     item['email'] = checkout_data.email
     item['metadata'] = dict(
-        amount=str(payload.amount),
+        amount=f"{amount[:len(amount)-2]}.00",
         transaction_status=payload.transaction_status,
         payment_method=payload.payment_method
     )
