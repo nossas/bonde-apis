@@ -104,7 +104,7 @@ def donation(payload: Donation):
     address = checkout_data.address
 
     item['address_line'] = \
-        f"{address.street_number} {address.street} Apt {address.complementary}" \
+        f"{address.street_number} {address.street}, {address.complementary}" \
         if address.complementary \
         else f"{address.street_number} {address.street}"
 
