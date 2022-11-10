@@ -64,6 +64,7 @@ class Donation(WidgetAction):
     amount: int
     transaction_status: str
     payment_method: str
+    subscription: bool
 
 
 class Data(BaseModel):

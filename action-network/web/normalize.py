@@ -95,8 +95,11 @@ def donation(payload: Donation):
     item['metadata'] = dict(
         amount=f"{amount[:len(amount)-2]}.00",
         transaction_status=payload.transaction_status,
-        payment_method=payload.payment_method
+        payment_method=payload.payment_method,
+        recurring=payload.subscription
     )
+    if payload.subscription:
+        item['metadata']['recurring_period'] = "Monthly"
 
     address = checkout_data.address
 
