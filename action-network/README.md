@@ -4,11 +4,11 @@
 
 Em um dispositivo com Python 3, crie um ambiente virtual com o módulo `virtualenv`:
 
-`python3 -m venv environment`
+`python3 -m venv .venv`
 
 Ative seu ambiente virtual:
 
-`source bin environment/bin/activate`
+`source bin .venv/bin/activate`
 
 ### Variáveis de ambiente
 

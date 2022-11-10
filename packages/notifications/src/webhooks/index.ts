@@ -1,6 +1,6 @@
 import sendgrid from "./sendgrid";
 
-const webhhooksMap = {
+const webhooksMap = {
   "/sendgrid": sendgrid
 }
 
@@ -11,8 +11,8 @@ type MiddlewareArgs = {
 
 export const webhooks = {
   applyMiddleware: ({ app, path }: MiddlewareArgs): void => {
-    Object.keys(webhhooksMap).forEach((keyName: string) => {
-      app.post(path + keyName, webhhooksMap[keyName]);
+    Object.keys(webhooksMap).forEach((keyName: string) => {
+      app.post(path + keyName, webhooksMap[keyName]);
     })
   }
 }

@@ -17,6 +17,8 @@ type Config = {
   apmSecretToken?: string
   apmServerUrl?: string
   apmServiceName?: string
+  devEnv?: boolean,
+  elasticsearchDevMode?: boolean
 }
 
 const config: Config = {
@@ -33,7 +35,9 @@ const config: Config = {
   elasticsearchPassword: process.env.ELASTICSEARCH_PASSWORD,
   apmSecretToken: process.env.ELASTIC_APM_SECRET_TOKEN,
   apmServerUrl: process.env.ELASTIC_APM_SERVER_URL,
-  apmServiceName: process.env.ELASTIC_APM_SERVICE_NAME
+  apmServiceName: process.env.ELASTIC_APM_SERVICE_NAME,
+  devEnv: process.env.NODE_ENV == 'development',
+  elasticsearchDevMode: process.env.ELASTICSEARCH_CLOUD_ID == 'test' && process.env.ELASTICSEARCH_PASSWORD == 'test'
 };
 
 export default config;

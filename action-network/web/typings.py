@@ -62,6 +62,8 @@ class Donation(WidgetAction):
     """Represents widget donation model"""
     checkout_data: CheckoutData
     amount: int
+    transaction_status: str
+    payment_method: str
 
 
 class Data(BaseModel):
