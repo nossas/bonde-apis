@@ -84,6 +84,16 @@ def form(payload: Form):
 
 def donation(payload: Donation):
     """donation"""
+
+    if not payload.transaction_status:
+        raise Exception("not_transaction_status")
+    
+    if not payload.payment_method:
+        raise Exception("not_payment_method")
+    
+    if payload.amount > 999999:
+        raise Exception("amount_gte_999999")
+
     checkout_data = payload.checkout_data
 
     item = dict()
