@@ -1,0 +1,2 @@
+DROP VIEW IF EXISTS public.mda_results_juridical_triage_form;
+DROP VIEW IF EXISTS public.mda_results_psychological_triage_form
