@@ -3,6 +3,7 @@ import q from "q";
 import QRCode from 'qrcode';
 import { logo } from "./logo";
 import uploadS3 from "./upload_to_s3";
+import { arrow } from './arrow'
 
 interface pdfData {
   datauristring: string;
@@ -69,16 +70,34 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
     }
 
     let barTop = 133
+    let arrowTop = 81
     for (let i = 0; i < 10; i++) {
       doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
       doc.text('            /            /            ', 110, barTop);
+      doc.setFont("helvetica", 'normal');
+      doc.setFontSize(5);
+      doc.text('(ASSINATURA OU IMPRESSÃO DIGITAL)', 23, barTop - 3);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(6);
+      doc.text(' (OU NÚMERO DO TÍTULO DE ELEITOR):', 254, barTop - 11.5);
+
+      // ArrowIcon
+      doc.addImage(arrow, 'JPEG', 75, arrowTop, 5, 6);
+      doc.addImage(arrow, 'JPEG', 36, arrowTop, 5, 6);
       barTop = barTop + 3 * cellHeight;
+      arrowTop = cellSignatureHeight + arrowTop
 
       doc.setFontSize(6);
+      doc.setFont("helvetica", "bold");
       doc.cell(margin, 134, 100, cellSignatureHeight,
-        `ASSINATURA OU IMPRESSÃO DIGITAL`, 2, 'left');
+        `                        ASSINE AQUI`, 2, 'left');
 
 
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(5);
+
+      doc.setFontSize(6);
       doc.cell(margin, 110, (formWidth - cellSignatureWidth),
         cellHeight, `NOME COMPLETO (Por extenso e legível, sem abreviar):`, 2, 'right');
       doc.cell(margin, 134, (formWidth - cellSignatureWidth), cellHeight, '', 2, 'left');
@@ -90,10 +109,12 @@ const generatePlipPdf = async (unique_identifier: string, state: string, expecte
       doc.cell(cellSignatureWidth + margin, 158, (formWidth - cellSignatureWidth) / 4,
         cellHeight, `DATA DE NASCIMENTO:`, 4, 'center');
 
+      doc.setFont("helvetica", "bold");
       doc.cell((formWidth - cellSignatureWidth) / 4, 158,
         (formWidth - cellSignatureWidth) - ((formWidth - cellSignatureWidth) / 2),
-        cellHeight, `NÚMERO DO TÍTULO DE ELEITOR (OU NOME COMPLETO DA MÃE):`, 4, 'center');
+        cellHeight, 'NOME COMPLETO DA MÃE', 4, 'center');
 
+      doc.setFont("helvetica", "normal");
       doc.cell((formWidth - cellSignatureWidth) - ((formWidth - cellSignatureWidth) / 2), 158,
         (formWidth - cellSignatureWidth) / 4,
         cellHeight, `WHATSAPP (Com DDD):`, 4, 'right');
