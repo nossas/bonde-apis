@@ -201,3 +201,4 @@ cast(cast( answers -> 'assistencia_juridica' -> 'entrou_em_contato_advogada' as 
 cast(cast( answers -> 'atualizacoes_emergenciais' -> 'riscos_relacionados_suicidio' as text) as boolean) riscos_relacionados_suicidio,
 upper(cast(answers -> 'risco' as text)) risco
 from mapa_do_acolhimento.mda_forms_answers mfa where form = 'triagem-psicologico-2' and organization_id  = 360282119532;  
+
