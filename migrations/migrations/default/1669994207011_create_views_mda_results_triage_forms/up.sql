@@ -1,4 +1,5 @@
  CREATE SCHEMA IF NOT EXISTS "mapa_do_acolhimento";
+ ALTER TABLE public.mda_forms_answers  SET SCHEMA mapa_do_acolhimento; 
  CREATE OR REPLACE VIEW mapa_do_acolhimento.results_juridical_triage_1_form
  as select  
  cast( answers -> 'dados_voluntaria' -> 'email' as text) email_cadastro,
@@ -40,7 +41,7 @@
  cast( answers -> 'processo_juridico' -> 'encaminhamento' as text) encaminhamento,
  cast( answers -> 'processo_juridico' -> 'servicos_indicados' as text) servicos_indicados,
  upper(cast(answers -> 'risco' as text)) risco
-from public.mda_forms_answers where form = 'triagem-juridico-1' and organization_id  = 360269610652;
+from mapa_do_acolhimento.mda_forms_answers where form = 'triagem-juridico-1' and organization_id  = 360269610652;
 
 CREATE OR REPLACE VIEW mapa_do_acolhimento.results_psychological_triage_1_form
 as select
@@ -80,7 +81,7 @@ cast(answers->'processo_psicoterapeutico'->'demanda_inicial' as text) demanda_in
 cast(answers->'processo_psicoterapeutico'->'encaminhamento' as text) encaminhamento,
 cast(answers->'processo_psicoterapeutico'->'qual_servico_publico' as text) qual_servico_publico,
 upper(cast(answers->'risco' as text)) risco
-from "public".mda_forms_answers where form = 'triagem-psicologico-1' and organization_id  = 360282119532;
+from mapa_do_acolhimento.mda_forms_answers where form = 'triagem-psicologico-1' and organization_id  = 360282119532;
 
 CREATE OR REPLACE VIEW mapa_do_acolhimento.results_juridical_triage_2_form
 as select
@@ -139,7 +140,7 @@ as select
  cast(cast(answers -> 'assistencia_psicologica' -> 'via_mapa_do_acolhimento' as text) as boolean) via_mapa_do_acolhimento,
  cast(cast(answers -> 'assistencia_psicologica' -> 'entrou_em_contato_com_psicologa' as text) as boolean) entrou_em_contato_com_psicologa,
  upper(cast(answers -> 'risco' as text)) risco
- from "public".mda_forms_answers mfa where form = 'triagem-juridico-2' and organization_id  = 360269610652;
+ from mapa_do_acolhimento.mda_forms_answers mfa where form = 'triagem-juridico-2' and organization_id  = 360269610652;
 
 CREATE OR REPLACE VIEW mapa_do_acolhimento.results_psychological_triage_2_form
 as select
@@ -199,4 +200,4 @@ cast(cast( answers -> 'assistencia_juridica' -> 'processo_juridico_em_andamento'
 cast(cast( answers -> 'assistencia_juridica' -> 'entrou_em_contato_advogada' as text) as boolean) entrou_em_contato_advogada,
 cast(cast( answers -> 'atualizacoes_emergenciais' -> 'riscos_relacionados_suicidio' as text) as boolean) riscos_relacionados_suicidio,
 upper(cast(answers -> 'risco' as text)) risco
-from mda_forms_answers mfa where form = 'triagem-psicologico-2' and organization_id  = 360282119532;  
+from mapa_do_acolhimento.mda_forms_answers mfa where form = 'triagem-psicologico-2' and organization_id  = 360282119532;  
