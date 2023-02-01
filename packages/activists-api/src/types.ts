@@ -116,7 +116,7 @@ export type PlipInput = {
 
 export type Plip = {
   widget_id: number
-  community_id?: number
+  cached_community_id?: number
   mobilization_id?: number
   unique_identifier: string
   pdf_data: string

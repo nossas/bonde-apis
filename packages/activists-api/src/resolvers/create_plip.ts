@@ -17,8 +17,8 @@ export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): P
   const { id, errors } = await ActionsAPI.plip({
     widget_id: widget.id,
     //activist_id: activist.id,
-    //community_id: widget.block.mobilization.community.id,
-    //mobilization_id: widget.block.mobilization.id,
+    cached_community_id: widget.block.mobilization.community.id,
+    mobilization_id: widget.block.mobilization.id,
     unique_identifier: unique_identifier,
     pdf_data: pdf_data.url,
     expected_signatures: expected_signatures,
