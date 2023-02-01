@@ -2,9 +2,8 @@
 import json
 import re
 
-from typings import Donation, Form, Payload, Pressure
+from typings import Donation, Form, Payload, Pressure, Plip
 from utils import only_digits, get_field, find_by_ddd
-
 
 def form(payload: Form):
     """form"""
@@ -87,10 +86,10 @@ def donation(payload: Donation):
 
     if not payload.transaction_status:
         raise Exception("not_transaction_status")
-    
+
     if not payload.payment_method:
         raise Exception("not_payment_method")
-    
+
     if payload.amount > 999999:
         raise Exception("amount_gte_999999")
 
@@ -171,6 +170,54 @@ def pressure(payload: Pressure):
             else item['region']
 
         item['region'] = find_by_ddd(item['region'])
+
+    # Clean response
+    response = dict()
+    for key, value in item.items():
+        if value:
+            response[key] = value
+
+    return response
+
+
+def plip(payload: Plip):
+    """plip"""
+    form_data = payload.form_data
+    item = dict()
+
+
+    # TODO: SPLIT NAME
+    item['name'] = form_data.name.title()
+    item['email'] = form_data.email
+    item['region'] = form_data.state
+    if form_data.color:
+        item['color'] = form_data.color
+
+    if form_data.whatsapp:
+        item["phone"] = form_data.whatsapp
+
+        item["phone"] = item["phone"].replace(r'[\(\) -]+', '', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^\d{1}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^\d{2}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^\+(\d{2})(\d{2})(\d{1})(\d{4})(\d{4})$', r'+\1 (\2) \3 \4 \5', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3', regex=True)
+        item["phone"] = item["phone"].replace(
+            r'^\{"ddd"=>"(\d{2})","number"=>"(\d{1})(\d{8})"\}$', r'+55 (\1) \2 \3', regex=True)
+
+    if form_data.gender:
+        item['gender'] = form_data.gender
+
+    item['metadata'] = dict(
+        expected_signatures=form_data.expected_signatures,
+        status_ficha="INSCRITO",
+        unique_identifier=unique_identifier
+    )
 
     # Clean response
     response = dict()

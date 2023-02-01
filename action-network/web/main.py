@@ -19,7 +19,6 @@ def webhook_activist_action(body: Payload):
     result = to_payload(body)
 
     try:
-        
         if result['action'] == "donation" and result['metadata']['transaction_status'] not in ['pending','processing']:
             # Update transaction_status from donation
             cnx.execute('UPDATE "analyze".activist_actions SET metadata = \'' + json.dumps(result['metadata']) + '\' WHERE action_id = ' + str(result['action_id']))
