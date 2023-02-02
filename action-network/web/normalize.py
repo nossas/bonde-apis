@@ -185,11 +185,11 @@ def plip(payload: Plip):
     form_data = payload.form_data
     item = dict()
 
-
-    # TODO: SPLIT NAME
     item['name'] = form_data.name.title()
     item['email'] = form_data.email
     item['region'] = form_data.state
+    item['given_name'] = item['name'].split(" ")[0]
+    item['family_name'] = " ".join(item['name'].split(" ")[1:])
     if form_data.color:
         item['color'] = form_data.color
 
@@ -245,6 +245,10 @@ def to_payload(data: Payload):
     elif table == 'activist_pressures':
         response = pressure(payload=payload)
         response['action'] = 'pressure'
+
+    elif table == 'plips':
+        response = pressure(payload=payload)
+        response['action'] = 'form'
 
     response['widget_id'] = payload.widget_id
     response['mobilization_id'] = payload.mobilization_id
