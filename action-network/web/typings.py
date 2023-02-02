@@ -43,6 +43,7 @@ class PlipFormData(BaseModel):
 class Plip(WidgetAction):
     """Represents widget plip model"""
     form_data: PlipFormData
+    unique_identifier: str
 
 class Phone(BaseModel):
     """Phone"""
@@ -80,7 +81,7 @@ class Donation(WidgetAction):
 
 class Data(BaseModel):
     """Hasura Data Model"""
-    new: Union[Donation, Form, Pressure]
+    new: Union[Donation, Form, Pressure, Plip]
 
 
 class Event(BaseModel):

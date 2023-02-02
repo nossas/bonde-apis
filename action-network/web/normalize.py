@@ -196,19 +196,19 @@ def plip(payload: Plip):
     if form_data.whatsapp:
         item["phone"] = form_data.whatsapp
 
-        item["phone"] = item["phone"].replace(r'[\(\) -]+', '', regex=True)
-        item["phone"] = item["phone"].replace(
-            r'^\d{1}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
-        item["phone"] = item["phone"].replace(
-            r'^\d{2}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
-        item["phone"] = item["phone"].replace(
-            r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
-        item["phone"] = item["phone"].replace(
-            r'^\+(\d{2})(\d{2})(\d{1})(\d{4})(\d{4})$', r'+\1 (\2) \3 \4 \5', regex=True)
-        item["phone"] = item["phone"].replace(
-            r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3', regex=True)
-        item["phone"] = item["phone"].replace(
-            r'^\{"ddd"=>"(\d{2})","number"=>"(\d{1})(\d{8})"\}$', r'+55 (\1) \2 \3', regex=True)
+        # item["phone"] = item["phone"].replace(r'[\(\) -]+', '', regex=True)
+        # item["phone"] = item["phone"].replace(
+        #     r'^\d{1}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+        # item["phone"] = item["phone"].replace(
+        #     r'^\d{2}(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+        # item["phone"] = item["phone"].replace(
+        #     r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', regex=True)
+        # item["phone"] = item["phone"].replace(
+        #     r'^\+(\d{2})(\d{2})(\d{1})(\d{4})(\d{4})$', r'+\1 (\2) \3 \4 \5', regex=True)
+        # item["phone"] = item["phone"].replace(
+        #     r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3', regex=True)
+        # item["phone"] = item["phone"].replace(
+        #     r'^\{"ddd"=>"(\d{2})","number"=>"(\d{1})(\d{8})"\}$', r'+55 (\1) \2 \3', regex=True)
 
     if form_data.gender:
         item['gender'] = form_data.gender
@@ -216,7 +216,7 @@ def plip(payload: Plip):
     item['metadata'] = dict(
         expected_signatures=form_data.expected_signatures,
         status_ficha="INSCRITO",
-        unique_identifier=unique_identifier
+        unique_identifier=payload.unique_identifier
     )
 
     # Clean response
@@ -247,8 +247,8 @@ def to_payload(data: Payload):
         response['action'] = 'pressure'
 
     elif table == 'plips':
-        response = pressure(payload=payload)
-        response['action'] = 'form'
+        response = plip(payload=payload)
+        response['action'] = 'plip'
 
     response['widget_id'] = payload.widget_id
     response['mobilization_id'] = payload.mobilization_id
