@@ -213,7 +213,7 @@ def plip(payload: Plip):
         expected_signatures=form_data.expected_signatures,
         status_form="INSCRITO",
         unique_identifier=payload.unique_identifier,
-        type_form="VOLUNTÁRIO"
+        type_form="ATIVISTA"
     )
 
     # Clean response
