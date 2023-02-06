@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import insert, update
 
 from typings import Payload
-from database import cnx, activist_actions
+from database import engine, activist_actions
 from normalize import to_payload
 import json
 
@@ -29,15 +29,17 @@ async def webhook_activist_action(body: Payload):
                 values(metadata=result['metadata'])
             )
 
-            with cnx.connect() as connection:
+            with engine.connect() as connection:
                 connection.execute(stmt)
                 connection.commit()
+                connection.close()
 
         else:
             # Insert normalized action in database
-            with cnx.connect() as connection:
+            with engine.connect() as connection:
                 connection.execute(activist_actions.insert(), result)
                 connection.commit()
+                connection.close()
 
     except IntegrityError:
         # Continue process don't stop workflow
