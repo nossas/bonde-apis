@@ -4,12 +4,11 @@ Server for webapi
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import insert, update
+from sqlalchemy import update
 
 from typings import Payload
 from database import engine, activist_actions
 from normalize import to_payload
-import json
 
 app = FastAPI()
 

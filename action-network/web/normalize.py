@@ -211,9 +211,8 @@ def plip(payload: Plip):
 
     item['metadata'] = dict(
         expected_signatures=form_data.expected_signatures,
-        status_form="INSCRITO",
         unique_identifier=payload.unique_identifier,
-        type_form="ATIVISTA"
+        type_form="Ativista"
     )
 
     # Clean response
