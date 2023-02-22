@@ -1,4 +1,5 @@
 .env
 .venv
+.pyv
 /environment
 __pycache__

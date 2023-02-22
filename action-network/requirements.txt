@@ -1,5 +1,5 @@
-sqlalchemy
-psycopg2
+sqlalchemy==1.4
+psycopg2-binary
 validate-docbr
 python-dotenv
 pandas_gbq

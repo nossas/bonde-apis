@@ -33,3 +33,22 @@ activist_actions = Table("activist_actions", analyze_metadata,
                          Column("birthday", String, nullable=True),
                          Column("metadata", JSON, nullable=True)
                          )
+
+log_activist_actions = Table("log_activist_actions", analyze_metadata,
+                         Column("action", String),
+                         Column("action_id", Integer),
+                         Column("created_at", String),
+                         Column("widget_id", Integer),
+                         Column("community_id", Integer),
+                         Column("an_response", JSON, nullable=True)
+                         )
+
+actions = Table("actions", analyze_metadata,
+                         Column("community_id", Integer),
+                         Column("mobilization_id", Integer),
+                         Column("widget_id", Integer),
+                         Column("an_action_id", String),
+                         Column("an_resource_name", String),
+                         Column("an_response", JSON, nullable=True),
+                         Column("mobilization_name", String)
+                         )
