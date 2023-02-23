@@ -26,17 +26,29 @@ class FormData(BaseModel):
     state: Union[str, None]
     phone: Union[str, None]
 
-
 class Pressure(WidgetAction):
     """Represents widget pressure model"""
     form_data: FormData
 
+class PlipFormData(BaseModel):
+    """Represents plip form data"""
+    email: str
+    state: str
+    color: Union[str, None]
+    whatsapp: Union[str, None]
+    gender: Union[str, None]
+    name: str
+    expected_signatures: int
+
+class Plip(WidgetAction):
+    """Represents widget plip model"""
+    form_data: PlipFormData
+    unique_identifier: str
 
 class Phone(BaseModel):
     """Phone"""
     ddd: str
     number: str
-
 
 class Address(BaseModel):
     """Address"""
@@ -69,7 +81,7 @@ class Donation(WidgetAction):
 
 class Data(BaseModel):
     """Hasura Data Model"""
-    new: Union[Donation, Form, Pressure]
+    new: Union[Donation, Form, Pressure, Plip]
 
 
 class Event(BaseModel):

@@ -99,6 +99,16 @@ select_permissions:
                     _eq: X-Hasura-User-Id
       allow_aggregations: true
 event_triggers:
+  - name: webhook-an-plips
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook: '{{N8N_WEBHOOK_URL}}/action-network/activist_action'
   - name: webhooks-plip-mautic
     definition:
       enable_manual: true

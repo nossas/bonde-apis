@@ -2,9 +2,8 @@
 import json
 import re
 
-from typings import Donation, Form, Payload, Pressure
+from typings import Donation, Form, Payload, Pressure, Plip
 from utils import only_digits, get_field, find_by_ddd
-
 
 def form(payload: Form):
     """form"""
@@ -87,10 +86,10 @@ def donation(payload: Donation):
 
     if not payload.transaction_status:
         raise Exception("not_transaction_status")
-    
+
     if not payload.payment_method:
         raise Exception("not_payment_method")
-    
+
     if payload.amount > 999999:
         raise Exception("amount_gte_999999")
 
@@ -181,6 +180,50 @@ def pressure(payload: Pressure):
     return response
 
 
+def plip(payload: Plip):
+    """plip"""
+    form_data = payload.form_data
+    item = dict()
+
+    item['name'] = form_data.name.title()
+    item['email'] = form_data.email
+    item['region'] = form_data.state
+    item['given_name'] = item['name'].split(" ")[0]
+    item['family_name'] = " ".join(item['name'].split(" ")[1:])
+    if form_data.color:
+        item['color'] = form_data.color
+
+    if form_data.whatsapp:
+        item["phone"] = form_data.whatsapp
+
+        item['phone'] = only_digits(item['phone'])
+        item['phone'] = re.sub(
+            r'^(\d{2})(\d{1})(\d{4})(\d{4})$', r'+55 (\1) \2 \3 \4', item['phone'])
+        item['phone'] = re.sub(
+            r'^(\d{1})(\d{4})(\d{4})$', r'+55 (xx) \1 \2 \3', item['phone'])
+        item['phone'] = re.sub(
+            r'^(\d{2})(\d{4})(\d{4})$', r'+55 (\1) 9 \2 \3', item['phone'])
+        item['phone'] = re.sub(
+            r'^(\d{4})(\d{4})$', r'+55 (xx) 9 \1 \2', item['phone'])
+
+    if form_data.gender:
+        item['gender'] = form_data.gender
+
+    item['metadata'] = dict(
+        expected_signatures=form_data.expected_signatures,
+        unique_identifier=payload.unique_identifier,
+        type_form="Ativista"
+    )
+
+    # Clean response
+    response = dict()
+    for key, value in item.items():
+        if value:
+            response[key] = value
+
+    return response
+
+
 def to_payload(data: Payload):
     """to_payload"""
     payload = data.event.data.new
@@ -198,6 +241,10 @@ def to_payload(data: Payload):
     elif table == 'activist_pressures':
         response = pressure(payload=payload)
         response['action'] = 'pressure'
+
+    elif table == 'plips':
+        response = plip(payload=payload)
+        response['action'] = 'plip'
 
     response['widget_id'] = payload.widget_id
     response['mobilization_id'] = payload.mobilization_id
