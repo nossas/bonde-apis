@@ -1,5 +1,6 @@
 .env
 .venv
 .pyv
+.pyenv
 /environment
 __pycache__

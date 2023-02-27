@@ -40,7 +40,7 @@ sql = f"""
     INNER JOIN blocks b ON b.id = w.block_id
     INNER JOIN mobilizations m ON m.id = b.mobilization_id
     INNER JOIN communities c ON c.id = m.community_id
-    WHERE w.id = 70801
+    WHERE w.id = 75634
 """
 # WHERE w.id IN ({','.join(widgets_id)})
 

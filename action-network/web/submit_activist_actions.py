@@ -11,6 +11,12 @@ SELECT
     aa.action,
     aa.action_id,
     aa.action_date,
+    (
+        SELECT
+            min(action_date)
+        FROM "analyze".activist_actions
+        WHERE widget_id = aa.widget_id AND email = aa.email
+    ) as first_action_date,
     aa.widget_id,
     aa.mobilization_id,
     aa.community_id,
@@ -36,7 +42,7 @@ FROM "analyze".activist_actions aa
 INNER JOIN "analyze".actions a ON a.widget_id = aa.widget_id
 INNER JOIN "public".communities c ON c.id = a.community_id
 FULL OUTER JOIN "analyze".log_activist_actions log_aa ON log_aa.action_id = aa.action_id AND log_aa.action = aa.action
-WHERE c.an_group_id = '480c0e20e4543eb9b62eaed6db946d35'
+WHERE c.id = 518
 AND log_aa.an_response IS NULL
 AND aa.action = 'plip'
 """
@@ -48,7 +54,7 @@ def submit(query_sql, thread_name):
     df = pd.read_sql_query(query_sql, engine)
 
     limit_size = int(len(df) * 0.01)
-    
+
     print(f"{thread_name}: Limit size {limit_size} by {len(df)}")
     insert_streaming = []
 
@@ -104,11 +110,14 @@ def submit(query_sql, thread_name):
 
 
             tags = [x['theme'] for x in filter(lambda y: y['mobilization_id'] == item['mobilization_id'], themes)]
-            
+
             if item.action == 'plip':
                 custom_fields['assinaturas_esperadas'] = item['metadata']['expected_signatures']
-                custom_fields['data_ficha_gerada'] = item.action_date[0:19]
+                custom_fields['data_ficha_gerada'] = item.first_action_date[0:19]
                 tags.append(item['metadata']['type_form'])
+
+                if item.action_date == item.first_action_date:
+                    tags.append("Ficha gerada")
 
             if len(custom_fields.keys()) > 0:
                 payload['person']['custom_fields'] = custom_fields
@@ -123,21 +132,21 @@ def submit(query_sql, thread_name):
                 endpoint += f"/petitions/{item['an_action_id']}"
             if item['action'] == "donation":
                 endpoint += f"/fundraising_pages/{item['an_action_id']}"
-            
+
             endpoint += f"/{item['an_resource_name']}"
 
             headers = {
                 'OSDI-API-Token': item['an_group_id'],
                 'Content-Type': 'application/json'
             }
-            
+
             print(f"{thread_name}: Connecting {item['an_group_id']} on Action Network API")
             # print(f"{thread_name}: {endpoint} ...")
 
             data = json.dumps(payload)
             # print(data)
             an_response = requests.request("POST", endpoint, data=data, headers=headers, timeout=(5, 20))
-            
+
             print(f"{thread_name}: Response {an_response.status_code}")
             if an_response.status_code == 200:
                 insert_streaming.append(dict(
@@ -181,17 +190,19 @@ def submit(query_sql, thread_name):
 
 if __name__ == '__main__':
     start_time = perf_counter()
-    threads = []
 
-    for x in range(4):
-        offset = x * 5836
-        t = Thread(target=submit, args=(sql + f" OFFSET {offset} LIMIT 5836", f"Thread {x}"))
-        threads.append(t)
-        t.start()
-    
-    for t in threads:
-        t.join()
-    
+    submit(sql, "No thread")
+#    threads = []
+
+#    for x in range(4):
+#        offset = x * 5836
+#        t = Thread(target=submit, args=(sql + f" OFFSET {offset} LIMIT 5836", f"Thread {x}"))
+#        threads.append(t)
+#        t.start()
+
+#    for t in threads:
+#        t.join()
+
     end_time = perf_counter()
 
     print(f'Processo de inserção {end_time - start_time: 0.2f} segundo(s).')

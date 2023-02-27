@@ -15,17 +15,17 @@ SELECT
     m.id AS mobilization_id,
     m.community_id AS community_id,
     p.created_at AS action_date,
-	p.unique_identifier AS unique_identifier,
-	p.expected_signatures AS expected_signatures,
+    p.unique_identifier AS unique_identifier,
+    p.expected_signatures AS expected_signatures,
     p.state as state,
-	p.form_data AS form_data
+    p.form_data AS form_data
 FROM "public".plips p
 FULL OUTER JOIN "analyze".activist_actions aa ON aa.action_id = p.id AND aa.action = 'plip'
 INNER JOIN "public".communities c ON c.id = p.cached_community_id
 INNER JOIN "public".widgets w ON w.id = p.widget_id
 INNER JOIN "public".blocks b ON b.id = w.block_id
 INNER JOIN "public".mobilizations m ON m.id = b.mobilization_id
-WHERE c.an_group_id = '3436ffde1bf84f42e5d83fa5d8045b0b'
+WHERE c.id = 518
 AND aa.action_id IS NULL
 ORDER BY p.created_at ASC
 '''

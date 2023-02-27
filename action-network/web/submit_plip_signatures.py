@@ -12,7 +12,13 @@ SELECT
     c.an_group_id,
     aa.email,
     ps2.id as action_id,
-    ps2.created_at,
+    ps2.created_at as action_date,
+    (
+        SELECT min(ps.created_at)
+	FROM plip_signatures as ps
+	WHERE ps.widget_id = aa.widget_id
+	AND ps.email = aa.email
+    ) as first_action_date,
     log_aa.an_response->'_links'->'self'->>'href' as submission_uri,
     log_aa.an_response->'_links'->'osdi:form'->>'href' as form_uri,
     log_aa.an_response->'_links'->'osdi:person'->>'href' as person_uri,
@@ -20,7 +26,7 @@ SELECT
 	SELECT sum(ps.confirmed_signatures)
         FROM plip_signatures as ps
 	WHERE ps.widget_id = aa.widget_id
-	AND ps.unique_identifier = aa.metadata->>'unique_identifier'
+	AND ps.email = aa.email
     ), 0) as confirmed_signatures
 FROM "analyze".activist_actions aa
 INNER JOIN "analyze".actions a ON a.widget_id = aa.widget_id
@@ -34,11 +40,11 @@ AND COALESCE((
     SELECT sum(ps.confirmed_signatures)
     FROM plip_signatures as ps
     WHERE ps.widget_id = aa.widget_id
-    AND ps.unique_identifier = aa.metadata->>'unique_identifier'
+    AND ps.email = aa.email
 ), 0) > 0
+and aa.community_id = 518
 ORDER BY ps2.created_at
-LIMIT 9
-;
+LIMIT 10
 """
 
 def submit(query_sql, thread_name):
@@ -50,10 +56,10 @@ def submit(query_sql, thread_name):
     for item in df.to_dict(orient="records"):
         try:
 
-            created_at = item['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+            first_action_date = item['first_action_date'].strftime('%Y-%m-%d %H:%M:%S')
             custom_fields = dict(
                 assinaturas_confirmadas=item['confirmed_signatures'],
-                data_ficha_entregue=created_at
+                data_ficha_entregue=first_action_date
             )
 
             payload = dict(
@@ -63,7 +69,8 @@ def submit(query_sql, thread_name):
                 )
             )
 
-            payload['add_tags'] = ["Ficha Entregue"]
+            if item['first_action_date'] == item['action_date']:
+                payload['add_tags'] = ["Ficha Entregue"]
 
             print("Submit this payload: ")
             print(payload)
