@@ -1,6 +1,7 @@
 - "!include analyze_actions.yaml"
 - "!include analyze_activist_actions.yaml"
 - "!include log_activist_actions.yaml"
+- "!include mapa_do_acolhimento_servicos_publicos.yaml"
 - "!include public_activist_actions.yaml"
 - "!include public_activist_pressures.yaml"
 - "!include public_activist_pressures_range.yaml"
