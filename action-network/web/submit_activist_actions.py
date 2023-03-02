@@ -111,12 +111,16 @@ def submit(query_sql, thread_name):
 
             tags = [x['theme'] for x in filter(lambda y: y['mobilization_id'] == item['mobilization_id'], themes)]
 
-            if item.action == 'plip':
-                custom_fields['assinaturas_esperadas'] = item['metadata']['expected_signatures']
-                custom_fields['data_ficha_gerada'] = item.first_action_date[0:19]
+            if item.action == 'plip': 
                 tags.append(item['metadata']['type_form'])
 
                 if item.action_date == item.first_action_date:
+                    custom_fields['assinaturas_esperadas'] = \
+                            item['metadata']['expected_signatures']
+
+                    custom_fields['data_ficha_gerada'] = \
+                            item.first_action_date[0:19]
+
                     tags.append("Ficha gerada")
 
             if len(custom_fields.keys()) > 0:

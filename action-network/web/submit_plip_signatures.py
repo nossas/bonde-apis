@@ -58,8 +58,7 @@ def submit(query_sql, thread_name):
 
             first_action_date = item['first_action_date'].strftime('%Y-%m-%d %H:%M:%S')
             custom_fields = dict(
-                assinaturas_confirmadas=item['confirmed_signatures'],
-                data_ficha_entregue=first_action_date
+                assinaturas_confirmadas=item['confirmed_signatures'] 
             )
 
             payload = dict(
@@ -70,6 +69,8 @@ def submit(query_sql, thread_name):
             )
 
             if item['first_action_date'] == item['action_date']:
+                custom_fields['data_ficha_entregue'] = first_action_date
+
                 payload['add_tags'] = ["Ficha Entregue"]
 
             print("Submit this payload: ")
