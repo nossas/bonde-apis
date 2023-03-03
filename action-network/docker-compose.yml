@@ -1,12 +1,12 @@
 services:
   an-web:
-    # build:
-    #   context: ./
-    #   dockerfile: Dockerfile
-    image: nossas/bonde-an-web-fastapi:feature-webhook-an
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    # image: nossas/bonde-an-web-fastapi:v1.4.1-next.0
     command: uvicorn main:app --host 0.0.0.0 --port 80
     ports:
       - "8000:80"
     env_file:
       - ./.env
-    
+

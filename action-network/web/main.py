@@ -30,14 +30,12 @@ async def webhook_activist_action(body: Payload):
 
             with engine.connect() as connection:
                 connection.execute(stmt)
-                connection.commit()
                 connection.close()
 
         else:
             # Insert normalized action in database
             with engine.connect() as connection:
                 connection.execute(activist_actions.insert(), result)
-                connection.commit()
                 connection.close()
 
     except IntegrityError:
