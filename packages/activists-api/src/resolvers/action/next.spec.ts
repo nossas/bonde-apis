@@ -121,7 +121,13 @@ describe('next proccess on BaseAction mailchimp tests', () => {
           email_from: `${opts.widget.settings.sender_name} <${opts.widget.settings.sender_email}>`,
           email_to: `${opts.activist.name} <${opts.activist.email}>`,
           subject: opts.widget.settings.email_subject,
-          body: opts.widget.settings.email_text
+          body: opts.widget.settings.email_text,
+          context: {
+            autofire: true,
+            widget_id: opts.widget.id,
+            mobilization_id: opts.widget.block.mobilization.id,
+            community_id: opts.widget.block.mobilization.community.id
+          }
         })
       });
   });
@@ -139,7 +145,13 @@ describe('next proccess on BaseAction mailchimp tests', () => {
           email_from: opts.widget.block.mobilization.community.email_template_from,
           email_to: `${opts.activist.name} <${opts.activist.email}>`,
           subject: opts.widget.settings.email_subject,
-          body: opts.widget.settings.email_text
+          body: opts.widget.settings.email_text,
+          context: {
+            autofire: true,
+            widget_id: opts.widget.id,
+            mobilization_id: opts.widget.block.mobilization.id,
+            community_id: opts.widget.block.mobilization.community.id
+          }
         })
       });
   });
