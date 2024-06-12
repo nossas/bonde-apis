@@ -61,10 +61,16 @@ type ActivityFeedTimestampResponse {
   max_timestamp: Int
 }
 
+type EmailStatsResponse {
+  message: String
+}
+
 type Query {
   activity_feed(filter: ActivityFeedFilter): ActivityFeedResponse
   activity_feed_total(widget_id: Int!): ActivityFeedTotalResponse
   activity_feed_timestamp: ActivityFeedTimestampResponse
+
+  email_stats(widget_id: Int!): EmailStatsResponse
 }
 
 type Mutation {
