@@ -61,8 +61,19 @@ type ActivityFeedTimestampResponse {
   max_timestamp: Int
 }
 
+type EmailEvent {
+  email: String
+  event: String
+  timestamp: Int
+  sg_event_id: String
+  sg_message_id: String
+  useragent: String
+  ip: String
+  url: String
+}
+
 type EmailStatsResponse {
-  message: String
+  events: [EmailEvent]
 }
 
 type Query {
