@@ -41,11 +41,14 @@ jobs:
           GRAPHQL_HTTP_URL: http://bonde.devel/graphql
         run: pnpm test
       
+      - name: Wait before uploading coverage
+          run: sleep 30s
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          directory: ./coverage
+          files: ./coverage/lcov.info
           flags: unittests
           verbose: true
