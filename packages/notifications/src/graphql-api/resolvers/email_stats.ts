@@ -18,18 +18,43 @@ interface EmailStatsResponse {
 
 interface EmailStatsArgs {
   widget_id: number;
+  mobilization_id?: number;
+  community_id?: number;
 }
 
 
 export default async (_: void, args: EmailStatsArgs): Promise<EmailStatsResponse> => {
+  let categories: string[] = [];
+
+  if (args.widget_id) {
+    categories.push(`autofire-w${args.widget_id}`);
+  }
+  if (args.mobilization_id) {
+    categories.push(`autofire-m${args.mobilization_id}`);
+  }
+  if (args.community_id) {
+    categories.push(`autofire-c${args.community_id}`);
+  }
+
   const query = {
     bool: {
-      should: [
-        { match: { event: "delivered" } },
-        { match: { event: "bounced" } },
-        { match: { event: "processed" } },
-        { match: { event: "click" } },
-        { match: { event: "open" } }
+      must: [
+        {
+          terms: {
+            category: categories
+          }
+        },
+        {
+          bool: {
+            should: [
+              { match: { event: "delivered" } },
+              { match: { event: "bounced" } },
+              { match: { event: "processed" } },
+              { match: { event: "click" } },
+              { match: { event: "open" } }
+            ]
+          }
+        }
       ]
     }
   };
