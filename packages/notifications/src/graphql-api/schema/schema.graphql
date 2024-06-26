@@ -72,8 +72,17 @@ type EmailEvent {
   url: String
 }
 
+type EmailStats {
+  open: Int
+  delivered: Int
+  bounced: Int
+  processed: Int
+  click: Int
+}
+
 type EmailStatsResponse {
   events: [EmailEvent]
+  stats: EmailStats
 }
 
 type Query {
