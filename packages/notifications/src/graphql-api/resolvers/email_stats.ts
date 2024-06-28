@@ -20,6 +20,7 @@ interface EmailStatsResponse {
     bounced: number;
     processed: number;
     click: number;
+    total: number;
   };
 }
 
@@ -79,6 +80,7 @@ export default async (_: void, args: EmailStatsArgs): Promise<EmailStatsResponse
       bounced: events.filter(event => event.event === "bounced").length,
       processed: events.filter(event => event.event === "processed").length,
       click: events.filter(event => event.event === "click").length,
+      total: events.length
     };
 
     return { events, stats };

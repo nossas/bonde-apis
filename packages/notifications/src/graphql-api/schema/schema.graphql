@@ -78,6 +78,7 @@ type EmailStats {
   bounced: Int
   processed: Int
   click: Int
+  total: Int
 }
 
 type EmailStatsResponse {
