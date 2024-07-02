@@ -1,3 +1,4 @@
+import logger, { apmAgent } from '../logger';
 import nunjucks from 'nunjucks';
 
 export interface MailSettings {
@@ -73,15 +74,31 @@ class Mail {
     }
 
     let categories: string[] = [];
-    if (context?.widget_id) {
-      categories = [...categories, `w${context?.widget_id}`]
+
+    if (!context.autofire) {
+      if (context?.widget_id) {
+        categories = [...categories, `w${context?.widget_id}`]
+      }
+      if (context?.mobilization_id) {
+        categories = [...categories, `m${context?.mobilization_id}`]
+      }
+      if (context?.community_id) {
+        categories = [...categories, `c${context?.community_id}`]
+      }
+    } else {
+      categories = [...categories, 'autofire']
+      if (context?.widget_id) {
+        categories = [...categories, `autofire-w${context?.widget_id}`]
+      }
+      if (context?.mobilization_id) {
+        categories = [...categories, `autofire-m${context?.mobilization_id}`]
+      }
+      if (context?.community_id) {
+        categories = [...categories, `autofire-c${context?.community_id}`]
+      }
     }
-    if (context?.mobilization_id) {
-      categories = [...categories, `m${context?.mobilization_id}`]
-    }
-    if (context?.community_id) {
-      categories = [...categories, `c${context?.community_id}`]
-    }
+
+    logger.child({ categories }).info("Categorized Sendgrid Message");
 
     return {
       ...message,

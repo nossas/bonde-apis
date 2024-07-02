@@ -16,6 +16,13 @@ export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction
   }
 
   // Post-action
+  // Configurar contexto para categorizar mensagens no sendgrid
+  const context = {
+    widget_id:widget.id,
+    mobilization_id:widget.block.mobilization.id,
+    community_id:community.id,
+    autofire:true
+  }
   const { email_subject, sender_email, sender_name, email_text } = widget.settings;
 
   // TODO: Required fields to Notify "Pós-Ação"
@@ -23,7 +30,8 @@ export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction
     email_from: community.email_template_from,
     email_to: `${activist.name} <${activist.email}>`,
     subject: email_subject,
-    body: email_text
+    body: email_text,
+    context
   };
 
   // TODO: Thing a better place to move this code
@@ -44,7 +52,7 @@ export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction
 
   await NotificationsAPI.send(notifyOpts);
 
-  logger.child({ activist, widget }).info('action is done');
+  logger.child({ activist, widget, notifyOpts }).info('action is done');
 };
 
 // 0. trazer a função de processar pdf e inserir plip para remote schema
