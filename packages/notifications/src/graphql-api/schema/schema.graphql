@@ -61,10 +61,37 @@ type ActivityFeedTimestampResponse {
   max_timestamp: Int
 }
 
+type EmailEvent {
+  email: String
+  event: String
+  timestamp: Int
+  sg_event_id: String
+  sg_message_id: String
+  useragent: String
+  ip: String
+  url: String
+}
+
+type EmailStats {
+  open: Int
+  delivered: Int
+  bounced: Int
+  processed: Int
+  click: Int
+  total: Int
+}
+
+type EmailStatsResponse {
+  events: [EmailEvent]
+  stats: EmailStats
+}
+
 type Query {
   activity_feed(filter: ActivityFeedFilter): ActivityFeedResponse
   activity_feed_total(widget_id: Int!): ActivityFeedTotalResponse
   activity_feed_timestamp: ActivityFeedTimestampResponse
+
+  email_stats(widget_id: Int!, category: String): EmailStatsResponse
 }
 
 type Mutation {
