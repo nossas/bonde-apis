@@ -26,14 +26,19 @@ interface EmailStatsResponse {
 
 interface EmailStatsArgs {
   widget_id: number;
+  category?: string;
 }
 
 
 export default async (_: void, args: EmailStatsArgs): Promise<EmailStatsResponse> => {
+  const { widget_id, category } = args;
   let categories: string[] = [];
 
-  categories.push(`autofire-w${args.widget_id}`);
- 
+  if (category)  {
+    categories.push(`${category}-w${widget_id}`);
+  }  else {
+    categories.push(`w${widget_id}`);
+  }
   const query = {
     bool: {
       must: [
