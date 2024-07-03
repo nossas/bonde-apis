@@ -73,16 +73,19 @@ type EmailEvent {
 }
 
 type EmailStats {
-  open: Int
-  delivered: Int
-  bounced: Int
   processed: Int
+  delivered: Int
+  open: Int
+  unsubscribe: Int
+  bounce: Int
+  deferred: Int
+  dropped: Int
+  spamreport: Int
   click: Int
-  total: Int
 }
 
 type EmailStatsResponse {
-  events: [EmailEvent]
+  total: Int!
   stats: EmailStats
 }
 
