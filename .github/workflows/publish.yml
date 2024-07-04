@@ -7,21 +7,21 @@ on:
       - "hotfix/*"
     tags:
       - v*
-    paths:
-      - "packages/**"
-      - "utils/**"
-      - "package.json"
-      - "Dockerfile"
-      - "tsconfig.json"
-      - "pnpm-*"
+    # paths:
+    #   - "packages/**"
+    #   - "utils/**"
+    #   - "package.json"
+    #   - "Dockerfile"
+    #   - "tsconfig.json"
+    #   - "pnpm-*"
 jobs:
   tests:
     name: Tests for all apis and libs
-    uses: ./.github/workflows/tests.yml
+    uses: ./tests.yml
 
   build:
     name: Build apis endpoints
-    uses: ./.github/workflows/build.yml
+    uses: ./build.yml
     # with:
     #   environment: staging
     secrets:
