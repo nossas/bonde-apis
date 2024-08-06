@@ -1,0 +1,15 @@
+table:
+  schema: public
+  name: candidature_candidatureflow
+event_triggers:
+  - name: votepeloclima-validacao-cadastro
+    definition:
+      enable_manual: false
+      update:
+        columns:
+          - status
+    retry_conf:
+      num_retries: 0
+      interval_sec: 10
+      timeout_sec: 60
+    webhook: '{{N8N_WEBHOOK_URL}}/votepeloclima/validacao/cadastro/'
