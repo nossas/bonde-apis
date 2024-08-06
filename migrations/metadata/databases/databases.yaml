@@ -13,3 +13,12 @@
         max_connections: 50
   tables: "!include default/tables/tables.yaml"
   functions: "!include default/functions/functions.yaml"
+- name: votepeloclima
+  kind: postgres
+  configuration:
+    connection_info:
+      use_prepared_statements: false
+      database_url:
+        from_env: HASURA_GRAPHQL_VOTEPELOCLIMA_DATABASE_URL
+      isolation_level: read-committed
+  tables: "!include votepeloclima/tables/tables.yaml"
