@@ -5,7 +5,7 @@ export const createWildcard = async (routerName: string, domainName: string): Pr
   // Configure routers
   await etcdClient.put(`traefik/http/routers/${routerName}/tls`).value('true');
   await etcdClient.put(`traefik/http/routers/${routerName}/tls/certresolver`).value('myresolver');
-  await etcdClient.put(`traefik/http/routers/${routerName}/rule`).value(`HostRegexp(\`${domainName}\`, \`{subdomain:.+}.${domainName}\`)`);
+  await etcdClient.put(`traefik/http/routers/${routerName}/rule`).value(`Host(\`${domainName}\`) || HostRegexp(\`{subdomain:.+}.${domainName}\`)`);
   await etcdClient.put(`traefik/http/routers/${routerName}/tls/domains/0/main`).value(domainName);
   await etcdClient.put(`traefik/http/routers/${routerName}/tls/domains/0/sans/0`).value(`*.${domainName}`);
   await etcdClient.put(`traefik/http/routers/${routerName}/service`).value('public@docker');
