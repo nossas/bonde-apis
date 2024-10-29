@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: activist_pressures
+  schema: public
 object_relationships:
   - name: activist
     using:
@@ -11,12 +11,12 @@ object_relationships:
   - name: mobilization
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: mobilizations
-        insertion_order: null
         column_mapping:
           mobilization_id: id
+        insertion_order: null
+        remote_table:
+          name: mobilizations
+          schema: public
   - name: widget
     using:
       foreign_key_constraint_on: widget_id
@@ -26,8 +26,8 @@ array_relationships:
       foreign_key_constraint_on:
         column: pressure_id
         table:
-          schema: public
           name: pressures_integration_logs
+          schema: public
 select_permissions:
   - role: anonymous
     permission:
@@ -86,13 +86,23 @@ select_permissions:
               _eq: X-Hasura-User-Id
       allow_aggregations: true
 event_triggers:
+  - name: turn-io-activist-action-pressure
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: '{{N8N_WEBHOOK_URL}}/turn-io/activist-action'
   - name: webhook-an-activist_pressures
     definition:
       enable_manual: false
       insert:
         columns: '*'
     retry_conf:
-      num_retries: 0
       interval_sec: 10
+      num_retries: 0
       timeout_sec: 60
     webhook: '{{N8N_WEBHOOK_URL}}/action-network/activist_action'
