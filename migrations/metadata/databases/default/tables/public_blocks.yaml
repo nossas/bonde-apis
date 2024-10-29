@@ -1,26 +1,26 @@
 table:
-  schema: public
   name: blocks
+  schema: public
 object_relationships:
   - name: mobilization
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: mobilizations
-        insertion_order: null
         column_mapping:
           mobilization_id: id
+        insertion_order: null
+        remote_table:
+          name: mobilizations
+          schema: public
 array_relationships:
   - name: widgets
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: widgets
-        insertion_order: null
         column_mapping:
           id: block_id
+        insertion_order: null
+        remote_table:
+          name: widgets
+          schema: public
 insert_permissions:
   - role: user
     permission:
@@ -42,7 +42,6 @@ insert_permissions:
         - name
         - menu_hidden
         - deleted_at
-      backend_only: false
 select_permissions:
   - role: anonymous
     permission:

@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: dns_hosted_zones
+  schema: public
 object_relationships:
   - name: community
     using:
@@ -9,19 +9,19 @@ array_relationships:
   - name: certificates
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: certificates
-        insertion_order: null
         column_mapping:
           id: dns_hosted_zone_id
+        insertion_order: null
+        remote_table:
+          name: certificates
+          schema: public
   - name: dns_records
     using:
       foreign_key_constraint_on:
         column: dns_hosted_zone_id
         table:
-          schema: public
           name: dns_records
+          schema: public
 insert_permissions:
   - role: user
     permission:
@@ -41,7 +41,6 @@ insert_permissions:
         - ns_ok
         - status
         - is_external_domain
-      backend_only: false
 select_permissions:
   - role: user
     permission:
@@ -88,7 +87,7 @@ event_triggers:
         columns:
           - ns_ok
     retry_conf:
-      num_retries: 0
       interval_sec: 10
+      num_retries: 0
       timeout_sec: 60
     webhook: '{{API_DOMAINS_URL}}/events/create-certificate'

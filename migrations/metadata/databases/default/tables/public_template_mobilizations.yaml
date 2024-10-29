@@ -1,16 +1,16 @@
 table:
-  schema: public
   name: template_mobilizations
+  schema: public
 object_relationships:
   - name: community
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: communities
-        insertion_order: null
         column_mapping:
           community_id: id
+        insertion_order: null
+        remote_table:
+          name: communities
+          schema: public
 insert_permissions:
   - role: user
     permission:
@@ -39,7 +39,6 @@ insert_permissions:
         - goal
         - created_at
         - updated_at
-      backend_only: false
 select_permissions:
   - role: user
     permission:

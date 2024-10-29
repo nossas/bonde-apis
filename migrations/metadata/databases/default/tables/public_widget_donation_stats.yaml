@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: widget_donation_stats
+  schema: public
 select_permissions:
   - role: anonymous
     permission:

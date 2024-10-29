@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: rede_groups
+  schema: public
 object_relationships:
   - name: community
     using:
@@ -23,7 +23,6 @@ insert_permissions:
         - name
         - created_at
         - updated_at
-      backend_only: false
 select_permissions:
   - role: user
     permission:

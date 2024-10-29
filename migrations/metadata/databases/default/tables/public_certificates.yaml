@@ -1,16 +1,16 @@
 table:
-  schema: public
   name: certificates
+  schema: public
 object_relationships:
   - name: community
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: communities
-        insertion_order: null
         column_mapping:
           community_id: id
+        insertion_order: null
+        remote_table:
+          name: communities
+          schema: public
 select_permissions:
   - role: user
     permission:
@@ -38,7 +38,7 @@ event_triggers:
       insert:
         columns: '*'
     retry_conf:
-      num_retries: 20
       interval_sec: 360
+      num_retries: 20
       timeout_sec: 60
     webhook: '{{API_DOMAINS_URL}}/events/check-certificate'

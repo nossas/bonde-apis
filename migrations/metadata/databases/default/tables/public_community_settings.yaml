@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: community_settings
+  schema: public
 object_relationships:
   - name: community
     using:

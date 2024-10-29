@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: communities
+  schema: public
 object_relationships:
   - name: recipient
     using:
@@ -9,33 +9,33 @@ array_relationships:
   - name: community_users
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: community_users
-        insertion_order: null
         column_mapping:
           id: community_id
+        insertion_order: null
+        remote_table:
+          name: community_users
+          schema: public
   - name: dns_hosted_zones
     using:
       foreign_key_constraint_on:
         column: community_id
         table:
-          schema: public
           name: dns_hosted_zones
+          schema: public
   - name: integrations
     using:
       foreign_key_constraint_on:
         column: community_id
         table:
-          schema: public
           name: integrations
+          schema: public
   - name: mobilizations
     using:
       foreign_key_constraint_on:
         column: community_id
         table:
-          schema: public
           name: mobilizations
+          schema: public
 select_permissions:
   - role: anonymous
     permission:

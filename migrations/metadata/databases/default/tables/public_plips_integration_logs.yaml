@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: plips_integration_logs
+  schema: public
 object_relationships:
   - name: community
     using:

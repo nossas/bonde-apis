@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: activist_actions
+  schema: public
 object_relationships:
   - name: community
     using:
@@ -22,7 +22,6 @@ insert_permissions:
         - mobilization_id
         - community_id
         - activist_id
-      backend_only: false
 select_permissions:
   - role: common_user
     permission:

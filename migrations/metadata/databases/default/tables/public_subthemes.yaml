@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: subthemes
+  schema: public
 object_relationships:
   - name: theme
     using:

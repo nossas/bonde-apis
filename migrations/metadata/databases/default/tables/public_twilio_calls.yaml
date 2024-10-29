@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: twilio_calls
+  schema: public
 insert_permissions:
   - role: anonymous
     permission:
@@ -10,7 +10,6 @@ insert_permissions:
         - from
         - to
         - widget_id
-      backend_only: false
 select_permissions:
   - role: anonymous
     permission:

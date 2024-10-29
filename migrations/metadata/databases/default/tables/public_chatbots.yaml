@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: chatbots
+  schema: public
 object_relationships:
   - name: community
     using:
@@ -11,15 +11,15 @@ array_relationships:
       foreign_key_constraint_on:
         column: chatbot_id
         table:
-          schema: public
           name: chatbot_campaigns
+          schema: public
   - name: chatbot_settings
     using:
       foreign_key_constraint_on:
         column: chatbot_id
         table:
-          schema: public
           name: chatbot_settings
+          schema: public
 select_permissions:
   - role: user
     permission:

@@ -1,16 +1,16 @@
 table:
-  schema: public
   name: participations
+  schema: public
 object_relationships:
   - name: community
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: communities
-        insertion_order: null
         column_mapping:
           community_id: id
+        insertion_order: null
+        remote_table:
+          name: communities
+          schema: public
 select_permissions:
   - role: user
     permission:

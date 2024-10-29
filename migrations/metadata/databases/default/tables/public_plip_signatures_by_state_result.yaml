@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: plip_signatures_by_state_result
+  schema: public
 select_permissions:
   - role: common_user
     permission:

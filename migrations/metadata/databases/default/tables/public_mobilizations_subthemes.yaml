@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: mobilizations_subthemes
+  schema: public
 object_relationships:
   - name: mobilization
     using:
@@ -20,7 +20,6 @@ insert_permissions:
       columns:
         - mobilization_id
         - subtheme_id
-      backend_only: false
 select_permissions:
   - role: user
     permission:

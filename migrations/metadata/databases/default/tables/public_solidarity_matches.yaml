@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: solidarity_matches
+  schema: public
 object_relationships:
   - name: community
     using:
@@ -36,7 +36,6 @@ insert_permissions:
         - community_id
         - created_at
         - status
-      backend_only: false
 select_permissions:
   - role: user
     permission:

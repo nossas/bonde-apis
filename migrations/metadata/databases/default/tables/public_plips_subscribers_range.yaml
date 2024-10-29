@@ -1,16 +1,16 @@
 table:
-  schema: public
   name: plips_subscribers_range
+  schema: public
 object_relationships:
   - name: widget
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: widgets
-        insertion_order: null
         column_mapping:
           widget_id: id
+        insertion_order: null
+        remote_table:
+          name: widgets
+          schema: public
 select_permissions:
   - role: common_user
     permission:

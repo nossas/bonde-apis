@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: tags
+  schema: public
 select_permissions:
   - role: common_user
     permission:

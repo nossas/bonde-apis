@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: solidarity_users
+  schema: public
 object_relationships:
   - name: community
     using:
@@ -78,7 +78,6 @@ insert_permissions:
         - whatsapp
         - permanently_deleted
         - community_id
-      backend_only: false
 select_permissions:
   - role: user
     permission:

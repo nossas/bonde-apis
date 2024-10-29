@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: chatbot_settings
+  schema: public
 object_relationships:
   - name: chatbot
     using:

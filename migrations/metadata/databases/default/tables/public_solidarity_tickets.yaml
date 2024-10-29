@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: solidarity_tickets
+  schema: public
 object_relationships:
   - name: community
     using:
@@ -8,12 +8,12 @@ object_relationships:
   - name: individual
     using:
       manual_configuration:
-        remote_table:
-          schema: public
-          name: solidarity_users
-        insertion_order: null
         column_mapping:
           requester_id: user_id
+        insertion_order: null
+        remote_table:
+          name: solidarity_users
+          schema: public
 insert_permissions:
   - role: user
     permission:
@@ -53,7 +53,6 @@ insert_permissions:
         - external_id
         - atrelado_ao_ticket
         - match_syncronized
-      backend_only: false
 select_permissions:
   - role: user
     permission:

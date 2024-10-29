@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: pressures_integration_logs
+  schema: public
 object_relationships:
   - name: activist_pressure
     using:

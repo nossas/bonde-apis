@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: rede_relationships
+  schema: public
 object_relationships:
   - name: agent
     using:

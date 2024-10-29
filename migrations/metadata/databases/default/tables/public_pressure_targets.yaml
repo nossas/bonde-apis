@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: pressure_targets
+  schema: public
 object_relationships:
   - name: widget
     using:
@@ -24,7 +24,6 @@ insert_permissions:
         - label
         - email_subject
         - email_body
-      backend_only: false
 select_permissions:
   - role: anonymous
     permission:

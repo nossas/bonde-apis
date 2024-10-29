@@ -1,6 +1,6 @@
 table:
-  schema: public
   name: rede_individuals
+  schema: public
 object_relationships:
   - name: group
     using:
