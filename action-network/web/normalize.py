@@ -120,26 +120,31 @@ def plip(payload: Plip):
     return clean_response(item)
 
 def to_payload(data: Payload):
+    """to_payload"""
     payload = data.event.data.new
     table = data.table.name
+    response = dict()
 
-    normalizers = {
-        'form_entries': form,
-        'donations': donation,
-        'activist_pressures': pressure,
-        'plips': plip
-    }
+    if table == 'form_entries':
+        response = form(payload=payload)
+        response['action'] = 'form'
 
-    if table not in normalizers:
-        raise ValueError(f"Unknown table: {table}")
+    elif table == 'donations':
+        response = donation(payload=payload)
+        response['action'] = 'donation'
 
-    response = normalizers[table](payload)
-    response.update({
-        'action': table.rstrip('s'),
-        'widget_id': payload.widget_id,
-        'mobilization_id': payload.mobilization_id,
-        'community_id': payload.cached_community_id,
-        'action_id': payload.id,
-        'action_date': payload.created_at
-    })
+    elif table == 'activist_pressures':
+        response = pressure(payload=payload)
+        response['action'] = 'pressure'
+
+    elif table == 'plips':
+        response = plip(payload=payload)
+        response['action'] = 'plip'
+
+    response['widget_id'] = payload.widget_id
+    response['mobilization_id'] = payload.mobilization_id
+    response['community_id'] = payload.cached_community_id
+    response['action_id'] = payload.id
+    response['action_date'] = payload.created_at
+
     return response
