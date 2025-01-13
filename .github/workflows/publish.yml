@@ -7,13 +7,6 @@ on:
       - "hotfix/*"
     tags:
       - v*
-    # paths:
-    #   - "packages/**"
-    #   - "utils/**"
-    #   - "package.json"
-    #   - "Dockerfile"
-    #   - "tsconfig.json"
-    #   - "pnpm-*"
 jobs:
   tests:
     name: Tests for all apis and libs

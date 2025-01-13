@@ -31,14 +31,3 @@ select_permissions:
           community_users:
             user_id:
               _eq: X-Hasura-User-Id
-event_triggers:
-  - name: check_certificate
-    definition:
-      enable_manual: false
-      insert:
-        columns: '*'
-    retry_conf:
-      interval_sec: 360
-      num_retries: 20
-      timeout_sec: 60
-    webhook: '{{API_DOMAINS_URL}}/events/check-certificate'

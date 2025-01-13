@@ -4,6 +4,8 @@ on:
     branches-ignore:
       - "*/an-*"
       - "feature/webhook-an"
+    tags:
+      - v*
   workflow_call:
     # inputs:
     #   environment:

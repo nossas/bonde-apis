@@ -5,12 +5,6 @@ type Mutation {
 }
 
 type Mutation {
-  create_or_update_certificate(
-    dns_hosted_zone_id: Int!
-  ): UpdateCertificateResult
-}
-
-type Mutation {
   create_record(
     record: RecordInput
   ): RecordResult
@@ -26,20 +20,6 @@ type Mutation {
   delete_records(
     records: DeleteRecordsInput
   ): DeleteRecordsResult
-}
-
-type Mutation {
-  resync_mailchimp_start(
-    is_community: Boolean
-    id: Int!
-  ): MailchimpStart
-}
-
-type Query {
-  resync_mailchimp_status(
-    is_community: Boolean
-    id: Int!
-  ): MailchimpStatus
 }
 
 input DomainInput {
