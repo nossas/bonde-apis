@@ -14,7 +14,6 @@ import logger from '../config/logger';
 import healthRoutes from '../routes/health-route';
 import swaggerRoutes from '../routes/swagger-route';
 import actionsRoutes from '../routes/actions-route';
-import eventsRoutes from '../routes/events-route';
 
 const app = express();
 
@@ -35,7 +34,6 @@ app.use(bodyParser.json());
 app.use('/health', healthRoutes);
 app.use('/swagger', swaggerRoutes);
 app.use('/actions', actionsRoutes);
-app.use('/events', eventsRoutes);
 
 // async () => {
 //   if (!config.jwtSecret) throw new Error('No JWT_SECRET provided.');
