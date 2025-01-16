@@ -64,13 +64,13 @@ def donation(payload: Donation):
     if payload.amount > 999999:
         raise ValueError("Amount exceeds allowed limit.")
 
-    checkout_data = payload.checkout_data
-    address = checkout_data.address
-    phone = checkout_data.phone
+    checkout_data = payload.checkout_data or {}
+    address = checkout_data.get('address', {})
+    phone = checkout_data.get('phone', None)
 
     item = {
-        'name': checkout_data.name.title(),
-        'email': checkout_data.email,
+        'name': checkout_data.get('name', '').title(),
+        'email': checkout_data.get('email', ''),
         'metadata': {
             'amount': f"{str(payload.amount)[:-2]}.00",
             'transaction_status': payload.transaction_status,
@@ -78,11 +78,11 @@ def donation(payload: Donation):
             'recurring': payload.subscription,
             'recurring_period': "Monthly" if payload.subscription else None
         },
-        'address_line': f"{address.street_number} {address.street}, {address.complementary}".strip(', '),
-        'locality': address.city,
-        'region': address.state,
-        'postal_code': address.zipcode,
-        'phone': f"+55{phone.ddd}{phone.number}" if phone else None
+        'address_line': f"{address.get('street_number', '')} {address.get('street', '')}, {address.get('complementary', '')}".strip(', '),
+        'locality': address.get('city', ''),
+        'region': address.get('state', ''),
+        'postal_code': address.get('zipcode', ''),
+        'phone': f"+55{phone['ddd']}{phone['number']}" if phone else None
     }
 
     item['name'], item['given_name'], item['family_name'] = normalize_name(item['name'], None, None)
@@ -130,6 +130,7 @@ def to_payload(data: Payload):
         response['action'] = 'form'
 
     elif table == 'donations':
+        payload.checkout_data = payload.get('checkout_data', {})
         response = donation(payload=payload)
         response['action'] = 'donation'
 
