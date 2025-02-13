@@ -89,6 +89,7 @@ input PlipInput  {
   expected_signatures: Int
   color: String
   gender: String
+  team: String
 }
 
 type Response {
