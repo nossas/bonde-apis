@@ -20,8 +20,3 @@
     url: '{{API_PAYMENTS_URL}}/graphql'
     timeout_seconds: 60
     forward_client_headers: true
-- name: Redes
-  definition:
-    url: '{{API_REDES_URL}}/graphql'
-    timeout_seconds: 60
-    forward_client_headers: true
