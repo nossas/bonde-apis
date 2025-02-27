@@ -1,7 +1,0 @@
-table:
-  name: integrations
-  schema: public
-object_relationships:
-  - name: community
-    using:
-      foreign_key_constraint_on: community_id

@@ -1,1 +1,0 @@
-DROP TABLE "public"."forms_integration_logs";

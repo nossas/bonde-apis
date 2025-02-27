@@ -1,5 +1,0 @@
-function:
-  name: get_widget_donation_stats
-  schema: public
-permissions:
-  - role: anonymous

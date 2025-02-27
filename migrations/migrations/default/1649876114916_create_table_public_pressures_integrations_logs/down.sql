@@ -1,1 +1,0 @@
-DROP TABLE "public"."pressures_integration_logs";

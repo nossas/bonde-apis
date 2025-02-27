@@ -1,1 +1,0 @@
-ALTER TABLE "analyze".activist_actions DROP COLUMN metadata;

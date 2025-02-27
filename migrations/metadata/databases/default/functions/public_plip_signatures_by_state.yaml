@@ -1,6 +1,0 @@
-function:
-  name: plip_signatures_by_state
-  schema: public
-permissions:
-  - role: common_user
-  - role: user

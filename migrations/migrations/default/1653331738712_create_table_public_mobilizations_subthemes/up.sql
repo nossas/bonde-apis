@@ -1,1 +1,0 @@
-CREATE TABLE "public"."mobilizations_subthemes" ("mobilization_id" integer NOT NULL, "subtheme_id" integer NOT NULL, PRIMARY KEY ("mobilization_id","subtheme_id") , UNIQUE ("mobilization_id", "subtheme_id"));COMMENT ON TABLE "public"."mobilizations_subthemes" IS E'Tabela responsavel por relacionar mobilização com subtemas no BONDE';

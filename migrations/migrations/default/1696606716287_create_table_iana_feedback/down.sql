@@ -1,1 +1,0 @@
---DROP TABLE "mapa_do_acolhimento".iana_feedback;
