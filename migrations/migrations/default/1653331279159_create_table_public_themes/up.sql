@@ -1,1 +1,0 @@
-CREATE TABLE "public"."themes" ("id" serial NOT NULL, "value" text NOT NULL, "label" text NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"), UNIQUE ("value"));COMMENT ON TABLE "public"."themes" IS E'Tabela responsável por armazenar temas ao BONDE';

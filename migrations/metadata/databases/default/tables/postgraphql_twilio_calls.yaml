@@ -1,3 +1,0 @@
-table:
-  name: twilio_calls
-  schema: postgraphql
