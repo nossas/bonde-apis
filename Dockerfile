@@ -2,8 +2,10 @@ FROM node:18-alpine
 
 WORKDIR /usr/src/app
 
-RUN apk add --update python3 make g++\
-   && rm -rf /var/cache/apk/*
+# Instalar dependências de compilação para o bcrypt
+RUN apk add --no-cache \
+    build-base \
+    python3
 
 RUN yarn global add pnpm node-gyp
 
