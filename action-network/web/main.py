@@ -13,7 +13,6 @@ from normalize import to_payload
 app = FastAPI()
 
 @app.post("/webhook/activist_action")
-
 async def webhook_activist_action(body: Payload):
     """Webhook for integration Bonde activist actions to Action Network"""
     # Normalize hasura event payload
