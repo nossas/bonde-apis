@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 from pydantic import BaseModel, Field
 
 
@@ -23,8 +23,8 @@ class FormData(BaseModel):
     lastname: str
     body: str
     name: str
-    state: Union[str, None]
-    phone: Union[str, None]
+    state: Optional[str] = None
+    phone: Optional[str] = None
 
 class Pressure(WidgetAction):
     """Represents widget pressure model"""
@@ -34,9 +34,9 @@ class PlipFormData(BaseModel):
     """Represents plip form data"""
     email: str
     state: str
-    color: Union[str, None]
-    whatsapp: Union[str, None]
-    gender: Union[str, None]
+    color: Optional[str] = None
+    whatsapp: Optional[str] = None
+    gender: Optional[str] = None
     name: str
     expected_signatures: int
 
@@ -58,16 +58,16 @@ class Address(BaseModel):
     city: str
     street_number: str
     neighborhood: str
-    complementary: Union[str, None]
+    complementary: Optional[str] = None
 
 
 class CheckoutData(BaseModel):
     """CheckoutData"""
     email: str
-    phone: Union[Phone, None]
+    phone: Optional[Phone] = None
     document_number: str
     name: str
-    address: Union[Address, None]
+    address: Optional[Address] = None
 
 
 class Donation(WidgetAction):
@@ -81,7 +81,7 @@ class Donation(WidgetAction):
 
 class Data(BaseModel):
     """Hasura Data Model"""
-    new: Union[Donation, Form, Pressure, Plip]
+    new: Pressure | Plip | Donation | Form
 
 
 class Event(BaseModel):
