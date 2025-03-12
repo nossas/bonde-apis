@@ -37,6 +37,7 @@ class PlipFormData(BaseModel):
     color: Optional[str] = None
     whatsapp: Optional[str] = None
     gender: Optional[str] = None
+    team: Optional[str] = None
     name: str
     expected_signatures: int
 
