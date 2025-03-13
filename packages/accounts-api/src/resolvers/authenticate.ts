@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import * as UsersAPI from '../graphql-api/users';
 import { JWT } from '../types'
 import { generateJWT } from '../utils'
