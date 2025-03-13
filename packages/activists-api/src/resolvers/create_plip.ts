@@ -6,12 +6,15 @@ import crypto from 'crypto';
 import generatePlipPdf from './generate-plip-pdf';
 
 export const create_plip = async ({ action, widget }: IBaseAction<PlipInput>): Promise<IActionData> => {
+  // id do widget plip do bonde dos bois (https://www.odesafiodosbumbas.com/) em producao
+  const boisWidgetID = 79520;
 
   const name = action?.name || ''
   const state = action?.state || '';
   const expected_signatures = action?.expected_signatures || 10;
   const unique_identifier = crypto.createHash("sha1").update(`${action?.email}${state}${expected_signatures}` || '').digest("hex");
-  const pdf_data = await generatePlipPdf(unique_identifier, state, expected_signatures, name);
+  const isBoisWidget = Boolean(widget.id === boisWidgetID);
+  const pdf_data = await generatePlipPdf(unique_identifier, name, isBoisWidget);
 
 
   const { id, errors } = await ActionsAPI.plip({
