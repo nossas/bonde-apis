@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import q from "q";
 import QRCode from "qrcode";
 import { logo } from "./logo";
+import { bois } from "./bois";
 import uploadS3 from "./upload_to_s3";
 import { arrow } from "./arrow";
 
@@ -12,9 +13,8 @@ interface pdfData {
 
 const generatePlipPdf = async (
   unique_identifier: string,
-  state: string,
-  expected_signatures: number,
-  name: string
+  name: string,
+  isBoisWidget: boolean
 ): Promise<pdfData> => {
   if (!unique_identifier) {
     const msg = "Invalid unique_identifier";
@@ -45,7 +45,7 @@ const generatePlipPdf = async (
     docWidth - 230,
     8
   );
-  doc.addImage(logo, "JPEG", 10, 10, imgWidth, imgHeight);
+  doc.addImage(isBoisWidget ? bois : logo, "JPEG", 10, 10, imgWidth, imgHeight);
   doc.addImage(
     uiQRCode,
     "JPEG",
@@ -61,15 +61,15 @@ const generatePlipPdf = async (
   doc.setFontSize(8.8);
   doc.text(
     `Dispõe sobre a destinação das terras públicas cobertas por florestas ou outras formas de vegetação na
-    Amazônia Legal, priorizando a conservação ambiental e a justiça social, determina a vedação e inativação do
-    registro no Sistema de Cadastro Ambiental Rural (Sicar) nas situações que especifica, e dá outras providências.`,
+  Amazônia Legal, priorizando a conservação ambiental e a justiça social, determina a vedação e inativação do
+  registro no Sistema de Cadastro Ambiental Rural (Sicar) nas situações que especifica, e dá outras providências.`,
     220,
     31,
     { align: "center" }
   );
   doc.setFont("helvetica", "bold");
   doc.text(`Saiba mais em amazoniadepe.org.br`, 220, 54, { align: "center" });
-  
+
   doc.cell(margin, 62, 90, 5, ``, 1, "left");
 
   //background color
@@ -85,17 +85,17 @@ const generatePlipPdf = async (
   for (let i = 0; i < 10; i++) {
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.text("         /         /         ", 110, barTop);
+    doc.text("         /         /         ", 110, barTop - 18);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(5);
     doc.text("(ASSINATURA OU IMPRESSÃO DIGITAL)", 23, barTop - 3);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6);
-    doc.text(" (OU NÚMERO DO TÍTULO DE ELEITOR):", 239, barTop - 11.5);
+    // doc.text("(OU NÚMERO DO TÍTULO DE ELEITOR):", 239, barTop - 11.5);
 
     // ArrowIcon
-    doc.addImage(arrow, "JPEG", 75, arrowTop, 5, 6);
-    doc.addImage(arrow, "JPEG", 36, arrowTop, 5, 6);
+    doc.addImage(arrow, 'JPEG', 75, arrowTop, 5, 6);
+    doc.addImage(arrow, 'JPEG', 36, arrowTop, 5, 6);
     barTop = barTop + 3 * cellHeight;
     arrowTop = cellSignatureHeight + arrowTop;
 
@@ -111,7 +111,7 @@ const generatePlipPdf = async (
       "left"
     );
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(5);
 
     doc.setFontSize(6);
@@ -134,15 +134,7 @@ const generatePlipPdf = async (
       "left"
     );
 
-    doc.cell(
-      cellSignatureWidth + margin,
-      134,
-      formWidth - cellSignatureWidth,
-      cellHeight,
-      `ENDEREÇO (Completo, legível, sem abreviar, com CEP):`,
-      3,
-      "right"
-    );
+    doc.setFont("helvetica", "normal");
 
     doc.cell(
       cellSignatureWidth + margin,
@@ -154,39 +146,34 @@ const generatePlipPdf = async (
       "center"
     );
 
-    doc.setFont("helvetica", "bold");
-
+    
     doc.cell(
       (formWidth - cellSignatureWidth) / 4,
       158,
-      formWidth - cellSignatureWidth - (formWidth - cellSignatureWidth) / 1.9,
+      formWidth - cellSignatureWidth - (formWidth - cellSignatureWidth) / 5,
       cellHeight,
-      "NOME COMPLETO DA MÃE",
+      "NOME COMPLETO DA MÃE:",
       4,
       "center"
     );
 
-    doc.setFont("helvetica", "normal");
-
     doc.cell(
-      formWidth - cellSignatureWidth - (formWidth - cellSignatureWidth) / 2,
-      158,
-      (formWidth - cellSignatureWidth) / 4,
+      cellSignatureWidth + margin,
+      134,
+      (formWidth - cellSignatureWidth) / 1.5,
       cellHeight,
       `CIDADE:`,
-      4,
+      3,
       "right"
     );
 
-    doc.setFont("helvetica", "normal");
-    
     doc.cell(
-      formWidth - cellSignatureWidth - (formWidth - cellSignatureWidth) / 2,
-      158,
-      (formWidth - cellSignatureWidth) / 13.1,
+      cellSignatureWidth + margin,
+      134,
+      (formWidth - cellSignatureWidth) / 3,
       cellHeight,
-      `UF:`,
-      4,
+      `ESTADO:`,
+      3,
       "right"
     );
   }
