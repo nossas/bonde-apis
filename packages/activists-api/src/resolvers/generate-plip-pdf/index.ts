@@ -91,7 +91,6 @@ const generatePlipPdf = async (
     doc.text("(ASSINATURA OU IMPRESSÃO DIGITAL)", 23, barTop - 3);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(6);
-    // doc.text("(OU NÚMERO DO TÍTULO DE ELEITOR):", 239, barTop - 11.5);
 
     // ArrowIcon
     doc.addImage(arrow, 'JPEG', 75, arrowTop, 5, 6);
