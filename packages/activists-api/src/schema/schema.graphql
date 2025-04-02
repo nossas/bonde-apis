@@ -90,6 +90,10 @@ input PlipInput  {
   team: String
 }
 
+input WidgetActionInput {
+  custom_fields: JSON
+}
+
 type Response {
   data: JSON
 }
@@ -104,4 +108,5 @@ type Mutation {
   create_donation(widget_id: Int!, activist: ActivistInput!, input: DonationInput!): Response
   update_mailchimp_settings(api_key: String!, list_id: String!): Status
   create_plip(widget_id: Int!, activist: ActivistInput!, input: PlipInput!): Response
+  create_widget_action(widget_id: Int!, activist: ActivistInput!, input: WidgetActionInput!): Response
 }

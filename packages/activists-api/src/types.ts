@@ -124,3 +124,7 @@ export type Plip = {
   expected_signatures: number
   form_data: any
 }
+
+export type WidgetActionInput = {
+  custom_fields?: any
+}
