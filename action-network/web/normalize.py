@@ -194,7 +194,7 @@ def to_payload(data: Payload):
 
     response["widget_id"] = payload.widget_id
     response["mobilization_id"] = payload.mobilization_id
-    response["community_id"] = payload.cached_community_id or payload.community_id
+    response["community_id"] = payload.cached_community_id if hasattr(payload, 'cached_community_id') else payload.community_id
     response["action_id"] = payload.id
     response["action_date"] = payload.created_at
 

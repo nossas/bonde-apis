@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 from pydantic import BaseModel, Field
 
 
@@ -81,6 +81,7 @@ class Donation(WidgetAction):
 
 
 class BaseAction(BaseModel):
+    """"""
     id: int
     widget_id: int
     mobilization_id: int
@@ -90,7 +91,7 @@ class BaseAction(BaseModel):
     last_name: str
     email: str
     phone_number: Optional[str] = None
-    custom_fields: Optional[any] = {}
+    custom_fields: Optional[Any] = {}
     kind: str
     created_at: str
 
