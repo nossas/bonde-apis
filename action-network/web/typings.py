@@ -80,9 +80,24 @@ class Donation(WidgetAction):
     subscription: bool
 
 
+class BaseAction(BaseModel):
+    id: int
+    widget_id: int
+    mobilization_id: int
+    community_id: int
+    activist_id: int
+    first_name: str
+    last_name: str
+    email: str
+    phone_number: Optional[str] = None
+    custom_fields: Optional[any] = {}
+    kind: str
+    created_at: str
+
+
 class Data(BaseModel):
     """Hasura Data Model"""
-    new: Pressure | Plip | Donation | Form
+    new: Pressure | Plip | Donation | Form | BaseAction
 
 
 class Event(BaseModel):

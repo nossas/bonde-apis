@@ -3,7 +3,7 @@
 import json
 import re
 
-from typings import Donation, Form, Payload, Pressure, Plip
+from typings import Donation, Form, Payload, Pressure, Plip, BaseAction
 from utils import only_digits, get_field, find_by_ddd
 
 
@@ -151,6 +151,19 @@ def plip(payload: Plip):
     )
     return clean_response(item)
 
+def widget_action(payload: BaseAction):
+    item = {
+        "name": payload.first_name + " " + payload.last_name,
+        "email": payload.email,
+        "phone": normalize_phone(payload.phone_number) if payload.phone_number else None,
+        "metadata": payload.custom_fields
+    }
+
+    if item["phone"]:
+        item["region"] = find_by_ddd(item["phone"])
+
+    return clean_response(item)
+
 
 def to_payload(data: Payload):
     """to_payload"""
@@ -174,9 +187,14 @@ def to_payload(data: Payload):
         response = plip(payload=payload)
         response["action"] = "plip"
 
+    else:
+        # Ação padronizada
+        response = widget_action(payload=payload)
+        response["action"] = payload.kind
+
     response["widget_id"] = payload.widget_id
     response["mobilization_id"] = payload.mobilization_id
-    response["community_id"] = payload.cached_community_id
+    response["community_id"] = payload.cached_community_id or payload.community_id
     response["action_id"] = payload.id
     response["action_date"] = payload.created_at
 
