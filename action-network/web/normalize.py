@@ -154,6 +154,8 @@ def plip(payload: Plip):
 def widget_action(payload: BaseAction):
     item = {
         "name": payload.first_name + " " + payload.last_name,
+        "given_name": payload.first_name,
+        "family_name": payload.last_name,
         "email": payload.email,
         "phone": normalize_phone(payload.phone_number) if payload.phone_number else None,
         "metadata": payload.custom_fields
