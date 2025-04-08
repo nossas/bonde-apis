@@ -3,6 +3,11 @@ import re
 
 def find_by_ddd(ddd):
     """Return state by DDD"""
+    if len(ddd) > 2:
+        match = re.search(r"\+55\s*\((\d{2})\)", ddd)
+        if match:
+            ddd = str(match.group(1))
+
     states = dict(
       DF=['61', 'Distrito Federal'],
       GO=['62','64', 'Goiania', 'Goiânia'],
@@ -33,7 +38,7 @@ def find_by_ddd(ddd):
       SC=['47','48','49', 'Santa Catarina']
     )
 
-    state = ddd
+    state = None
 
     for index, values in enumerate(states.values()):
         if ddd in values:
