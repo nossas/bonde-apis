@@ -65,8 +65,8 @@ def form(payload: Form):
 
     item["region"] = normalize_region(item["region"])
     item["name"], item["given_name"], item["family_name"] = normalize_name(
-        f"{item['given_name']} {item['family_name']}".strip(),
         item["given_name"],
+        None,
         item["family_name"],
     )
     if item["phone"]:
