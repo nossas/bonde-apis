@@ -65,14 +65,15 @@ def only_digits(field):
         else:
             return field
 
-
 def get_field(regex_pattern, fields):
     """xxx"""
     pattern = re.compile(regex_pattern)
 
-    results = list(filter(lambda x: pattern.search(x['label'].lower()), fields))
-
+    results = list(filter(lambda x: pattern.search(x['label'].lower().strip()), fields))
+    
     if len(results) == 1 and 'value' in results[0]:
+        return results[0]['value']
+    elif len(results) == 2 and 'value' in results[0]:
         return results[0]['value']
 
     return None
