@@ -52,7 +52,7 @@ export default async <T>({ activist, widget }: IBaseAction<T>, done?: DoneAction
 
   await NotificationsAPI.send(notifyOpts);
 
-  logger.child({ activist, widget, notifyOpts }).info('action is done');
+  logger.child({ activist, widget: { id: widget.id }, notifyOpts }).info('action is done');
 };
 
 // 0. trazer a função de processar pdf e inserir plip para remote schema
