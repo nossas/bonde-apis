@@ -13,6 +13,15 @@ export type PressureAction = {
   form_data?: any
 }
 
+type MailInput = {
+  context: any
+  body: string
+  subject: string
+  email_from: string
+  email_to: string
+  trackingSettings: any
+}
+
 type PressureEmailArgs = {
   activist: Activist
   emailBody: string
@@ -32,7 +41,7 @@ const send_pressure_mail = async ({
   // 1 Changed by activists
   // 2 Configured in group of targets
   // 3 Configured in settings of widget
-  const mailInput = targets.map((target: string) => ({
+  const mailInput: MailInput[] = targets.map((target: string) => ({
     context: { activist, ...context },
     body: emailBody,
     subject: emailSubject, // email_subject || group?.email_subject || pressure_subject,
@@ -47,7 +56,15 @@ const send_pressure_mail = async ({
 
   // Envia e-mail de pressão
   await NotificationsAPI.send(mailInput);
-  logger.child({ mailInput }).info('NotificationsAPI');
+
+  logger.child({
+    mailInput: mailInput.map((item) => ({
+      context: item.context,
+      subject: item.subject,
+      from: item.email_from,
+      to: item.email_to
+    }))
+  }).info('NotificationsAPI');
 }
 
 /**
