@@ -68,7 +68,7 @@ def parse_item(item):
         df2, r'(e-?mail|correo electr(o|ó)nico|email)')
     # Pegar telefone
     item['phone'] = get_field_name(
-        df2, r'(celular|mobile|portable|whatsapp)')
+        df2, r'(celular|mobile|portable|whatsapp|telefone)')
     # Pegar cidade
     item['locality'] = get_field_name(
         df2, r'(cidade|city|ciudad)')
