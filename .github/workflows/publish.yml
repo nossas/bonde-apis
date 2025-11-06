@@ -10,7 +10,7 @@ on:
 jobs:
   tests:
     name: Tests for all apis and libs
-    uses: ./tests.yml
+    uses: ./.github/workflows/tests.yml
 
   build:
     name: Build apis endpoints
