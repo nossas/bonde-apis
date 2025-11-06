@@ -9,6 +9,7 @@ export type PressureAction = {
   targets_id?: string
   email_subject?: string
   email_body?: string
+  subject_list?: string[]
   token: string
   form_data?: any
 }
@@ -63,6 +64,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
       pressure_subject: pressureSubject,
       pressure_body: pressureBody,
       pressure_type: pressureType,
+      subject_list: subjectList,
       batch_limit = 100,
       mail_limit = 1000,
       optimization_enabled = true
@@ -122,6 +124,17 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     form_data
   }
 
+  // FUNÇÃO AUXILIAR PARA OBTER O ASSUNTO
+  const getEmailSubject = (): string => {
+    if (subjectList && subjectList.length > 0) {
+      const randomIndex = Math.floor(Math.random() * subjectList.length);
+      return subjectList[randomIndex];
+    }
+    
+    // Fallback para o assunto único
+    return emailSubject || group?.email_subject || pressureSubject;
+  };
+
   if (optimization_enabled) {
     // Pressão otimizado foi habilitada
     const pressureInfo = await ActionsAPI.get_pressure_info(widget.id);
@@ -169,7 +182,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
           activist,
           targets,
           emailBody: optimziedBody,
-          emailSubject: group?.email_subject || pressureSubject,
+          emailSubject: getEmailSubject(),
         });
 
         logger.child({ id, created_at }).info('ActionsAPI');
@@ -208,7 +221,7 @@ export const create_email_pressure = async ({ widget, activist, action }: IBaseA
     activist,
     targets,
     emailBody: emailBody || group?.email_body || pressureBody,
-    emailSubject: emailSubject || group?.email_subject || pressureSubject
+    emailSubject: getEmailSubject()
   });
   // Cria a pressão na base de dados
   const { id, created_at } = await ActionsAPI.pressure({
