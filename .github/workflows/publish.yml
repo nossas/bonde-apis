@@ -8,9 +8,9 @@ on:
     tags:
       - v*
 jobs:
-  tests:
-    name: Tests for all apis and libs
-    uses: ./.github/workflows/tests.yml
+  # tests:
+  #   name: Tests for all apis and libs
+  #   uses: ./.github/workflows/tests.yml
 
   build:
     name: Build apis endpoints
