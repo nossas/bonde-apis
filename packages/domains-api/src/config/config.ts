@@ -28,8 +28,8 @@ const config: Config = {
   awsAccessKey: process.env.AWS_ACCESS_KEY,
   awsSecretKey: process.env.AWS_SECRET_KEY,
   awsRoute53Region: process.env.AWS_ROUTE53_REGION || 'sa-east-1',
-  awsLoadBalancerDns: process.env.AWS_LOAD_BALANCER_DNS || 'a2f212cad2d294747a445a1c3912809d-d2f26ccca140a83f.elb.us-east-1.amazonaws.com.',
-  awsLoadBalancerHostedZoneId: process.env.AWS_LOAD_BALANCER_HOSTED_ZONE_ID || 'Z35SXDOTRQ7X7K'
+  awsLoadBalancerDns: process.env.AWS_LOAD_BALANCER_DNS || 'localhost',
+  awsLoadBalancerHostedZoneId: process.env.AWS_LOAD_BALANCER_HOSTED_ZONE_ID || 'localhost'
 };
 
 export default config;
