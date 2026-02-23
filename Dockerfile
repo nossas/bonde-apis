@@ -7,7 +7,9 @@ RUN apk add --no-cache \
     build-base \
     python3
 
-RUN yarn global add pnpm node-gyp
+# Pnpm version 10
+# node-gyp version 11
+RUN yarn global add pnpm@10 node-gyp@11
 
 COPY package*.json ./
 

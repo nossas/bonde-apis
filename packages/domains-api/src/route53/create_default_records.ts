@@ -1,39 +1,45 @@
 import config from '../config/config';
-import logger from '../config/logger'
+import logger from '../config/logger';
+
+type AliasTarget = {
+  DNSName: string;
+  EvaluateTargetHealth: boolean;
+  HostedZoneId: string;
+};
 
 type ResourceRecord = {
-  Value: string
-}
+  Value: string;
+};
 
 type ResourceRecordSet = {
-  Name: string
-  ResourceRecords: ResourceRecord[]
-  TTL: number
-  Type: string
-}
+  Name: string;
+  ResourceRecords?: ResourceRecord[];
+  AliasTarget?: AliasTarget;
+  TTL?: number;
+  Type: string;
+};
 
 type Change = {
-  Action: string
-  ResourceRecordSet: ResourceRecordSet
-}
+  Action: string;
+  ResourceRecordSet: ResourceRecordSet;
+};
 
 type ChangeBatch = {
-  Changes: Change[]
-  Comment: string
-}
+  Changes: Change[];
+  Comment: string;
+};
 
 type RecordParams = {
-  ChangeBatch: ChangeBatch
-  HostedZoneId: string
-}
+  ChangeBatch: ChangeBatch;
+  HostedZoneId: string;
+};
 
 type Args = {
-  domain: string
-  hostedZoneId: string
-}
+  domain: string;
+  hostedZoneId: string;
+};
 
 export default (route53: any) => async ({ domain, hostedZoneId }: Args) => {
-  // Create defaults Record on AWS
   const records: RecordParams = {
     ChangeBatch: {
       Changes: [
@@ -41,36 +47,39 @@ export default (route53: any) => async ({ domain, hostedZoneId }: Args) => {
           Action: 'CREATE',
           ResourceRecordSet: {
             Name: domain,
-            ResourceRecords: [
-              { Value: config.awsRouteIp }
-            ],
-            TTL: 300,
-            Type: 'A'
+            Type: 'A',
+            AliasTarget: {
+              DNSName: config.awsLoadBalancerDns,
+              EvaluateTargetHealth: true,
+              HostedZoneId: config.awsLoadBalancerHostedZoneId
+            }
           }
         },
         {
           Action: 'CREATE',
           ResourceRecordSet: {
-            Name: `*.${domain}`,
+            Name: `*.${domain}`, 
             ResourceRecords: [
-              { Value: config.awsRouteIp }
+              { Value: config.awsLoadBalancerDns }
             ],
             TTL: 300,
-            Type: 'A'
+            Type: 'CNAME'
           }
         }
       ],
       Comment: 'autocreated'
     },
     HostedZoneId: hostedZoneId
-  }
-  logger.child({ records }).info('changeResourceRecordSets');
+  };
 
+  logger.child({ records }).info('changeResourceRecordSets');
+  
   try {
     const result = await route53.changeResourceRecordSets(records).promise();
-    logger.child({ result }).info('changeResourceRecordSets');
+    logger.child({ result }).info('changeResourceRecordSets - success');
+    return result;
   } catch (err) {
-    logger.child({ err }).info('error');
-    return [];
+    logger.child({ err }).error('changeResourceRecordSets - error');
+    throw err;
   }
-}
+};

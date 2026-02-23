@@ -10,7 +10,8 @@ import delete_records from './delete_records';
 if (!config.awsAccessKey) throw new Error('AWS_ACCESS_KEY not found');
 if (!config.awsSecretKey) throw new Error('AWS_SECRET_KEY not found');
 
-if (!config.awsRouteIp) throw new Error('AWS_ROUTE_IP not found');
+if (!config.awsLoadBalancerDns) throw new Error('AWS_LOAD_BALANCER_DNS not found');
+if (!config.awsLoadBalancerHostedZoneId) throw new Error('AWS_LOAD_BALANCER_HOSTED_ZONE_ID not found');
 
 // Configure AWS
 AWS.config.update({

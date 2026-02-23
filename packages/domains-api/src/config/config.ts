@@ -13,7 +13,8 @@ type Config = {
   awsAccessKey?: string
   awsSecretKey?: string
   awsRoute53Region: string
-  awsRouteIp: string
+  awsLoadBalancerDns: string
+  awsLoadBalancerHostedZoneId: string
 }
 
 const config: Config = {
@@ -27,7 +28,8 @@ const config: Config = {
   awsAccessKey: process.env.AWS_ACCESS_KEY,
   awsSecretKey: process.env.AWS_SECRET_KEY,
   awsRoute53Region: process.env.AWS_ROUTE53_REGION || 'sa-east-1',
-  awsRouteIp: process.env.AWS_ROUTE_IP || 'localhost'
+  awsLoadBalancerDns: process.env.AWS_LOAD_BALANCER_DNS || 'localhost',
+  awsLoadBalancerHostedZoneId: process.env.AWS_LOAD_BALANCER_HOSTED_ZONE_ID || 'localhost'
 };
 
 export default config;
